@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { useStore } from "@/store";
 import Home from "../views/Home.vue";
 import Register from "../views/Signup.vue";
 import Login from "../views/Login.vue";
@@ -24,6 +25,13 @@ const routes: Array<RouteRecordRaw> = [
     path: "/app",
     name: "AppPage",
     component: AppPage,
+    beforeEnter: (to, from, next) => {
+      if(!localStorage["auth.token"]){
+        next("/");
+      } else{
+        next()
+      }
+    },
   },
   {
     path: "/about",
