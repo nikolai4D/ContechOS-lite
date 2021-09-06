@@ -135,14 +135,14 @@ export default defineComponent({
 
       userNodesSelection.call((simulation: any) => {
         document.querySelectorAll("circle.user").forEach((circle) => {
-          const text = document.createElement("text");
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
-          text.setAttribute("stroke", "#ffffff");
-          text.setAttribute("stroke-width", "2px");
+          text.setAttribute("fill", "#ffffff");
+          text.setAttribute("font-size", "20px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
 
-          text.innerText = circle.querySelector("title")!.textContent!;
+          text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
         });
@@ -173,14 +173,14 @@ export default defineComponent({
 
       roleNodesSelection.call((simulation: any) => {
         document.querySelectorAll("circle.role").forEach((circle) => {
-          const text = document.createElement("text");
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
-          text.setAttribute("stroke", "#ffffff");
-          text.setAttribute("stroke-width", "2px");
+          text.setAttribute("fill", "#ffffff");
+          text.setAttribute("font-size", "20px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
 
-          text.innerText = circle.querySelector("title")!.textContent!;
+          text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
         });
