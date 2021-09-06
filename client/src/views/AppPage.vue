@@ -107,14 +107,14 @@ export default defineComponent({
         .data(users)
         .join("circle")
         .attr("r", 40)
-        .attr("fill", "#3c3c3c")
-        .call((simulation: any) => {
-          function dragstarted(event: any) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            event.subject.fx = event.subject.x;
-            event.subject.fy = event.subject.y;
-          }
+        .attr("fill", "#3c3c3c");
 
+      node
+        .append("title")
+        .text((data: any) => data.name);
+
+      node
+        .call((simulation: any) => {
           document.querySelectorAll("circle").forEach((circle) => {
             const text = document.createElement("text");
 
@@ -127,6 +127,12 @@ export default defineComponent({
 
             circle.insertAdjacentElement("afterend", text);
           });
+
+          function dragstarted(event: any) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+          }
 
           function dragged(event: any) {
             event.subject.fx = event.x;
@@ -145,8 +151,6 @@ export default defineComponent({
             .on("drag", dragged)
             .on("end", dragended);
         });
-
-      node.append("title").text((data: any) => data.name);
     },
   },
 });
