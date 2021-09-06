@@ -60,10 +60,10 @@ export default defineComponent({
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
       const simulation = d3
-        .forceSimulation(users)
+        .forceSimulation([...users, ...roles])
         .force(
           "link",
-          d3.forceLink(links).id((data: any) => data.id)
+          d3.forceLink(links).distance(200).id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
         .force(
@@ -71,13 +71,17 @@ export default defineComponent({
           d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
         )
         .on("tick", () => {
-          link
+          linksSelection
             .attr("x1", (data: any) => data.source.x)
             .attr("y1", (data: any) => data.source.y)
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
-          node
+          userNodesSelection
+            .attr("cx", (data: any) => data.x)
+            .attr("cy", (data: any) => data.y);
+
+          roleNodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
 
@@ -89,7 +93,7 @@ export default defineComponent({
           });
         });
 
-      const link = d3
+      const linksSelection = d3
         .select("svg")
         .append("g")
         .attr("stroke", "#999")
@@ -98,7 +102,7 @@ export default defineComponent({
         .data(links)
         .join("line");
 
-      const node = d3
+      const userNodesSelection = d3
         .select("svg")
         .append("g")
         .attr("stroke", "#fff")
@@ -107,15 +111,32 @@ export default defineComponent({
         .data(users)
         .join("circle")
         .attr("r", 40)
-        .attr("fill", "#3c3c3c");
+        .attr("fill", "#3c3c3c")
+        .classed("user", true);
 
-      node
+    const roleNodesSelection = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#f46")
+        .attr("stroke-width", 1.5)
+        .selectAll("circle")
+        .data(roles)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", "#f46")
+        .classed("role", true);
+
+      userNodesSelection
         .append("title")
         .text((data: any) => data.name);
 
-      node
+      roleNodesSelection
+        .append("title")
+        .text((data: any) => data.id);
+
+      userNodesSelection
         .call((simulation: any) => {
-          document.querySelectorAll("circle").forEach((circle) => {
+          document.querySelectorAll("circle.user").forEach((circle) => {
             const text = document.createElement("text");
 
             text.setAttribute("stroke", "#ffffff");
@@ -123,7 +144,46 @@ export default defineComponent({
             text.setAttribute("text-anchor", "middle");
             text.setAttribute("alignment-baseline", "middle");
 
-            text.innerText = circle.querySelector("title")!.innerText;
+            text.innerText = circle.querySelector("title")!.textContent!;
+
+            circle.insertAdjacentElement("afterend", text);
+          });
+
+          function dragstarted(event: any) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+          }
+
+          function dragged(event: any) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+          }
+
+          function dragended(event: any) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+          }
+
+          return d3
+            .drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+        });
+
+        roleNodesSelection
+        .call((simulation: any) => {
+          document.querySelectorAll("circle.role").forEach((circle) => {
+            const text = document.createElement("text");
+
+            text.setAttribute("stroke", "#ffffff");
+            text.setAttribute("stroke-width", "2px");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("alignment-baseline", "middle");
+
+            text.innerText = circle.querySelector("title")!.textContent!;
 
             circle.insertAdjacentElement("afterend", text);
           });
