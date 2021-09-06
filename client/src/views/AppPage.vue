@@ -59,6 +59,81 @@ export default defineComponent({
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
+      const link = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("line")
+        .data(links)
+        .join("line");
+
+      const role = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5)
+        .selectAll("circle")
+        .data(users)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", "#bf2217")
+      
+      role.data(roles)
+        .enter()
+        .append("text")
+        .text(function(d) { return d.id; })
+
+      const node = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5)
+        .selectAll("circle")
+        .data(users)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", "#3c3c3c")
+        .call((simulation: any) => {
+          function dragstarted(event: any) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+          }
+
+          document.querySelectorAll("circle").forEach((circle) => {
+            const text = document.createElement("text");
+
+            text.setAttribute("stroke", "#ffffff");
+            text.setAttribute("stroke-width", "2px");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("alignment-baseline", "middle");
+
+            // text.innerText = circle.querySelector("title")!.innerText;
+
+            circle.insertAdjacentElement("afterend", text);
+          });
+
+          function dragged(event: any) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+          }
+
+          function dragended(event: any) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+          }
+
+          return d3
+            .drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+        });
+
+      node.append("title").text((data: any) => data.name);
+
       const simulation = d3
         .forceSimulation(users)
         .force(
@@ -88,65 +163,6 @@ export default defineComponent({
             text.setAttribute("y", circle.getAttribute("cy")!);
           });
         });
-
-      const link = d3
-        .select("svg")
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("line")
-        .data(links)
-        .join("line");
-
-      const node = d3
-        .select("svg")
-        .append("g")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
-        .selectAll("circle")
-        .data(users)
-        .join("circle")
-        .attr("r", 40)
-        .attr("fill", "#3c3c3c")
-        .call((simulation: any) => {
-          function dragstarted(event: any) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            event.subject.fx = event.subject.x;
-            event.subject.fy = event.subject.y;
-          }
-
-          document.querySelectorAll("circle").forEach((circle) => {
-            const text = document.createElement("text");
-
-            text.setAttribute("stroke", "#ffffff");
-            text.setAttribute("stroke-width", "2px");
-            text.setAttribute("text-anchor", "middle");
-            text.setAttribute("alignment-baseline", "middle");
-
-            text.innerText = circle.querySelector("title")!.innerText;
-
-            circle.insertAdjacentElement("afterend", text);
-          });
-
-          function dragged(event: any) {
-            event.subject.fx = event.x;
-            event.subject.fy = event.y;
-          }
-
-          function dragended(event: any) {
-            if (!event.active) simulation.alphaTarget(0);
-            event.subject.fx = null;
-            event.subject.fy = null;
-          }
-
-          return d3
-            .drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
-        });
-
-      node.append("title").text((data: any) => data.name);
     },
   },
 });
