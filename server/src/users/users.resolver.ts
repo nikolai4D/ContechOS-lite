@@ -19,7 +19,7 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'user' })
   @UseGuards(JwtAuthGuard)
-  async findOne(
+  findOne(
     @CurrentUser() user: User,
     @Args('id', { type: () => String }) id: string,
   ) {
@@ -28,6 +28,12 @@ export class UsersResolver {
     }
 
     return user;
+  }
+
+  @Query(() => [User], { name: 'users' })
+  @UseGuards(JwtAuthGuard)
+  findAll() {
+    return this.usersService.findAll();
   }
 
   @Mutation(() => User)
