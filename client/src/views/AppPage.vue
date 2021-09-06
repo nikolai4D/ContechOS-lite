@@ -135,7 +135,10 @@ export default defineComponent({
 
       userNodesSelection.call((simulation: any) => {
         document.querySelectorAll("circle.user").forEach((circle) => {
-          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
 
           text.setAttribute("fill", "#ffffff");
           text.setAttribute("font-size", "20px");
@@ -173,7 +176,10 @@ export default defineComponent({
 
       roleNodesSelection.call((simulation: any) => {
         document.querySelectorAll("circle.role").forEach((circle) => {
-          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
 
           text.setAttribute("fill", "#ffffff");
           text.setAttribute("font-size", "20px");
