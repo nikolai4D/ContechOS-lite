@@ -63,7 +63,10 @@ export default defineComponent({
         .forceSimulation([...users, ...roles])
         .force(
           "link",
-          d3.forceLink(links).distance(200).id((data: any) => data.id)
+          d3
+            .forceLink(links)
+            .distance(200)
+            .id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
         .force(
@@ -114,7 +117,7 @@ export default defineComponent({
         .attr("fill", "#3c3c3c")
         .classed("user", true);
 
-    const roleNodesSelection = d3
+      const roleNodesSelection = d3
         .select("svg")
         .append("g")
         .attr("stroke", "#f46")
@@ -126,91 +129,85 @@ export default defineComponent({
         .attr("fill", "#f46")
         .classed("role", true);
 
-      userNodesSelection
-        .append("title")
-        .text((data: any) => data.name);
+      userNodesSelection.append("title").text((data: any) => data.name);
 
-      roleNodesSelection
-        .append("title")
-        .text((data: any) => data.id);
+      roleNodesSelection.append("title").text((data: any) => data.id);
 
-      userNodesSelection
-        .call((simulation: any) => {
-          document.querySelectorAll("circle.user").forEach((circle) => {
-            const text = document.createElement("text");
+      userNodesSelection.call((simulation: any) => {
+        document.querySelectorAll("circle.user").forEach((circle) => {
+          const text = document.createElement("text");
 
-            text.setAttribute("stroke", "#ffffff");
-            text.setAttribute("stroke-width", "2px");
-            text.setAttribute("text-anchor", "middle");
-            text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("stroke", "#ffffff");
+          text.setAttribute("stroke-width", "2px");
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("alignment-baseline", "middle");
 
-            text.innerText = circle.querySelector("title")!.textContent!;
+          text.innerText = circle.querySelector("title")!.textContent!;
 
-            circle.insertAdjacentElement("afterend", text);
-          });
-
-          function dragstarted(event: any) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            event.subject.fx = event.subject.x;
-            event.subject.fy = event.subject.y;
-          }
-
-          function dragged(event: any) {
-            event.subject.fx = event.x;
-            event.subject.fy = event.y;
-          }
-
-          function dragended(event: any) {
-            if (!event.active) simulation.alphaTarget(0);
-            event.subject.fx = null;
-            event.subject.fy = null;
-          }
-
-          return d3
-            .drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
+          circle.insertAdjacentElement("afterend", text);
         });
 
-        roleNodesSelection
-        .call((simulation: any) => {
-          document.querySelectorAll("circle.role").forEach((circle) => {
-            const text = document.createElement("text");
+        function dragstarted(event: any) {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        }
 
-            text.setAttribute("stroke", "#ffffff");
-            text.setAttribute("stroke-width", "2px");
-            text.setAttribute("text-anchor", "middle");
-            text.setAttribute("alignment-baseline", "middle");
+        function dragged(event: any) {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        }
 
-            text.innerText = circle.querySelector("title")!.textContent!;
+        function dragended(event: any) {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
 
-            circle.insertAdjacentElement("afterend", text);
-          });
+        return d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+      });
 
-          function dragstarted(event: any) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            event.subject.fx = event.subject.x;
-            event.subject.fy = event.subject.y;
-          }
+      roleNodesSelection.call((simulation: any) => {
+        document.querySelectorAll("circle.role").forEach((circle) => {
+          const text = document.createElement("text");
 
-          function dragged(event: any) {
-            event.subject.fx = event.x;
-            event.subject.fy = event.y;
-          }
+          text.setAttribute("stroke", "#ffffff");
+          text.setAttribute("stroke-width", "2px");
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("alignment-baseline", "middle");
 
-          function dragended(event: any) {
-            if (!event.active) simulation.alphaTarget(0);
-            event.subject.fx = null;
-            event.subject.fy = null;
-          }
+          text.innerText = circle.querySelector("title")!.textContent!;
 
-          return d3
-            .drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
+          circle.insertAdjacentElement("afterend", text);
         });
+
+        function dragstarted(event: any) {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event: any) {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        }
+
+        function dragended(event: any) {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
+
+        return d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+      });
     },
   },
 });
