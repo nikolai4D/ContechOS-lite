@@ -108,25 +108,25 @@ export default defineComponent({
       const userNodesSelection = d3
         .select("svg")
         .append("g")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
         .selectAll("circle")
         .data(users)
         .join("circle")
         .attr("r", 40)
         .attr("fill", "#3c3c3c")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
         .classed("user", true);
 
       const roleNodesSelection = d3
         .select("svg")
         .append("g")
-        .attr("stroke", "#f46")
-        .attr("stroke-width", 1.5)
         .selectAll("circle")
         .data(roles)
         .join("circle")
         .attr("r", 40)
         .attr("fill", "#f46")
+        .attr("stroke", "#3c3c3c")
+        .attr("stroke-width", 1.5)
         .classed("role", true);
 
       userNodesSelection.append("title").text((data: any) => data.name);
