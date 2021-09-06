@@ -5,6 +5,9 @@ on: push
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: [./client, ./server]
     steps:
       - name: checkout
         uses: actions/checkout@master
@@ -12,10 +15,12 @@ jobs:
       - name: setup
         uses: actions/setup-node@master
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: dependencies
         run: npm ci
+        working-directory: ${{ matrix.dir }}
 
       - name: lint
         run: npm run lint
+        working-directory: ${{ matrix.dir }}
