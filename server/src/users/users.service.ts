@@ -113,12 +113,12 @@ export class UsersService {
       `,
     );
 
-    const users = result.records.map(record => ({
+    const users = result.records.map((record) => ({
       ...record.get('u').properties,
       role: record.get('r').properties,
     }));
 
-    return users.map(user => new User(user));
+    return users.map((user) => new User(user));
   }
 
   async existsByEmail(email: string): Promise<boolean> {
