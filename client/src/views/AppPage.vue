@@ -64,7 +64,7 @@ export default defineComponent({
           "link",
           d3
             .forceLink(links)
-            .distance(200) 
+            .distance(200)
             .id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
