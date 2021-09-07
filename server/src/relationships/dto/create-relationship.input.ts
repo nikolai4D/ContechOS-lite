@@ -1,17 +1,17 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { ValidateNested } from 'class-validator';
-import { RelationshipEdge } from '../entities/relationship-edge.entity';
+import { RelationshipEdgeDto } from './relationship-edge.dto';
 
 @InputType()
 export class CreateRelationshipInput {
   @Field()
   name: string;
 
-  @Field()
+  @Field(() => RelationshipEdgeDto)
   @ValidateNested()
-  source: RelationshipEdge;
+  source: RelationshipEdgeDto;
 
-  @Field()
+  @Field(() => RelationshipEdgeDto)
   @ValidateNested()
-  target: RelationshipEdge;
+  target: RelationshipEdgeDto;
 }

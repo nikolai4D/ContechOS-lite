@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Utilities } from 'src/utilities/Utilities';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
-import { UpdateRelationshipInput } from './dto/update-relationship.input';
 import { Relationship } from './entities/relationship.entity';
 
 @Injectable()
@@ -17,23 +17,13 @@ export class RelationshipsService {
 
     const result = await this.neo4jService.write(
       `
-      MERGE (from { id: $from })-[rel:${createRelationshipInput.name}]->(to { id: $to })
-      CREATE (u:User {
-        id: $id,
-        name: $name,
-        email: $email,
-        password: $password,
-        createdAt: datetime(),
-        updatedAt: datetime()
-      })-[:HAS_ROLE { id: $relationshipId }]->(r)
-      RETURN u, r
+      MERGE (from { id: $from })-[rel:${createRelationshipInput.name} {
+        id: $id
+      }]->(to { id: $to })
+      RETURN from, rel, to
       `,
       {
         id: randomUUID(),
-        name: createUserInput.name,
-        email: createUserInput.email,
-        password,
-        relationshipId: randomUUID(),
       },
     );
 
@@ -109,40 +99,6 @@ export class RelationshipsService {
       source: { id: from.id },
       target: { id: to.id },
     });
-  }
-
-  async update(id: string, updateRelationshipInput: UpdateRelationshipInput): Promise<Relationship> {
-    const relationship = await this.findOne(id);
-
-    if (!relationship) {
-      throw new NotFoundException();
-    }
-
-    const result = await this.neo4jService.write(
-      `
-      MATCH (u:User { id: $id })-[:HAS_ROLE]->(r:Role)
-      SET u += {
-        name: $name,
-        email: $email,
-        password: $password,
-        updatedAt: datetime()
-      }
-      RETURN u, r
-      `,
-      {
-        id,
-        name: updateUserInput.name ?? user.name,
-        email: updateUserInput.email ?? user.email,
-        password: updateUserInput.password ?? user.password,
-      },
-    );
-
-    const newUser = {
-      ...result.records.at(0)?.get('u').properties,
-      role: result.records.at(0)?.get('r').properties,
-    };
-
-    return new User(newUser);
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {
