@@ -196,7 +196,6 @@ export default defineComponent({
           
           document.querySelectorAll("line").forEach((line) => {
             const text = line.nextElementSibling!;
-
             text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2 + line.x1.baseVal.value).toString());
             text.setAttribute("y", ((line.y2.baseVal.value - line.y1.baseVal.value) /2 + line.y1.baseVal.value).toString());
           });
@@ -283,15 +282,13 @@ export default defineComponent({
           );
 
           text.setAttribute("fill", "black");
-          text.setAttribute("background-color", "#fff");
-          text.setAttribute("font-size", "8px");
+          text.setAttribute("font-size", "10px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("style", "text-transform: capitalize");
-          text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2).toString());
-          text.setAttribute("y", line.y1.baseVal.value);
-
+          text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2 + line.x1.baseVal.value).toString());
+          text.setAttribute("y", ((line.y2.baseVal.value - line.y1.baseVal.value) /2 + line.y1.baseVal.value).toString());
+          
           text.textContent = "has role";
 
           line.insertAdjacentElement("afterend", text);
