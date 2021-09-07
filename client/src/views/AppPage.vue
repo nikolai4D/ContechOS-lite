@@ -1,5 +1,5 @@
 <template>
-  <svg></svg>
+  <svg @contextmenu="rightClick($event)"></svg>
 </template>
 
 <style lang="scss" scoped>
@@ -24,6 +24,17 @@ export default defineComponent({
     this.getAllUsers();
   },
   methods: {
+    rightClick(e:any) {
+      e.preventDefault()
+      var clickedOn = e.path[0] // get the element you directly clicked on
+      if(clickedOn.tagName == "circle") { // if you click on a node
+        console.log("right clicked on a node of class " + clickedOn.className.baseVal)
+      } else if(clickedOn.tagName == "line") { // if you click on a relationship
+        console.log("right clicked on a relationship")
+      } else if(clickedOn.tagName == "svg") { // if you clicked on the background
+        console.log("right clicked on the background")
+      }
+    },
     async getAllUsers() {
       const response = await fetch("http://localhost:3000/graphql", {
         method: "POST",
@@ -50,6 +61,7 @@ export default defineComponent({
         return {
           source: user,
           target: roles.find((role: any) => role.id === user.role.id),
+          name: "has role",
         };
       });
 
