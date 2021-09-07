@@ -9,7 +9,10 @@ export class RelationshipsResolver {
   constructor(private readonly relationshipsService: RelationshipsService) {}
 
   @Mutation(() => Relationship)
-  createRelationship(@Args('createRelationshipInput') createRelationshipInput: CreateRelationshipInput) {
+  createRelationship(
+    @Args('createRelationshipInput')
+    createRelationshipInput: CreateRelationshipInput,
+  ) {
     return this.relationshipsService.create(createRelationshipInput);
   }
 
@@ -24,8 +27,14 @@ export class RelationshipsResolver {
   }
 
   @Mutation(() => Relationship)
-  updateRelationship(@Args('updateRelationshipInput') updateRelationshipInput: UpdateRelationshipInput) {
-    return this.relationshipsService.update(updateRelationshipInput.id, updateRelationshipInput);
+  updateRelationship(
+    @Args('updateRelationshipInput')
+    updateRelationshipInput: UpdateRelationshipInput,
+  ) {
+    return this.relationshipsService.update(
+      updateRelationshipInput.id,
+      updateRelationshipInput,
+    );
   }
 
   @Mutation(() => Relationship)

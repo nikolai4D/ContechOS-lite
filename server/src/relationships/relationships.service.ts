@@ -14,7 +14,10 @@ export class RelationshipsService {
   }
 
   async findAll(from: string, to: string) {
-    if (!Utilities.isValidNeo4jLabel(from) || !Utilities.isValidNeo4jLabel(to)) {
+    if (
+      !Utilities.isValidNeo4jLabel(from) ||
+      !Utilities.isValidNeo4jLabel(to)
+    ) {
       throw new BadRequestException();
     }
 
@@ -22,20 +25,22 @@ export class RelationshipsService {
       `
       MATCH (from:${from})-[rel]->(to:${to})
       RETURN from, rel, to
-      `
+      `,
     );
 
-    return result.records.map(record => {
-      const { properties: from } = record.get("from");
-      const { properties: rel, type: name } = record.get("rel");
-      const { properties: to } = record.get("to");
+    return result.records.map((record) => {
+      const { properties: from } = record.get('from');
+      const { properties: rel, type: name } = record.get('rel');
+      const { properties: to } = record.get('to');
 
-      console.log(new Relationship({
-        id: rel.id,
-        name,
-        source: { id: from.id },
-        target: { id: to.id },
-      }));
+      console.log(
+        new Relationship({
+          id: rel.id,
+          name,
+          source: { id: from.id },
+          target: { id: to.id },
+        }),
+      );
 
       return new Relationship({
         id: rel.id,
