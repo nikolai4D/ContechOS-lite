@@ -1,11 +1,10 @@
 <template>
   <div>
     <svg @contextmenu="rightClick($event)"></svg>
-    <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a>
-    </div>
+
+    <ContextMenu :menuId = "'bg-context-menu'" :options="[{name:'Add Node', action: addNode}, {name:'Create Relation', action: createRel}]"/>
+    <ContextMenu :menuId = "'node-context-menu'" :options="[{name:'Edit Node', action: editNode}, {name:'Create Relation to Existing Node', action: createRelToExistingNode},{name:'Create Relation to New Node', action: createRelToNewNode},{name:'Delete Node', action: deleteNode}]"/>
+    <ContextMenu :menuId = "'rel-context-menu'" :options="[{name:'Edit Relationship', action: editRel}, {name:'Delete Relation', action: deleteRel}]"/>
 
   </div>
 </template>
@@ -21,6 +20,8 @@ svg {
 import { defineComponent } from "vue";
 import { uniqBy } from "lodash";
 import * as d3 from "d3";
+import ContextMenu from "../components/ContextMenu.vue"
+
 export default defineComponent({
   name: "AppPage",
   data() {
@@ -31,33 +32,66 @@ export default defineComponent({
   created() {
     this.getAllUsers();
   },
+  components: {
+    ContextMenu
+  },
   methods: {
+    addNode() {
+      console.log("adding a node")
+    },
+    createRel() {
+      console.log("creating a relationship")
+    },
+    editNode() {
+      console.log("editNode")
+    },
+    createRelToExistingNode() {
+      console.log("createRelToExistingNode")
+    },
+    createRelToNewNode() {
+      console.log("createRelToNewNode")
+    },
+    deleteNode() {
+      console.log("deleteNode")
+    },
+    editRel() {
+      console.log("editRel")
+    },
+    deleteRel() {
+      console.log("deleteRel")
+    },
     rightClick(e:any) {
       e.preventDefault()
+
+      // first let's remove all opened menus 
+      document.querySelectorAll(".dropdown-menu").forEach((el) => {
+        el.classList.remove("show")
+        el.style.display = "none"
+      })
+
+      // select menu to display  based on where you clicked
       var clickedOn = e.path[0] // get the element you directly clicked on
+      var contMenu = null
       if(clickedOn.tagName == "circle") { // if you click on a node
         console.log("right clicked on a node of class " + clickedOn.className.baseVal)
+        contMenu = document.getElementById("node-context-menu")! 
       } else if(clickedOn.tagName == "line") { // if you click on a relationship
         console.log("right clicked on a relationship")
+        contMenu = document.getElementById("rel-context-menu")! 
       } else if(clickedOn.tagName == "svg") { // if you clicked on the background
         console.log("right clicked on the background")
-        var contMenu = document.getElementById("context-menu")!
-        contMenu.classList.add("show")
+        contMenu = document.getElementById("bg-context-menu")!        
+      }
+
+      // display menu
+      contMenu.classList.add("show")
         contMenu.style.top = e.y + "px"
         contMenu.style.left = e.x + "px"
         contMenu.style.display = "block"
-        document.getElementsByTagName("svg")[0].addEventListener("click", () => { // hide after left click on svg
+        document.addEventListener("click", () => { // hide after left click on svg
           contMenu.classList.remove("show")
           contMenu.style.display = "none"
         })
-        document.querySelectorAll(".dropdown-item").forEach((el) => {
-          el.addEventListener("click", () => { // hide after left click on option
-            contMenu.classList.remove("show")
-            contMenu.style.display = "none"
-          })
-        })
-        
-      }
     },
     async getAllUsers() {
       const response = await fetch("http://localhost:3000/graphql", {
