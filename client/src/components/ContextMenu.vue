@@ -1,7 +1,14 @@
 <template>
-    <div class="dropdown-menu dropdown-menu-sm" :id="menuId">
-      <a class="dropdown-item" href="#" v-for="(option, id) in options" :key="id" @click="option.action">{{option.name}}</a>
-    </div>
+  <div class="dropdown-menu dropdown-menu-sm" :id="menuId">
+    <a
+      class="dropdown-item"
+      href="#"
+      v-for="(option, id) in options"
+      :key="id"
+      @click="option.action"
+      >{{ option.name }}</a
+    >
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,13 +18,13 @@ export default defineComponent({
   name: "ContextMenu",
   props: {
     options: Array,
-    menuId: String
+    menuId: String,
   },
 });
 </script>
 
 <style>
 .dropdown-item:active {
-    color: white;
+  color: white;
 }
 </style>
