@@ -150,7 +150,6 @@ export default defineComponent({
         });
 
         return drag(simulation);
-      
       }
 
       roleNodesSelection.call(dragRoles(simulation));
