@@ -4,10 +4,7 @@
 
     <ContextMenu
       :menuId="'bg-context-menu'"
-      :options="[
-        { name: 'Add Node', action: addNode },
-        { name: 'Create Relation', action: createRel },
-      ]"
+      :options="[{ name: 'Add Node', action: addNode }]"
     />
     <ContextMenu
       :menuId="'node-context-menu'"
@@ -24,7 +21,7 @@
     <ContextMenu
       :menuId="'rel-context-menu'"
       :options="[
-        { name: 'Edit Relationship', action: editRel },
+        { name: 'Edit Relation', action: editRel },
         { name: 'Delete Relation', action: deleteRel },
       ]"
     />
