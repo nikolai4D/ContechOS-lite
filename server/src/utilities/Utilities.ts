@@ -33,4 +33,8 @@ export class Utilities {
   public static isValidNeo4jLabel(label: string): boolean {
     return /^([A-Z][a-z]+)+$/.test(label);
   }
+
+  public static isValidNeo4jRelationshipType(type: string): boolean {
+    return /^([A-Z]+(\_){0,1})+([A-Z])$/.test(type);
+  }
 }
