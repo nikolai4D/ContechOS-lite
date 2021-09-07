@@ -29,4 +29,9 @@ export class Utilities {
         .padStart(2, '0')}.${nanosecond.div(1000).toNumber().toString(10)}Z`,
     );
   }
+
+  public static isValidNeo4jLabel(label: string): boolean {
+    // TODO
+    return true;
+  }
 }
