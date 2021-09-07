@@ -130,7 +130,9 @@ export default defineComponent({
       userNodesSelection.append("title").text((data: any) => data.name);
       roleNodesSelection.append("title").text((data: any) => data.id);
 
-      userNodesSelection.call((simulation: any) => {
+      userNodesSelection.call(dragUsers(simulation));
+
+      function dragUsers(simulation: any): any {
         document.querySelectorAll("circle.user").forEach((circle) => {
           const text = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -147,31 +149,13 @@ export default defineComponent({
           circle.insertAdjacentElement("afterend", text);
         });
 
-        function dragstarted(event: any) {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        }
+        return drag(simulation);
+      
+      }
 
-        function dragged(event: any) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        }
+      roleNodesSelection.call(dragRoles(simulation));
 
-        function dragended(event: any) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }
-
-        return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
-      });
-
-      roleNodesSelection.call((simulation: any) => {
+      function dragRoles(simulation: any): any {
         document.querySelectorAll("circle.role").forEach((circle) => {
           const text = document.createElementNS(
             "http://www.w3.org/2000/svg",
@@ -188,6 +172,10 @@ export default defineComponent({
           circle.insertAdjacentElement("afterend", text);
         });
 
+        return drag(simulation);
+      }
+
+      function drag(simulation: any) {
         function dragstarted(event: any) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
@@ -210,7 +198,7 @@ export default defineComponent({
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended);
-      });
+      }
     },
   },
 });
