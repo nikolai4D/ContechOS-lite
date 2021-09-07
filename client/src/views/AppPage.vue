@@ -1,5 +1,13 @@
 <template>
-  <svg @contextmenu="rightClick($event)"></svg>
+  <div>
+    <svg @contextmenu="rightClick($event)"></svg>
+    <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+      <a class="dropdown-item" href="#">Action</a>
+      <a class="dropdown-item" href="#">Another action</a>
+      <a class="dropdown-item" href="#">Something else here</a>
+    </div>
+
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -33,6 +41,22 @@ export default defineComponent({
         console.log("right clicked on a relationship")
       } else if(clickedOn.tagName == "svg") { // if you clicked on the background
         console.log("right clicked on the background")
+        var contMenu = document.getElementById("context-menu")!
+        contMenu.classList.add("show")
+        contMenu.style.top = e.y + "px"
+        contMenu.style.left = e.x + "px"
+        contMenu.style.display = "block"
+        document.getElementsByTagName("svg")[0].addEventListener("click", () => { // hide after left click on svg
+          contMenu.classList.remove("show")
+          contMenu.style.display = "none"
+        })
+        document.querySelectorAll(".dropdown-item").forEach((el) => {
+          el.addEventListener("click", () => { // hide after left click on option
+            contMenu.classList.remove("show")
+            contMenu.style.display = "none"
+          })
+        })
+        
       }
     },
     async getAllUsers() {
@@ -155,6 +179,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("style", "text-transform: capitalize");
 
           text.textContent = circle.querySelector("title")!.textContent!;
 
@@ -178,6 +203,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("pointer-events", "none");
+          text.setAttribute("style", "text-transform: capitalize");
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
