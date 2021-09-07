@@ -58,9 +58,6 @@ export default defineComponent({
     addNode() {
       console.log("adding a node");
     },
-    createRel() {
-      console.log("creating a relationship");
-    },
     editNode() {
       console.log("editNode");
     },
@@ -178,6 +175,10 @@ export default defineComponent({
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
+          linksArrow
+            .attr("refX", (data: any) => data.target.x)
+            .attr("refY", (data: any) => data.target.y);
+
           userNodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
@@ -192,6 +193,25 @@ export default defineComponent({
             text.setAttribute("x", circle.getAttribute("cx")!);
             text.setAttribute("y", circle.getAttribute("cy")!);
           });
+
+          document.querySelectorAll("line").forEach((line) => {
+            const text = line.nextElementSibling!;
+
+            text.setAttribute(
+              "x",
+              (
+                (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
+                line.x1.baseVal.value
+              ).toString()
+            );
+            text.setAttribute(
+              "y",
+              (
+                (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
+                line.y1.baseVal.value
+              ).toString()
+            );
+          });
         });
       const linksSelection = d3
         .select("svg")
@@ -200,7 +220,26 @@ export default defineComponent({
         .attr("stroke-opacity", 0.6)
         .selectAll("line")
         .data(links)
-        .join("line");
+        .join("line")
+        .attr("marker-end", "url(#arrowhead)");
+
+      const linksArrow = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("markerWidth", "10")
+        .attr("markerHeight", "7")
+        .attr("orient", "auto")
+        .attr("refX", (data: any) => -data.target.x)
+        .attr("refY", (data: any) => -data.target.y)
+        .attr("id", "arrowhead")
+        .append("polygon")
+        .attr("points", "0 0, 10 3.5, 0 7")
+        .attr("fill", "black");
 
       const userNodesSelection = d3
         .select("svg")
@@ -228,6 +267,7 @@ export default defineComponent({
 
       userNodesSelection.append("title").text((data: any) => data.name);
       roleNodesSelection.append("title").text((data: any) => data.id);
+      linksSelection.append("title").text((data: any) => data.name);
       userNodesSelection.call(dragUsers(simulation));
 
       function dragUsers(simulation: any): any {
@@ -247,6 +287,29 @@ export default defineComponent({
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
+        });
+        document.querySelectorAll("line").forEach((line: any) => {
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+
+          text.setAttribute("fill", "black");
+          text.setAttribute("background-color", "#fff");
+          text.setAttribute("font-size", "8px");
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("pointer-events", "none");
+          text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("style", "text-transform: capitalize");
+          text.setAttribute(
+            "x",
+            ((line.x2.baseVal.value - line.x1.baseVal.value) / 2).toString()
+          );
+          text.setAttribute("y", line.y1.baseVal.value);
+
+          text.textContent = "has role";
+
+          line.insertAdjacentElement("afterend", text);
         });
 
         return drag(simulation);
