@@ -5,6 +5,7 @@ import { Neo4jModule } from 'nest-neo4j';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { GraphQLModule } from '@nestjs/graphql';
+import { RelationshipsModule } from './relationships/relationships.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { GraphQLModule } from '@nestjs/graphql';
     Neo4jModule.fromEnv(),
     UsersModule,
     AuthModule,
+    RelationshipsModule,
   ],
 })
 export class AppModule {}
