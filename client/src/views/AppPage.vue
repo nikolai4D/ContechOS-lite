@@ -6,7 +6,6 @@
       <a class="dropdown-item" href="#">Another action</a>
       <a class="dropdown-item" href="#">Something else here</a>
     </div>
-
   </div>
 </template>
 
@@ -32,31 +31,39 @@ export default defineComponent({
     this.getAllUsers();
   },
   methods: {
-    rightClick(e:any) {
-      e.preventDefault()
-      var clickedOn = e.path[0] // get the element you directly clicked on
-      if(clickedOn.tagName == "circle") { // if you click on a node
-        console.log("right clicked on a node of class " + clickedOn.className.baseVal)
-      } else if(clickedOn.tagName == "line") { // if you click on a relationship
-        console.log("right clicked on a relationship")
-      } else if(clickedOn.tagName == "svg") { // if you clicked on the background
-        console.log("right clicked on the background")
-        var contMenu = document.getElementById("context-menu")!
-        contMenu.classList.add("show")
-        contMenu.style.top = e.y + "px"
-        contMenu.style.left = e.x + "px"
-        contMenu.style.display = "block"
-        document.getElementsByTagName("svg")[0].addEventListener("click", () => { // hide after left click on svg
-          contMenu.classList.remove("show")
-          contMenu.style.display = "none"
-        })
+    rightClick(e: any) {
+      e.preventDefault();
+      var clickedOn = e.path[0]; // get the element you directly clicked on
+      if (clickedOn.tagName == "circle") {
+        // if you click on a node
+        console.log(
+          "right clicked on a node of class " + clickedOn.className.baseVal
+        );
+      } else if (clickedOn.tagName == "line") {
+        // if you click on a relationship
+        console.log("right clicked on a relationship");
+      } else if (clickedOn.tagName == "svg") {
+        // if you clicked on the background
+        console.log("right clicked on the background");
+        var contMenu = document.getElementById("context-menu")!;
+        contMenu.classList.add("show");
+        contMenu.style.top = e.y + "px";
+        contMenu.style.left = e.x + "px";
+        contMenu.style.display = "block";
+        document
+          .getElementsByTagName("svg")[0]
+          .addEventListener("click", () => {
+            // hide after left click on svg
+            contMenu.classList.remove("show");
+            contMenu.style.display = "none";
+          });
         document.querySelectorAll(".dropdown-item").forEach((el) => {
-          el.addEventListener("click", () => { // hide after left click on option
-            contMenu.classList.remove("show")
-            contMenu.style.display = "none"
-          })
-        })
-        
+          el.addEventListener("click", () => {
+            // hide after left click on option
+            contMenu.classList.remove("show");
+            contMenu.style.display = "none";
+          });
+        });
       }
     },
     async getAllUsers() {
