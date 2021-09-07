@@ -29,6 +29,7 @@ export default defineComponent({
 
 <style>
 .dropdown-item:active {
-  color: white;
+  color: white !important;
+  background-color: #3472cf !important;
 }
 </style>
