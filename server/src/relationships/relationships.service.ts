@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
@@ -10,7 +14,9 @@ import { Relationship } from './entities/relationship.entity';
 export class RelationshipsService {
   constructor(private readonly neo4jService: Neo4jService) {}
 
-  async create(createRelationshipInput: CreateRelationshipInput): Promise<Relationship> {
+  async create(
+    createRelationshipInput: CreateRelationshipInput,
+  ): Promise<Relationship> {
     if (!Utilities.isValidNeo4jRelationshipType(createRelationshipInput.name)) {
       throw new BadRequestException();
     }
@@ -27,7 +33,7 @@ export class RelationshipsService {
       },
     );
 
-    const record =  result.records.at(0);
+    const record = result.records.at(0);
 
     if (!record) {
       throw new InternalServerErrorException();

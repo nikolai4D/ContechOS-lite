@@ -1,5 +1,11 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString, IsUUID } from "class-validator";
+import { Field, InputType } from '@nestjs/graphql';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 @InputType()
 export class RelationshipEdgeDto {
@@ -11,5 +17,5 @@ export class RelationshipEdgeDto {
   @Field(() => [String])
   @IsArray()
   @ArrayNotEmpty()
-  labels: string[]
+  labels: string[];
 }
