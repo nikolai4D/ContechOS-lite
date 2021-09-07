@@ -1,10 +1,19 @@
-import { CreateRelationshipInput } from './create-relationship.input';
-import { InputType, Field, ID, PartialType } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsOptional, ValidateNested } from 'class-validator';
+import { RelationshipEdge } from '../entities/relationship-edge.entity';
 
 @InputType()
-export class UpdateRelationshipInput extends PartialType(
-  CreateRelationshipInput,
-) {
-  @Field(() => ID)
-  id: string;
+export class UpdateRelationshipInput {
+  @Field({ nullable: true })
+  name?: string;
+
+  @Field({ nullable: true })
+  @ValidateNested()
+  @IsOptional()
+  source?: RelationshipEdge;
+
+  @Field({ nullable: true })
+  @ValidateNested()
+  @IsOptional()
+  target?: RelationshipEdge;
 }

@@ -75,6 +75,20 @@ export class RelationshipsService {
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {
-    return `This action removes a #${id} relationship`;
+    let success = true;
+
+    try {
+      await this.neo4jService.write(
+        `
+        MATCH ()-[rel { id: $id }]->()
+        DELETE rel
+        `,
+        { id },
+      );
+    } catch {
+      success = false;
+    }
+
+    return new GraphQLDeleteResult({ success });
   }
 }

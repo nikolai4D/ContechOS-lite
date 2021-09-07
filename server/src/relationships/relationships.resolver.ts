@@ -31,11 +31,12 @@ export class RelationshipsResolver {
 
   @Mutation(() => Relationship)
   updateRelationship(
+    @Args('id', { type: () => String }) id: string,
     @Args('updateRelationshipInput')
     updateRelationshipInput: UpdateRelationshipInput,
   ) {
     return this.relationshipsService.update(
-      updateRelationshipInput.id,
+      id,
       updateRelationshipInput,
     );
   }
