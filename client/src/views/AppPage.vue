@@ -38,20 +38,26 @@ export default defineComponent({
             "{\n  users {\n    id\n    name\n    email\n    role {\n    id\n    }  }\n}\n",
         }),
       });
+
       const { users } = (await response.json()).data;
+
       const roles = uniqBy(
         users.map((user: any) => user.role),
         "id"
       );
+
       const links = users.map((user: any) => {
         return {
           source: user,
           target: roles.find((role: any) => role.id === user.role.id),
         };
       });
+
       this.users = users;
+
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+
       const simulation = d3
         .forceSimulation([...users, ...roles])
         .force(
@@ -72,14 +78,18 @@ export default defineComponent({
             .attr("y1", (data: any) => data.source.y)
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
+
           userNodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
+
           roleNodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
+
           document.querySelectorAll("circle").forEach((circle) => {
             const text = circle.nextElementSibling!;
+
             text.setAttribute("x", circle.getAttribute("cx")!);
             text.setAttribute("y", circle.getAttribute("cy")!);
           });
@@ -92,28 +102,31 @@ export default defineComponent({
         .selectAll("line")
         .data(links)
         .join("line");
+
       const userNodesSelection = d3
         .select("svg")
         .append("g")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
         .selectAll("circle")
         .data(users)
         .join("circle")
         .attr("r", 40)
         .attr("fill", "#3c3c3c")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
         .classed("user", true);
+
       const roleNodesSelection = d3
         .select("svg")
         .append("g")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1.5)
         .selectAll("circle")
         .data(roles)
         .join("circle")
         .attr("r", 40)
-        .attr("fill", "#bf2217")
+        .attr("fill", "#f02e51")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.5)
         .classed("role", true);
+
       userNodesSelection.append("title").text((data: any) => data.name);
       roleNodesSelection.append("title").text((data: any) => data.id);
       userNodesSelection.call(dragUsers(simulation));
@@ -128,37 +141,15 @@ export default defineComponent({
           text.setAttribute("fill", "#ffffff");
           text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
-          text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("pointer-events", "none");
+          text.setAttribute("alignment-baseline", "middle");
 
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
         });
 
-        function dragstarted(event: any) {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        }
-
-        function dragged(event: any) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        }
-
-        function dragended(event: any) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }
-
-        return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
-      
+        return drag(simulation);
       }
 
       roleNodesSelection.call(dragRoles(simulation));
@@ -171,16 +162,19 @@ export default defineComponent({
           );
 
           text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "20px");
+          text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("pointer-events", "none");
-
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
         });
 
+        return drag(simulation);
+      }
+
+      function drag(simulation: any) {
         function dragstarted(event: any) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
@@ -204,44 +198,7 @@ export default defineComponent({
           .on("drag", dragged)
           .on("end", dragended);
       }
-      roleNodesSelection.call((simulation: any) => {
-        document.querySelectorAll("circle.role").forEach((circle) => {
-          const text = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text"
-          );
-          text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "20px");
-          text.setAttribute("text-anchor", "middle");
-          text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("pointer-events", "none");
-          text.textContent = circle.querySelector("title")!.textContent!;
-          circle.insertAdjacentElement("afterend", text);
-        });
-        function dragstarted(event: any) {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        }
-        function dragged(event: any) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        }
-        function dragended(event: any) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }
-        return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
-      });
     },
   },
 });
 </script>
-
-<style >
-</style>
