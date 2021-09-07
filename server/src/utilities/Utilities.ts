@@ -31,7 +31,6 @@ export class Utilities {
   }
 
   public static isValidNeo4jLabel(label: string): boolean {
-    // TODO
-    return true;
+    return /^([A-Z][a-z]+)+$/.test(label);
   }
 }
