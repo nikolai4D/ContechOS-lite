@@ -118,7 +118,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
     commit(MutationTypes.SET_USER, undefined);
   },
-  [ActionTypes.FETCH_CURRENT_USER]({ commit }, payload) {
+  [ActionTypes.FETCH_CURRENT_USER]({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
       provideApolloClient(apolloClient);
 
@@ -137,6 +137,10 @@ export const actions: ActionTree<State, RootState> & Actions = {
       );
 
       onResult((result) => {
+        if (!result.data) {
+          return dispatch(ActionTypes.SIGN_OUT);
+        }
+
         commit(MutationTypes.SET_USER, result.data.currentUser);
 
         resolve();
@@ -145,6 +149,8 @@ export const actions: ActionTree<State, RootState> & Actions = {
       onError((result) => {
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
+
+        dispatch(ActionTypes.SIGN_OUT);
 
         reject();
       });
