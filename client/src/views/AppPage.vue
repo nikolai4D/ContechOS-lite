@@ -4,9 +4,7 @@
 
     <ContextMenu
       :menuId="'bg-context-menu'"
-      :options="[
-        { name: 'Add Node', action: addNode },
-      ]"
+      :options="[{ name: 'Add Node', action: addNode }]"
     />
     <ContextMenu
       :menuId="'node-context-menu'"
