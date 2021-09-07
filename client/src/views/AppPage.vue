@@ -58,7 +58,7 @@ export default defineComponent({
           "link",
           d3
             .forceLink(links)
-            .distance(200)
+            .distance(200) 
             .id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
@@ -116,39 +116,94 @@ export default defineComponent({
         .classed("role", true);
       userNodesSelection.append("title").text((data: any) => data.name);
       roleNodesSelection.append("title").text((data: any) => data.id);
-      userNodesSelection.call((simulation: any) => {
+      userNodesSelection.call(dragUsers(simulation));
+
+      function dragUsers(simulation: any): any {
         document.querySelectorAll("circle.user").forEach((circle) => {
           const text = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "text"
           );
+
           text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "20px");
+          text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("pointer-events", "none");
+
           text.textContent = circle.querySelector("title")!.textContent!;
+
           circle.insertAdjacentElement("afterend", text);
         });
+
         function dragstarted(event: any) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
         }
+
         function dragged(event: any) {
           event.subject.fx = event.x;
           event.subject.fy = event.y;
         }
+
         function dragended(event: any) {
           if (!event.active) simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
         }
+
         return d3
           .drag()
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended);
-      });
+      
+      }
+
+      roleNodesSelection.call(dragRoles(simulation));
+
+      function dragRoles(simulation: any): any {
+        document.querySelectorAll("circle.role").forEach((circle) => {
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+
+          text.setAttribute("fill", "#ffffff");
+          text.setAttribute("font-size", "20px");
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("pointer-events", "none");
+
+          text.textContent = circle.querySelector("title")!.textContent!;
+
+          circle.insertAdjacentElement("afterend", text);
+        });
+
+        function dragstarted(event: any) {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event: any) {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        }
+
+        function dragended(event: any) {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
+
+        return d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+      }
       roleNodesSelection.call((simulation: any) => {
         document.querySelectorAll("circle.role").forEach((circle) => {
           const text = document.createElementNS(
@@ -159,6 +214,7 @@ export default defineComponent({
           text.setAttribute("font-size", "20px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
+          text.setAttribute("pointer-events", "none");
           text.textContent = circle.querySelector("title")!.textContent!;
           circle.insertAdjacentElement("afterend", text);
         });
@@ -186,3 +242,6 @@ export default defineComponent({
   },
 });
 </script>
+
+<style >
+</style>
