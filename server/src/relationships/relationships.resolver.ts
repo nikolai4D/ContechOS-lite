@@ -3,8 +3,11 @@ import { RelationshipsService } from './relationships.service';
 import { Relationship } from './entities/relationship.entity';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
 import { UpdateRelationshipInput } from './dto/update-relationship.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @Resolver(() => Relationship)
+@UseGuards(JwtAuthGuard)
 export class RelationshipsResolver {
   constructor(private readonly relationshipsService: RelationshipsService) {}
 
@@ -22,7 +25,7 @@ export class RelationshipsResolver {
   }
 
   @Query(() => Relationship, { name: 'relationship' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.relationshipsService.findOne(id);
   }
 
@@ -38,7 +41,7 @@ export class RelationshipsResolver {
   }
 
   @Mutation(() => Relationship)
-  removeRelationship(@Args('id', { type: () => Int }) id: number) {
+  removeRelationship(@Args('id', { type: () => String }) id: string) {
     return this.relationshipsService.remove(id);
   }
 }
