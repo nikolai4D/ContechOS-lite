@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Utilities } from 'src/utilities/Utilities';
@@ -10,8 +10,49 @@ import { Relationship } from './entities/relationship.entity';
 export class RelationshipsService {
   constructor(private readonly neo4jService: Neo4jService) {}
 
-  create(createRelationshipInput: CreateRelationshipInput): Promise<Relationship> {
-    return 'This action adds a new relationship';
+  async create(createRelationshipInput: CreateRelationshipInput): Promise<Relationship> {
+    if (!Utilities.isValidNeo4jRelationshipType(createRelationshipInput.name)) {
+      throw new BadRequestException();
+    }
+
+    const result = await this.neo4jService.write(
+      `
+      MERGE (from { id: $from })-[rel:${createRelationshipInput.name}]->(to { id: $to })
+      CREATE (u:User {
+        id: $id,
+        name: $name,
+        email: $email,
+        password: $password,
+        createdAt: datetime(),
+        updatedAt: datetime()
+      })-[:HAS_ROLE { id: $relationshipId }]->(r)
+      RETURN u, r
+      `,
+      {
+        id: randomUUID(),
+        name: createUserInput.name,
+        email: createUserInput.email,
+        password,
+        relationshipId: randomUUID(),
+      },
+    );
+
+    const record =  result.records.at(0);
+
+    if (!record) {
+      throw new InternalServerErrorException();
+    }
+
+    const { properties: from } = record.get('from');
+    const { properties: rel, type: name } = record.get('rel');
+    const { properties: to } = record.get('to');
+
+    return new Relationship({
+      id: rel.id,
+      name,
+      source: { id: from.id },
+      target: { id: to.id },
+    });
   }
 
   async findAll(from: string, to: string): Promise<Relationship[]> {
@@ -71,7 +112,37 @@ export class RelationshipsService {
   }
 
   async update(id: string, updateRelationshipInput: UpdateRelationshipInput): Promise<Relationship> {
-    return `This action updates a #${id} relationship`;
+    const relationship = await this.findOne(id);
+
+    if (!relationship) {
+      throw new NotFoundException();
+    }
+
+    const result = await this.neo4jService.write(
+      `
+      MATCH (u:User { id: $id })-[:HAS_ROLE]->(r:Role)
+      SET u += {
+        name: $name,
+        email: $email,
+        password: $password,
+        updatedAt: datetime()
+      }
+      RETURN u, r
+      `,
+      {
+        id,
+        name: updateUserInput.name ?? user.name,
+        email: updateUserInput.email ?? user.email,
+        password: updateUserInput.password ?? user.password,
+      },
+    );
+
+    const newUser = {
+      ...result.records.at(0)?.get('u').properties,
+      role: result.records.at(0)?.get('r').properties,
+    };
+
+    return new User(newUser);
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {

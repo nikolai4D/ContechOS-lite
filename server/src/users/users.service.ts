@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
@@ -55,10 +54,6 @@ export class UsersService {
       ...result.records.at(0)?.get('u').properties,
       role: result.records.at(0)?.get('r').properties,
     };
-
-    if (!user) {
-      throw new InternalServerErrorException();
-    }
 
     return new User(user);
   }
@@ -164,10 +159,6 @@ export class UsersService {
       ...result.records.at(0)?.get('u').properties,
       role: result.records.at(0)?.get('r').properties,
     };
-
-    if (!newUser) {
-      throw new InternalServerErrorException();
-    }
 
     return new User(newUser);
   }
