@@ -1,5 +1,9 @@
 <template>
-  <div class="dropdown-menu dropdown-menu-sm" :id="menuId" oncontextmenu="return false">
+  <div
+    class="dropdown-menu dropdown-menu-sm"
+    :id="menuId"
+    oncontextmenu="return false"
+  >
     <a
       class="dropdown-item"
       href="#"
