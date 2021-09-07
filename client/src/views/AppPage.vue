@@ -174,7 +174,7 @@ export default defineComponent({
             .attr("y1", (data: any) => data.source.y)
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
-          
+
           linksArrow
             .attr("refX", (data: any) => data.target.x)
             .attr("refY", (data: any) => data.target.y);
@@ -193,12 +193,24 @@ export default defineComponent({
             text.setAttribute("x", circle.getAttribute("cx")!);
             text.setAttribute("y", circle.getAttribute("cy")!);
           });
-          
+
           document.querySelectorAll("line").forEach((line) => {
             const text = line.nextElementSibling!;
 
-            text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2 + line.x1.baseVal.value).toString());
-            text.setAttribute("y", ((line.y2.baseVal.value - line.y1.baseVal.value) /2 + line.y1.baseVal.value).toString());
+            text.setAttribute(
+              "x",
+              (
+                (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
+                line.x1.baseVal.value
+              ).toString()
+            );
+            text.setAttribute(
+              "y",
+              (
+                (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
+                line.y1.baseVal.value
+              ).toString()
+            );
           });
         });
       const linksSelection = d3
@@ -210,7 +222,7 @@ export default defineComponent({
         .data(links)
         .join("line")
         .attr("marker-end", "url(#arrowhead)");
-      
+
       const linksArrow = d3
         .select("svg")
         .append("g")
@@ -226,8 +238,8 @@ export default defineComponent({
         .attr("refY", (data: any) => -data.target.y)
         .attr("id", "arrowhead")
         .append("polygon")
-        .attr("points", "0 0, 10 3.5, 0 7" )
-        .attr("fill", "black")
+        .attr("points", "0 0, 10 3.5, 0 7")
+        .attr("fill", "black");
 
       const userNodesSelection = d3
         .select("svg")
@@ -276,7 +288,7 @@ export default defineComponent({
 
           circle.insertAdjacentElement("afterend", text);
         });
-        document.querySelectorAll("line").forEach((line:any) => {
+        document.querySelectorAll("line").forEach((line: any) => {
           const text = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "text"
@@ -289,7 +301,10 @@ export default defineComponent({
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("style", "text-transform: capitalize");
-          text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2).toString());
+          text.setAttribute(
+            "x",
+            ((line.x2.baseVal.value - line.x1.baseVal.value) / 2).toString()
+          );
           text.setAttribute("y", line.y1.baseVal.value);
 
           text.textContent = "has role";
