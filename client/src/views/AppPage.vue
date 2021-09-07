@@ -140,7 +140,7 @@ export default defineComponent({
           );
 
           text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "20px");
+          text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
 
@@ -163,7 +163,7 @@ export default defineComponent({
           );
 
           text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "20px");
+          text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
 
