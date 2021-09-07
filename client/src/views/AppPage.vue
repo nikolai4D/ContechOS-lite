@@ -122,14 +122,13 @@ export default defineComponent({
         .data(roles)
         .join("circle")
         .attr("r", 40)
-        .attr("fill", "#f46")
-        .attr("stroke", "#3c3c3c")
+        .attr("fill", "#f02e51")
+        .attr("stroke", "#fff")
         .attr("stroke-width", 1.5)
         .classed("role", true);
 
       userNodesSelection.append("title").text((data: any) => data.name);
       roleNodesSelection.append("title").text((data: any) => data.id);
-
       userNodesSelection.call(dragUsers(simulation));
 
       function dragUsers(simulation: any): any {
@@ -142,6 +141,7 @@ export default defineComponent({
           text.setAttribute("fill", "#ffffff");
           text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
+          text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
 
           text.textContent = circle.querySelector("title")!.textContent!;
@@ -165,7 +165,7 @@ export default defineComponent({
           text.setAttribute("font-size", "14px");
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
-
+          text.setAttribute("pointer-events", "none");
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
