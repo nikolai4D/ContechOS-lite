@@ -86,14 +86,14 @@ export default defineComponent({
       e.preventDefault();
 
       // first let's remove all opened menus
-      document.querySelectorAll(".dropdown-menu").forEach((el) => {
+      document.querySelectorAll<HTMLElement>(".dropdown-menu").forEach((el) => {
         el.classList.remove("show");
         el.style.display = "none";
       });
 
       // select menu to display  based on where you clicked
       var clickedOn = e.path[0]; // get the element you directly clicked on
-      var contMenu = null;
+      var contMenu: any = null;
       if (clickedOn.tagName == "circle") {
         // if you click on a node
         console.log(
