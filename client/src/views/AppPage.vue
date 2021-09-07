@@ -82,14 +82,17 @@ export default defineComponent({
     deleteRel() {
       console.log("deleteRel");
     },
-    rightClick(e: any) {
-      e.preventDefault();
-
-      // first let's remove all opened menus
+    hideAllMenus() {
       document.querySelectorAll<HTMLElement>(".dropdown-menu").forEach((el) => {
         el.classList.remove("show");
         el.style.display = "none";
       });
+    },
+    rightClick(e: any) {
+      e.preventDefault();
+
+      // first let's remove all opened menus
+      this.hideAllMenus()
 
       // select menu to display  based on where you clicked
       var clickedOn = e.path[0]; // get the element you directly clicked on
@@ -115,6 +118,7 @@ export default defineComponent({
       contMenu.style.top = e.y + "px";
       contMenu.style.left = e.x + "px";
       contMenu.style.display = "block";
+      
       document.addEventListener("click", () => {
         // hide after left click on svg
         contMenu.classList.remove("show");
@@ -276,6 +280,12 @@ export default defineComponent({
 
       function drag(simulation: any) {
         function dragstarted(event: any) {
+          // first hide all open menus
+          document.querySelectorAll<HTMLElement>(".dropdown-menu").forEach((el) => {
+            el.classList.remove("show");
+            el.style.display = "none";
+          });
+
           if (!event.active) simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
