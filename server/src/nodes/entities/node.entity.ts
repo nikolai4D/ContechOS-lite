@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @ObjectType()
 export class Node {
@@ -8,10 +9,14 @@ export class Node {
   @Field(() => [String])
   labels: string[];
 
+  @Field(() => GraphQLJSONObject)
+  properties: any;
+
   constructor(data: Node) {
     Object.assign(this, {
       id: data.id,
       labels: data.labels,
+      properties: data.properties,
     });
   }
 }

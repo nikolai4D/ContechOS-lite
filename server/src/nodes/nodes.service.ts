@@ -43,6 +43,7 @@ export class NodesService {
     return new Node({
       id: properties.id,
       labels,
+      properties,
     });
   }
 
@@ -60,6 +61,7 @@ export class NodesService {
       return new Node({
         id: properties.id,
         labels,
+        properties,
       });
     });
   }
@@ -84,6 +86,7 @@ export class NodesService {
     return new Node({
       id: properties.id,
       labels,
+      properties,
     });
   }
 
@@ -97,7 +100,7 @@ export class NodesService {
 
     // TODO
 
-    return new Node({ id: '123', labels: ['User', 'Admin'] });
+    return new Node({ id: '123', labels: ['User', 'Admin'], properties: { id: '123' } });
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {
