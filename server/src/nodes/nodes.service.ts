@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Utilities } from 'src/utilities/Utilities';
@@ -8,7 +12,7 @@ import { Node } from './entities/node.entity';
 
 @Injectable()
 export class NodesService {
-  constructor (private readonly neo4jService: Neo4jService) {}
+  constructor(private readonly neo4jService: Neo4jService) {}
 
   async create(createNodeInput: CreateNodeInput): Promise<Node> {
     if (!createNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
@@ -102,11 +106,14 @@ export class NodesService {
   }
 
   async update(id: string, updateNodeInput: UpdateNodeInput): Promise<Node> {
-    if (updateNodeInput.labels && !updateNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
+    if (
+      updateNodeInput.labels &&
+      !updateNodeInput.labels.every(Utilities.isValidNeo4jLabel)
+    ) {
       throw new BadRequestException();
     }
 
-    return new Node({ id: "123", labels: ["User", "Admin"] });
+    return new Node({ id: '123', labels: ['User', 'Admin'] });
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {
