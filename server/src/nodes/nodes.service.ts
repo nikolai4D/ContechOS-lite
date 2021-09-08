@@ -132,7 +132,9 @@ export class NodesService {
       throw new InternalServerErrorException();
     }
 
-    // TODO: Check that node is not a user or a role
+    if (node.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+      throw new ForbiddenException();
+    }
 
     const result = await this.neo4jService.write(
       `
