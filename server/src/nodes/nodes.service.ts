@@ -30,7 +30,8 @@ export class NodesService {
       throw new ForbiddenException();
     }
 
-    if (Object.keys(createNodeInput.properties).some((property) =>
+    if (
+      Object.keys(createNodeInput.properties).some((property) =>
         Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property),
       )
     ) {
@@ -140,7 +141,11 @@ export class NodesService {
       throw new InternalServerErrorException();
     }
 
-    if (node.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+    if (
+      node.labels.some((label) =>
+        Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
+      )
+    ) {
       throw new ForbiddenException();
     }
 
@@ -153,7 +158,12 @@ export class NodesService {
           : ''
       }
       ${updateNodeInput.properties !== undefined ? 'SET n = $properties' : ''}
-      ${(updateNodeInput.labels !== undefined || updateNodeInput.properties !== undefined) ? 'SET n.updatedAt = datetime()' : ''}
+      ${
+        updateNodeInput.labels !== undefined ||
+        updateNodeInput.properties !== undefined
+          ? 'SET n.updatedAt = datetime()'
+          : ''
+      }
       RETURN n
       `,
       {
