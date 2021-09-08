@@ -36,6 +36,7 @@ export class NodesService {
         .map((label) => `:${label}`)
         .join('')} { id: $id })
       SET n = $properties
+      SET n.createdAt = datetime(), n.updatedAt = datetime()
       RETURN n
       `,
       {
