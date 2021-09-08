@@ -35,10 +35,12 @@ export class NodesService {
       MERGE (n${createNodeInput.labels
         .map((label) => `:${label}`)
         .join('')} { id: $id })
+      SET n = $properties
       RETURN n
       `,
       {
         id: randomUUID(),
+        properties: createNodeInput.properties,
       },
     );
 
