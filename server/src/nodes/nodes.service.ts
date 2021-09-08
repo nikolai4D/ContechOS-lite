@@ -22,7 +22,11 @@ export class NodesService {
       throw new BadRequestException();
     }
 
-    if (createNodeInput.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+    if (
+      createNodeInput.labels.some((label) =>
+        Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
+      )
+    ) {
       throw new ForbiddenException();
     }
 
@@ -101,8 +105,12 @@ export class NodesService {
       if (!updateNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
         throw new BadRequestException();
       }
-  
-      if (updateNodeInput.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+
+      if (
+        updateNodeInput.labels.some((label) =>
+          Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
+        )
+      ) {
         throw new ForbiddenException();
       }
     }
