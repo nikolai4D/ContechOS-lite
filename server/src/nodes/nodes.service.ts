@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Utilities } from 'src/utilities/Utilities';
@@ -21,10 +22,8 @@ export class NodesService {
 
     const result = await this.neo4jService.write(
       `
-      MERGE (from { id: $from })-[rel:${createRelationshipInput.name} {
-        id: $id
-      }]->(to { id: $to })
-      RETURN from, rel, to
+      MERGE (n${createNodeInput.labels.map(label => `:${label}`).join("")} { id: $id })
+      RETURN n
       `,
       {
         id: randomUUID(),
@@ -37,43 +36,28 @@ export class NodesService {
       throw new InternalServerErrorException();
     }
 
-    const { properties: from } = record.get('from');
-    const { properties: rel, type: name } = record.get('rel');
-    const { properties: to } = record.get('to');
+    const { labels, properties } = record.get('n');
 
     return new Node({
-      id: rel.id,
-      name,
-      source: { id: from.id },
-      target: { id: to.id },
+      id: properties.id,
+      labels,
     });
   }
 
   async findAll(): Promise<Node[]> {
-    if (
-      !Utilities.isValidNeo4jLabel(from) ||
-      !Utilities.isValidNeo4jLabel(to)
-    ) {
-      throw new BadRequestException();
-    }
-
     const result = await this.neo4jService.read(
       `
-      MATCH (from:${from})-[rel]->(to:${to})
-      RETURN from, rel, to
+      MATCH (n)
+      RETURN n
       `,
     );
 
     return result.records.map((record) => {
-      const { properties: from } = record.get('from');
-      const { properties: rel, type: name } = record.get('rel');
-      const { properties: to } = record.get('to');
+      const { labels, properties } = record.get('n');
 
       return new Node({
-        id: rel.id,
-        name,
-        source: { id: from.id },
-        target: { id: to.id },
+        id: properties.id,
+        labels,
       });
     });
   }
@@ -93,15 +77,11 @@ export class NodesService {
       return null;
     }
 
-    const { properties: from } = record.get('from');
-    const { properties: rel, type: name } = record.get('rel');
-    const { properties: to } = record.get('to');
+    const { labels, properties } = record.get('n');
 
     return new Node({
-      id: rel.id,
-      name,
-      source: { id: from.id },
-      target: { id: to.id },
+      id: properties.id,
+      labels,
     });
   }
 
@@ -113,6 +93,8 @@ export class NodesService {
       throw new BadRequestException();
     }
 
+    // TODO
+
     return new Node({ id: '123', labels: ['User', 'Admin'] });
   }
 
@@ -122,8 +104,8 @@ export class NodesService {
     try {
       await this.neo4jService.write(
         `
-        MATCH ()-[rel { id: $id }]->()
-        DELETE rel
+        MATCH (n { id: $id })
+        DELETE n
         `,
         { id },
       );
