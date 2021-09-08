@@ -83,7 +83,7 @@ export default defineComponent({
       console.log("deleteRel");
     },
     hideAllMenus() {
-      document.querySelectorAll<HTMLElement>(".dropdown-menu").forEach((el) => {
+      document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {
         el.classList.remove("show");
         el.style.display = "none";
       });
@@ -367,7 +367,7 @@ export default defineComponent({
         function dragstarted(event: any) {
           // first hide all open menus
           document
-            .querySelectorAll<HTMLElement>(".dropdown-menu")
+            .querySelectorAll<HTMLElement>(".context-menu")
             .forEach((el) => {
               el.classList.remove("show");
               el.style.display = "none";
