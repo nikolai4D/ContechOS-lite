@@ -117,12 +117,46 @@ export class NodesService {
       }
     }
 
-    // TODO
+    if (updateNodeInput.properties && Object.keys(updateNodeInput.properties).some(property => Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property))) {
+      throw new BadRequestException();
+    }
+
+    const node = await this.findOne(id);
+
+    if (!node) {
+      throw new InternalServerErrorException();
+    }
+
+    // TODO: Check that node is not a user or a role
+
+    const result = await this.neo4jService.write(
+      `
+      MATCH (n { id: $id })
+      ${updateNodeInput.labels !== undefined ? `SET n:${([...(updateNodeInput.labels ?? [])]).join(":")}` : ""}
+      ${updateNodeInput.properties !== undefined ? "SET n = $properties" : ""}
+      RETURN n
+      `,
+      {
+        id,
+        properties: {
+          ...updateNodeInput.properties,
+          ...Object.fromEntries(Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.map(property => [ property, node.properties[property] ])),
+        },
+      },
+    );
+
+    const record = result.records.at(0);
+
+    if (!record) {
+      throw new InternalServerErrorException();
+    }
+
+    const { labels, properties } = record.get('n');
 
     return new Node({
-      id: '123',
-      labels: ['User', 'Admin'],
-      properties: { id: '123' },
+      id: properties.id,
+      labels,
+      properties,
     });
   }
 

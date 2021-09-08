@@ -4,12 +4,12 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 
 @InputType()
 export class UpdateNodeInput {
-  @Field(() => [String])
+  @Field(() => [String], { nullable: true })
   @ArrayMinSize(1)
   @IsOptional()
   labels?: string[];
 
-  @Field(() => GraphQLJSONObject)
+  @Field(() => GraphQLJSONObject, { nullable: true })
   @IsOptional()
   properties?: { [key: string]: any };
 }
