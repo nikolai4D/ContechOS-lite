@@ -1,48 +1,71 @@
 <template>
-    <div>
-        <nav id="addNode" class="dropdown-menu dropdown-menu-sm" style="display:none"
-        >
-            <form action="">
-                <div class="sidebar-header">
-                    <h3 id="addNodeHeader">Add a Node</h3>
-                </div>
-                <ul class="list-unstyled components p-3 pb-0">
-                    <!-- <p>Add Node</p> -->
-                    <label for="node-labels" class="mb-1">Node Labels</label>
-                    <input type="text" class="form form-control ml-2 mr-2 mb-3" name="node-labels"
-                        placeholder='divide labels with a ","'>
-                    <label for="attributes" class="mb-1">Node Attributes</label>
-                    <div name="attributes">
-                        <div class="row mb-1">
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="attribute1">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="value1">
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="attribute2">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="value2">
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="attribute3">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" class="form-control" placeholder="value3">
-                            </div>
-                        </div>
-                    </div>
-                    <input type="submit" class="form form-control btn btn-primary mt-3" value="Add Node">
-                </ul>
-            </form>
-        </nav>
-    </div>
+  <div>
+    <nav
+      id="addNode"
+      class="dropdown-menu dropdown-menu-sm"
+      style="display: none"
+    >
+      <form action="">
+        <div class="sidebar-header">
+          <h3 id="addNodeHeader">Add a Node</h3>
+        </div>
+        <ul class="list-unstyled components p-3 pb-0">
+          <!-- <p>Add Node</p> -->
+          <label for="node-labels" class="mb-1">Node Labels</label>
+          <input
+            type="text"
+            class="form form-control ml-2 mr-2 mb-3"
+            name="node-labels"
+            placeholder='divide labels with a ","'
+          />
+          <label for="attributes" class="mb-1">Node Attributes</label>
+          <div name="attributes">
+            <div class="row mb-1">
+              <div class="col-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="attribute1"
+                />
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control" placeholder="value1" />
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="attribute2"
+                />
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control" placeholder="value2" />
+              </div>
+            </div>
+            <div class="row mb-1">
+              <div class="col-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="attribute3"
+                />
+              </div>
+              <div class="col-6">
+                <input type="text" class="form-control" placeholder="value3" />
+              </div>
+            </div>
+          </div>
+          <input
+            type="submit"
+            class="form form-control btn btn-primary mt-3"
+            value="Add Node"
+          />
+        </ul>
+      </form>
+    </nav>
+  </div>
 </template>
 
 <style scoped>
