@@ -22,7 +22,9 @@ export class NodesService {
 
     const result = await this.neo4jService.write(
       `
-      MERGE (n${createNodeInput.labels.map(label => `:${label}`).join("")} { id: $id })
+      MERGE (n${createNodeInput.labels
+        .map((label) => `:${label}`)
+        .join('')} { id: $id })
       RETURN n
       `,
       {
