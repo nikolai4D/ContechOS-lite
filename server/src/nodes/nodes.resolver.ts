@@ -33,7 +33,10 @@ export class NodesResolver {
   }
 
   @Mutation(() => Node)
-  updateNode(@Args('id') id: string, @Args('updateNodeInput') updateNodeInput: UpdateNodeInput) {
+  updateNode(
+    @Args('id') id: string,
+    @Args('updateNodeInput') updateNodeInput: UpdateNodeInput,
+  ) {
     return this.nodesService.update(id, updateNodeInput);
   }
 
