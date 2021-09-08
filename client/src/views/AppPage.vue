@@ -30,7 +30,6 @@
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 svg {
   width: 100%;
@@ -57,12 +56,12 @@ export default defineComponent({
   },
   components: {
     ContextMenu,
-    SideBarComp
+    SideBarComp,
   },
   methods: {
     addNode() {
       console.log("adding a node");
-      document.getElementById("addNode")!.classList.add("show")
+      document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
     },
     editNode() {
@@ -220,7 +219,6 @@ export default defineComponent({
           });
         });
 
-
       const arrowHeads = d3
         .select("svg")
         .append("g")
@@ -237,8 +235,8 @@ export default defineComponent({
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-        .attr("style", "fill: #f00;")
-        
+        .attr("style", "fill: #f00;");
+
       const linksSelection = d3
         .select("svg")
         .append("g")
@@ -249,17 +247,17 @@ export default defineComponent({
         .join("line")
         .attr("marker-end", "url(#arrowhead)");
 
-    //     <marker
-        //   id="arrow"
-        //   markerUnits="strokeWidth"
-        //   markerWidth="12"
-        //   markerHeight="12"
-        //   viewBox="0 0 12 12"
-        //   refX="6"
-        //   refY="6"
-        //   orient="auto">
-        //   <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #f00;"></path>
-        // </marker>
+      //     <marker
+      //   id="arrow"
+      //   markerUnits="strokeWidth"
+      //   markerWidth="12"
+      //   markerHeight="12"
+      //   viewBox="0 0 12 12"
+      //   refX="6"
+      //   refY="6"
+      //   orient="auto">
+      //   <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #f00;"></path>
+      // </marker>
 
       const userNodesSelection = d3
         .select("svg")
