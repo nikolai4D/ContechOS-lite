@@ -1,10 +1,15 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { isDateTime } from 'neo4j-driver';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Utilities } from 'src/utilities/Utilities';
 
-const KEYS_TO_EXCLUDE: string[] = ["password"];
+const KEYS_TO_EXCLUDE: string[] = ['password'];
 
 const serialize = (value: any): any => {
   if (Array.isArray(value)) {
@@ -17,21 +22,18 @@ const serialize = (value: any): any => {
 
   if (value !== null && typeof value === 'object') {
     return Object.fromEntries(
-      Object
-        .entries(value)
+      Object.entries(value)
         .filter(([key]) => !KEYS_TO_EXCLUDE.includes(key))
-        .map(([key, value]) => [key, serialize(value)])
+        .map(([key, value]) => [key, serialize(value)]),
     );
   }
 
   return value;
-}
+};
 
 @Injectable()
 export class SerializationInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next
-      .handle()
-      .pipe(map(serialize));
+    return next.handle().pipe(map(serialize));
   }
 }

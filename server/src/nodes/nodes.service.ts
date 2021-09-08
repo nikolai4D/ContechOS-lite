@@ -100,7 +100,11 @@ export class NodesService {
 
     // TODO
 
-    return new Node({ id: '123', labels: ['User', 'Admin'], properties: { id: '123' } });
+    return new Node({
+      id: '123',
+      labels: ['User', 'Admin'],
+      properties: { id: '123' },
+    });
   }
 
   async remove(id: string): Promise<GraphQLDeleteResult> {
