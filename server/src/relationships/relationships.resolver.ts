@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { RelationshipsService } from './relationships.service';
 import { Relationship } from './entities/relationship.entity';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
-import { UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @Resolver(() => Relationship)
@@ -24,8 +24,14 @@ export class RelationshipsResolver {
   }
 
   @Query(() => Relationship, { name: 'relationship' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.relationshipsService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    const relationship = await this.relationshipsService.findOne(id);
+
+    if (!relationship) {
+      throw new NotFoundException();
+    }
+
+    return relationship;
   }
 
   @Mutation(() => Relationship)

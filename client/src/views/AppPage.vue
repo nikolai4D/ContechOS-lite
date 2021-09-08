@@ -203,8 +203,20 @@ export default defineComponent({
 
           document.querySelectorAll("line").forEach((line) => {
             const text = line.nextElementSibling!;
-            text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2 + line.x1.baseVal.value).toString());
-            text.setAttribute("y", ((line.y2.baseVal.value - line.y1.baseVal.value) /2 + line.y1.baseVal.value).toString());
+            text.setAttribute(
+              "x",
+              (
+                (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
+                line.x1.baseVal.value
+              ).toString()
+            );
+            text.setAttribute(
+              "y",
+              (
+                (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
+                line.y1.baseVal.value
+              ).toString()
+            );
           });
         });
 
@@ -307,9 +319,21 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("x", ((line.x2.baseVal.value - line.x1.baseVal.value) /2 + line.x1.baseVal.value).toString());
-          text.setAttribute("y", ((line.y2.baseVal.value - line.y1.baseVal.value) /2 + line.y1.baseVal.value).toString());
-          
+          text.setAttribute(
+            "x",
+            (
+              (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
+              line.x1.baseVal.value
+            ).toString()
+          );
+          text.setAttribute(
+            "y",
+            (
+              (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
+              line.y1.baseVal.value
+            ).toString()
+          );
+
           text.textContent = "has role";
 
           line.insertAdjacentElement("afterend", text);

@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import { GraphQLModule } from '@nestjs/graphql';
 import { RelationshipsModule } from './relationships/relationships.module';
+import { NodesModule } from './nodes/nodes.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RelationshipsModule } from './relationships/relationships.module';
     UsersModule,
     AuthModule,
     RelationshipsModule,
+    NodesModule,
   ],
 })
 export class AppModule {}
