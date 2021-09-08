@@ -117,7 +117,12 @@ export class NodesService {
       }
     }
 
-    if (updateNodeInput.properties && Object.keys(updateNodeInput.properties).some(property => Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property))) {
+    if (
+      updateNodeInput.properties &&
+      Object.keys(updateNodeInput.properties).some((property) =>
+        Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
       throw new BadRequestException();
     }
 
@@ -132,15 +137,24 @@ export class NodesService {
     const result = await this.neo4jService.write(
       `
       MATCH (n { id: $id })
-      ${updateNodeInput.labels !== undefined ? `SET n:${([...(updateNodeInput.labels ?? [])]).join(":")}` : ""}
-      ${updateNodeInput.properties !== undefined ? "SET n = $properties" : ""}
+      ${
+        updateNodeInput.labels !== undefined
+          ? `SET n:${[...(updateNodeInput.labels ?? [])].join(':')}`
+          : ''
+      }
+      ${updateNodeInput.properties !== undefined ? 'SET n = $properties' : ''}
       RETURN n
       `,
       {
         id,
         properties: {
           ...updateNodeInput.properties,
-          ...Object.fromEntries(Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.map(property => [ property, node.properties[property] ])),
+          ...Object.fromEntries(
+            Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.map((property) => [
+              property,
+              node.properties[property],
+            ]),
+          ),
         },
       },
     );
