@@ -1,7 +1,6 @@
 <template>
     <div>
-        <nav id="addNode" class="dropdown-menu dropdown-menu-sm show"
-
+        <nav id="addNode" class="dropdown-menu dropdown-menu-sm" style="display:none"
         >
             <form action="">
                 <div class="sidebar-header">
