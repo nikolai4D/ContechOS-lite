@@ -1,11 +1,13 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j/dist';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
+import { Config } from 'src/config/Config';
 import { Utilities } from 'src/utilities/Utilities';
 import { CreateNodeInput } from './dto/create-node.input';
 import { UpdateNodeInput } from './dto/update-node.input';
@@ -18,6 +20,10 @@ export class NodesService {
   async create(createNodeInput: CreateNodeInput): Promise<Node> {
     if (!createNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
       throw new BadRequestException();
+    }
+
+    if (createNodeInput.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+      throw new ForbiddenException();
     }
 
     const result = await this.neo4jService.write(
@@ -91,11 +97,14 @@ export class NodesService {
   }
 
   async update(id: string, updateNodeInput: UpdateNodeInput): Promise<Node> {
-    if (
-      updateNodeInput.labels &&
-      !updateNodeInput.labels.every(Utilities.isValidNeo4jLabel)
-    ) {
-      throw new BadRequestException();
+    if (updateNodeInput.labels) {
+      if (!updateNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
+        throw new BadRequestException();
+      }
+  
+      if (updateNodeInput.labels.some(label => Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label))) {
+        throw new ForbiddenException();
+      }
     }
 
     // TODO
