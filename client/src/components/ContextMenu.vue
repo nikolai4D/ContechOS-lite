@@ -1,6 +1,6 @@
 <template>
   <div
-    class="dropdown-menu dropdown-menu-sm"
+    class="dropdown-menu dropdown-menu-sm context-menu"
     :id="menuId"
     oncontextmenu="return false"
   >

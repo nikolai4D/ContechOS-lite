@@ -25,6 +25,8 @@
         { name: 'Delete Relation', action: deleteRel },
       ]"
     />
+
+    <SideBarComp />
   </div>
 </template>
 
@@ -40,6 +42,7 @@ import { defineComponent } from "vue";
 import { uniqBy } from "lodash";
 import * as d3 from "d3";
 import ContextMenu from "../components/ContextMenu.vue";
+import SideBarComp from "../components/SideBar.vue";
 
 export default defineComponent({
   name: "AppPage",
@@ -53,10 +56,13 @@ export default defineComponent({
   },
   components: {
     ContextMenu,
+    SideBarComp,
   },
   methods: {
     addNode() {
       console.log("adding a node");
+      document.getElementById("addNode")!.classList.add("show");
+      document.getElementById("addNode")!.style.display = "block";
     },
     editNode() {
       console.log("editNode");
@@ -77,7 +83,7 @@ export default defineComponent({
       console.log("deleteRel");
     },
     hideAllMenus() {
-      document.querySelectorAll<HTMLElement>(".dropdown-menu").forEach((el) => {
+      document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {
         el.classList.remove("show");
         el.style.display = "none";
       });
@@ -97,7 +103,7 @@ export default defineComponent({
           "right clicked on a node of class " + clickedOn.className.baseVal
         );
         contMenu = document.getElementById("node-context-menu")!;
-      } else if (clickedOn.tagName == "line") {
+      } else if (clickedOn.tagName == "line" || clickedOn.tagName == "text") {
         // if you click on a relationship
         console.log("right clicked on a relationship");
         contMenu = document.getElementById("rel-context-menu")!;
@@ -175,9 +181,9 @@ export default defineComponent({
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
-          linksArrow
-            .attr("refX", (data: any) => data.target.x)
-            .attr("refY", (data: any) => data.target.y);
+          // linksArrow
+          //   .attr("refX", (data: any) => data.target.x)
+          //   .attr("refY", (data: any) => data.target.y);
 
           userNodesSelection
             .attr("cx", (data: any) => data.x)
@@ -212,6 +218,25 @@ export default defineComponent({
             );
           });
         });
+
+      const arrowHeads = d3
+        .select("svg")
+        .append("g")
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("id", "arrowhead")
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 12)
+        .attr("markerHeight", 12)
+        .attr("viewBox", "0 0 12 12")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+        .attr("style", "fill: #f00;");
+
       const linksSelection = d3
         .select("svg")
         .append("g")
@@ -222,23 +247,17 @@ export default defineComponent({
         .join("line")
         .attr("marker-end", "url(#arrowhead)");
 
-      const linksArrow = d3
-        .select("svg")
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("marker")
-        .data(links)
-        .join("marker")
-        .attr("markerWidth", "10")
-        .attr("markerHeight", "7")
-        .attr("orient", "auto")
-        .attr("refX", (data: any) => -data.target.x)
-        .attr("refY", (data: any) => -data.target.y)
-        .attr("id", "arrowhead")
-        .append("polygon")
-        .attr("points", "0 0, 10 3.5, 0 7")
-        .attr("fill", "black");
+      //     <marker
+      //   id="arrow"
+      //   markerUnits="strokeWidth"
+      //   markerWidth="12"
+      //   markerHeight="12"
+      //   viewBox="0 0 12 12"
+      //   refX="6"
+      //   refY="6"
+      //   orient="auto">
+      //   <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #f00;"></path>
+      // </marker>
 
       const userNodesSelection = d3
         .select("svg")
@@ -348,7 +367,7 @@ export default defineComponent({
         function dragstarted(event: any) {
           // first hide all open menus
           document
-            .querySelectorAll<HTMLElement>(".dropdown-menu")
+            .querySelectorAll<HTMLElement>(".context-menu")
             .forEach((el) => {
               el.classList.remove("show");
               el.style.display = "none";
