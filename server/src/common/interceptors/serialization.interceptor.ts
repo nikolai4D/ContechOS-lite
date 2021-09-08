@@ -16,6 +16,11 @@ const serialize = (value: any): any => {
     return value.map(serialize);
   }
 
+  // Date must be returned as-is
+  if (value instanceof Date) {
+    return value;
+  }
+
   if (isDateTime(value)) {
     return Utilities.neo4jDateTimeToDateObject(value).toISOString();
   }
