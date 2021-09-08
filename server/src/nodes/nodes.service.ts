@@ -30,12 +30,19 @@ export class NodesService {
       throw new ForbiddenException();
     }
 
+    if (Object.keys(createNodeInput.properties).some((property) =>
+        Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
+      throw new BadRequestException();
+    }
+
     const result = await this.neo4jService.write(
       `
       MERGE (n${createNodeInput.labels
         .map((label) => `:${label}`)
         .join('')} { id: $id })
-      SET n = $properties
+      SET n += $properties
       SET n.createdAt = datetime(), n.updatedAt = datetime()
       RETURN n
       `,
