@@ -67,8 +67,8 @@ export class NodesService {
   async findOne(id: string): Promise<Node | null> {
     const result = await this.neo4jService.read(
       `
-      MATCH (from)-[rel { id: $id }]->(to)
-      RETURN from, rel, to
+      MATCH (n { id: $id })
+      RETURN n
       `,
       { id },
     );
