@@ -1,4 +1,4 @@
-# ContechOS Lite
+# ContechOS Lite
 
 [![Format](https://github.com/nikolai4d/ContechOS-lite/actions/workflows/format.yml/badge.svg)](https://github.com/nikolai4d/ContechOS-lite/actions/workflows/format.yml)
 [![Lint](https://github.com/nikolai4d/ContechOS-lite/actions/workflows/lint.yml/badge.svg)](https://github.com/nikolai4d/ContechOS-lite/actions/workflows/lint.yml)
