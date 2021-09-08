@@ -146,6 +146,7 @@ export class NodesService {
           : ''
       }
       ${updateNodeInput.properties !== undefined ? 'SET n = $properties' : ''}
+      ${(updateNodeInput.labels !== undefined || updateNodeInput.properties !== undefined) ? 'SET n.updatedAt = datetime()' : ''}
       RETURN n
       `,
       {
