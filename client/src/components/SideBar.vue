@@ -217,7 +217,9 @@ export default defineComponent({
             requestAnimationFrame(update);
           }
 
-          document.getElementById("addNode").style.transform = `translate(${x}px, ${y}px)`;
+          document.getElementById(
+            "addNode"
+          ).style.transform = `translate(${x}px, ${y}px)`;
         }
 
         isDragging = true;
@@ -232,11 +234,11 @@ export default defineComponent({
 
         x = event.clientX;
         y = event.clientY;
-      }
+      };
 
       document.onmouseup = () => {
         isDragging = false;
-      }
+      };
     },
   },
 });
