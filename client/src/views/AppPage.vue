@@ -135,23 +135,45 @@ export default defineComponent({
         body: JSON.stringify({
           operationName: null,
           variables: {},
-          query:
-            "{\n  users {\n    id\n    name\n    email\n    role {\n    id\n    }  }\n}\n",
+          query: `
+          {
+            users {
+              id
+              name
+              email
+              role {
+                id
+              }
+            }
+
+            relationships(from: "User", to: "Role") {
+              id
+              name
+              source {
+                id
+              }
+              target {
+                id
+              }
+            }
+          }
+          `
         }),
       });
 
-      const { users } = (await response.json()).data;
+      const { users, relationships } = (await response.json()).data;
 
       const roles = uniqBy(
         users.map((user: any) => user.role),
         "id"
       );
 
-      const links = users.map((user: any) => {
+      const links = relationships.map((relationship: any) => {
         return {
-          source: user,
-          target: roles.find((role: any) => role.id === user.role.id),
-          name: "has role",
+          id: relationship.id,
+          name: relationship.name,
+          source: users.find((user: any) => user.id === relationship.source.id),
+          target: roles.find((role: any) => role.id === relationship.target.id),
         };
       });
 
@@ -332,7 +354,7 @@ export default defineComponent({
             ).toString()
           );
 
-          text.textContent = "has role";
+          text.textContent = line.querySelector("title").textContent;
 
           line.insertAdjacentElement("afterend", text);
         });
