@@ -14,7 +14,7 @@
       >
       <router-link to="/app" v-if="this.$route.path == '/app'">App</router-link>
     </nav>
-  <router-view />
+    <router-view />
   </div>
 </template>
 
