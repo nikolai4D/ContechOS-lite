@@ -6,9 +6,9 @@
       style="display: none"
     >
       <form action="">
-        <MenuHeader :menuName="'Add New Node'"/>
+        <MenuHeader :menuName="'Add New Node'" />
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-          <Labels :lbl="labels"/>
+          <Labels :lbl="labels" />
           <Attributes :attr="attributes" />
           <input
             type="submit"
@@ -48,13 +48,13 @@ export default defineComponent({
       isMouseDown: false,
       toggleMenu: true,
       labels: [],
-      attributes: [{name:"", value:""}],
+      attributes: [{ name: "", value: "" }],
     };
   },
   components: {
     Attributes,
     Labels,
-    MenuHeader
+    MenuHeader,
   },
 });
 </script>

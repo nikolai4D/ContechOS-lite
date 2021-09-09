@@ -6,7 +6,7 @@
       style="display: none"
     >
       <form action="">
-        <MenuHeader :menuName="'Edit Node'"/>
+        <MenuHeader :menuName="'Edit Node'" />
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
           <Labels :lbl="labels" />
           <Attributes :attr="attributes" />
@@ -22,7 +22,6 @@
 </template>
 
 <style scoped>
-
 #editNode {
   background: white;
   box-shadow: 0px 0px 15px black;
@@ -49,13 +48,13 @@ export default defineComponent({
       isMouseDown: false,
       toggleMenu: true,
       labels: ["user", "admin"],
-      attributes: [{name:"name", value:"luke"}],
+      attributes: [{ name: "name", value: "luke" }],
     };
   },
   components: {
     Attributes,
     Labels,
-    MenuHeader
+    MenuHeader,
   },
 });
 </script>
