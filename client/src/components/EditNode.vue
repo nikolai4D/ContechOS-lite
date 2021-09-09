@@ -6,7 +6,7 @@
       style="display: none"
     >
       <form action="">
-        <MenuHeader :menuName="'Edit Node'" />
+        <MenuHeader :menuName="'Edit Node'" @menuToggle="toggleMenu = $event" />
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
           <Labels :lbl="labels" />
           <Attributes :attr="attributes" />

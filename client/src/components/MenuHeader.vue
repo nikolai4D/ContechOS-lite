@@ -3,12 +3,12 @@
     <i
       class="fas fa-caret-right col-sm-2"
       v-if="toggleMenu"
-      @click="toggleMenu = false"
+      @click="menuToggle(false)"
     ></i>
     <i
       class="fas fa-caret-down col-sm-2"
       v-if="!toggleMenu"
-      @click="toggleMenu = true"
+      @click="menuToggle(true)"
     ></i>
     <h3 class="col-sm-8">{{ menuName }}</h3>
     <i class="fas fa-times col-sm-2" @click="closeElement($event)"></i>
@@ -49,6 +49,10 @@ export default defineComponent({
       this.parent.classList.remove("show");
       this.parent.style.display = "none";
       this.toggleMenu = true;
+    },
+    menuToggle(newValue) {
+      this.toggleMenu = newValue;
+      this.$emit("menuToggle", newValue);
     },
     enableDrag() {
       let x = 0;
