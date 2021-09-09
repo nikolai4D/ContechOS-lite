@@ -7,8 +7,16 @@
     >
       <form action="">
         <div class="sidebar-header row">
-          <i class="fas fa-caret-right col-sm-2" v-if="toggleMenu" @click="toggleMenu=false"></i>
-          <i class="fas fa-caret-down col-sm-2" v-if="!toggleMenu" @click="toggleMenu=true"></i>
+          <i
+            class="fas fa-caret-right col-sm-2"
+            v-if="toggleMenu"
+            @click="toggleMenu = false"
+          ></i>
+          <i
+            class="fas fa-caret-down col-sm-2"
+            v-if="!toggleMenu"
+            @click="toggleMenu = true"
+          ></i>
           <h3 id="addNodeHeader" class="col-sm-8">Add a Node</h3>
           <i class="fas fa-times col-sm-2" @click="closeElement"></i>
         </div>
@@ -32,7 +40,12 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value1" name="attribute1" />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="value1"
+                  name="attribute1"
+                />
               </div>
             </div>
             <div class="row mb-1">
@@ -44,7 +57,12 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value2" name="attribute2" />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="value2"
+                  name="attribute2"
+                />
               </div>
             </div>
             <div class="row mb-1">
@@ -56,7 +74,12 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value3" name="attribute3" />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="value3"
+                  name="attribute3"
+                />
               </div>
             </div>
           </div>
@@ -74,11 +97,11 @@
 <style scoped>
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
-i.fas{
+i.fas {
   padding: 3%;
   font-size: 1.2em;
 }
-.row{
+.row {
   --bs-gutter-x: 0;
 }
 
