@@ -125,12 +125,11 @@ a:focus {
   /* don't forget to add all the previously mentioned styles here too */
   background: white;
   box-shadow: 0px 0px 15px black;
-  transition: all 0.3s;
   width: 20%;
   display: block;
   position: absolute;
-  top: 30%;
-  right: 2%;
+  top: 0;
+  left: 0;
 }
 
 #sidebar h3 {
@@ -182,7 +181,7 @@ ul ul a {
 }
 </style>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -196,7 +195,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    // this.dragElement(document.getElementById("addNode"));
+    this.enableDrag();
   },
   methods: {
     closeElement() {
@@ -204,48 +203,42 @@ export default defineComponent({
       document.getElementById("addNode").style.display = "none";
       this.toggleMenu = true;
     },
-    dragElement(elmnt) {
-      var pos1 = 0,
-        pos2 = 0,
-        pos3 = 0,
-        pos4 = 0;
-      if (document.getElementById("addNodeHeader")) {
-        // if present, the header is where you move the DIV from:
-        document.getElementById("addNodeHeader").onmousedown = dragMouseDown;
-      } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
-      }
+    enableDrag(): void {
+      let x = 0;
+      let y = 0;
 
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
-      }
+      let isDragging = false;
 
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        elmnt.style.top = pos4 + "px";
-        elmnt.style.left = pos3 + "px";
-      }
+      const draggableElement = document.getElementById("addNodeHeader");
 
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-      }
+      draggableElement.onmousedown = () => {
+        function update() {
+          if (isDragging) {
+            requestAnimationFrame(update);
+          }
+
+          document.getElementById(
+            "addNode"
+          ).style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        isDragging = true;
+
+        requestAnimationFrame(update);
+      };
+
+      document.onmousemove = (event) => {
+        if (!isDragging) {
+          return;
+        }
+
+        x = event.clientX;
+        y = event.clientY;
+      };
+
+      document.onmouseup = () => {
+        isDragging = false;
+      };
     },
   },
 });
