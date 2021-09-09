@@ -21,7 +21,6 @@
           <i class="fas fa-times col-sm-2" @click="closeElement"></i>
         </div>
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-          <!-- <p>Add Node</p> -->
           <label for="node-labels" class="mb-1">Node Labels</label>
           <input
             type="text"
@@ -30,35 +29,7 @@
             placeholder='divide labels with a ","'
           />
           <label for="attributes" class="mb-1">Node Attributes</label>
-          <div name="attributes">
-            <div class="row mb-1 attribute" v-for="(attribute, id) in attributes" :key="id">
-              <div class="col-5">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute"
-                  :value="attribute.name"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value"
-                  name="attribute"
-                  :value="attribute.value"
-                />
-              </div>
-              <div class="col-1">
-                <i class="fa fa-trash" @click="removeAttribute(attribute)"></i>
-              </div>
-            </div>
-
-            <div @click="addAttribute">
-              <i class="fas fa-plus"></i>
-              <label for="addAttribute">Add Attribute</label>
-            </div>
-          </div>
+          <Attributes />
           <input
             type="submit"
             class="form form-control btn btn-primary mt-3"
@@ -152,18 +123,11 @@ ul ul a {
 .col-6:nth-child(2) {
   padding-left: 1%;
 }
-
-#mydiv {
-  position: absolute;
-  z-index: 9;
-  background-color: #f1f1f1;
-  text-align: center;
-  border: 1px solid #d3d3d3;
-}
 </style>
 
 <script>
 import { defineComponent } from "vue";
+import Attributes from "./Attributes.vue";
 
 export default defineComponent({
   name: "EditNode",
@@ -177,67 +141,16 @@ export default defineComponent({
     };
   },
   mounted() {
-    // this.dragElement(document.getElementById("addNode"));
+    // this.enableDrag();
+  },
+  components: {
+    Attributes
   },
   methods: {
-    addAttribute() {
-      this.attributes.push({name: "", value: ""})
-    },
-    removeAttribute(attr) {
-      console.log("a")
-      var index = this.attributes.indexOf(attr);
-      if (index !== -1) {
-        this.attributes.splice(index, 1);
-      }
-    },
     closeElement() {
       document.getElementById("editNode").classList.remove("show");
       document.getElementById("editNode").style.display = "none";
       this.toggleMenu = true;
     },
-    dragElement(elmnt) {
-      var pos1 = 0,
-        pos2 = 0,
-        pos3 = 0,
-        pos4 = 0;
-      if (document.getElementById("editNodeHeader")) {
-        // if present, the header is where you move the DIV from:
-        document.getElementById("editNodeHeader").onmousedown = dragMouseDown;
-      } else {
-        // otherwise, move the DIV from anywhere inside the DIV:
-        elmnt.onmousedown = dragMouseDown;
-      }
-
-      function dragMouseDown(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // get the mouse cursor position at startup:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
-      }
-
-      function elementDrag(e) {
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        elmnt.style.top = pos4 + "px";
-        elmnt.style.left = pos3 + "px";
-      }
-
-      function closeDragElement() {
-        // stop moving when mouse button is released:
-        document.onmouseup = null;
-        document.onmousemove = null;
-      }
-    },
-  },
-});
+    }});
 </script>

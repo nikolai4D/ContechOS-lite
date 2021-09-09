@@ -30,59 +30,7 @@
             placeholder='divide labels with a ","'
           />
           <label for="attributes" class="mb-1">Node Attributes</label>
-          <div name="attributes">
-            <div class="row mb-1">
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute1"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value1"
-                  name="attribute1"
-                />
-              </div>
-            </div>
-            <div class="row mb-1">
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute2"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value2"
-                  name="attribute2"
-                />
-              </div>
-            </div>
-            <div class="row mb-1">
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute3"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value3"
-                  name="attribute3"
-                />
-              </div>
-            </div>
-          </div>
+          <Attributes />
           <input
             type="submit"
             class="form form-control btn btn-primary mt-3"
@@ -183,6 +131,7 @@ ul ul a {
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Attributes from "./Attributes.vue";
 
 export default defineComponent({
   name: "AddNode",
@@ -197,10 +146,13 @@ export default defineComponent({
   mounted() {
     this.enableDrag();
   },
+  components: {
+    Attributes
+  },
   methods: {
     closeElement() {
-      document.getElementById("addNode").classList.remove("show");
-      document.getElementById("addNode").style.display = "none";
+      document.getElementById("addNode")!.classList.remove("show");
+      document.getElementById("addNode")!.style.display = "none";
       this.toggleMenu = true;
     },
     enableDrag(): void {
@@ -209,7 +161,7 @@ export default defineComponent({
 
       let isDragging = false;
 
-      const draggableElement = document.getElementById("addNodeHeader");
+      const draggableElement = document.getElementById("addNodeHeader")!;
 
       draggableElement.onmousedown = () => {
         function update() {
@@ -219,7 +171,7 @@ export default defineComponent({
 
           document.getElementById(
             "addNode"
-          ).style.transform = `translate(${x}px, ${y}px)`;
+          )!.style.transform = `translate(${x}px, ${y}px)`;
         }
 
         isDragging = true;
