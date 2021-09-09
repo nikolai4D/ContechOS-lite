@@ -24,7 +24,7 @@ i.fas {
   --bs-gutter-x: 0;
 }
 
-h3{
+h3 {
   user-select: none;
 }
 </style>

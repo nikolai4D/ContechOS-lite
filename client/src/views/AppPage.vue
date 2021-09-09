@@ -320,7 +320,10 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("style", "text-transform: capitalize; user-select: none;");
+          text.setAttribute(
+            "style",
+            "text-transform: capitalize; user-select: none;"
+          );
 
           text.textContent = circle.querySelector("title")!.textContent!;
 
@@ -337,7 +340,10 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("style", "text-transform: capitalize; user-select: none;");
+          text.setAttribute(
+            "style",
+            "text-transform: capitalize; user-select: none;"
+          );
           text.setAttribute(
             "x",
             (
@@ -375,7 +381,10 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("pointer-events", "none");
-          text.setAttribute("style", "text-transform: capitalize; user-select: none;");
+          text.setAttribute(
+            "style",
+            "text-transform: capitalize; user-select: none;"
+          );
           text.textContent = circle.querySelector("title")!.textContent!;
 
           circle.insertAdjacentElement("afterend", text);
