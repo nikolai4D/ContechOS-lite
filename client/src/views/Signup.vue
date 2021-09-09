@@ -60,9 +60,7 @@
           >
         </div>
         <div class="d-grid gap-2 mb-3">
-          <button class="btn btn-primary" type="submit">
-            Sign up
-          </button>
+          <button class="btn btn-primary" type="submit">Sign up</button>
         </div>
       </form>
     </div>
