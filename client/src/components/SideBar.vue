@@ -2,14 +2,17 @@
   <div>
     <nav
       id="addNode"
-      class="dropdown-menu dropdown-menu-sm"
+      class="dropdown-menu dropdown-menu-sm inputMenu"
       style="display: none"
     >
       <form action="">
-        <div class="sidebar-header">
-          <h3 id="addNodeHeader">Add a Node</h3>
+        <div class="sidebar-header row">
+          <i class="fas fa-caret-right col-sm-2" v-if="toggleMenu" @click="toggleMenu=false"></i>
+          <i class="fas fa-caret-down col-sm-2" v-if="!toggleMenu" @click="toggleMenu=true"></i>
+          <h3 id="addNodeHeader" class="col-sm-8">Add a Node</h3>
+          <i class="fas fa-times col-sm-2" @click="closeElement"></i>
         </div>
-        <ul class="list-unstyled components p-3 pb-0">
+        <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
           <!-- <p>Add Node</p> -->
           <label for="node-labels" class="mb-1">Node Labels</label>
           <input
@@ -29,7 +32,7 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value1" />
+                <input type="text" class="form-control" placeholder="value1" name="attribute1" />
               </div>
             </div>
             <div class="row mb-1">
@@ -41,7 +44,7 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value2" />
+                <input type="text" class="form-control" placeholder="value2" name="attribute2" />
               </div>
             </div>
             <div class="row mb-1">
@@ -53,7 +56,7 @@
                 />
               </div>
               <div class="col-6">
-                <input type="text" class="form-control" placeholder="value3" />
+                <input type="text" class="form-control" placeholder="value3" name="attribute3" />
               </div>
             </div>
           </div>
@@ -70,6 +73,14 @@
 
 <style scoped>
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+i.fas{
+  padding: 3%;
+  font-size: 1.2em;
+}
+.row{
+  --bs-gutter-x: 0;
+}
 
 p {
   font-family: "Poppins", sans-serif;
@@ -101,11 +112,6 @@ a:focus {
 
 #sidebar h3 {
   color: white;
-}
-
-#sidebar .sidebar-header {
-  padding: 20px;
-  background: #3472cf;
 }
 
 #sidebar ul.components {
@@ -163,12 +169,18 @@ export default defineComponent({
       startingPos: { x: null, y: null },
       currentPos: { x: null, y: null },
       isMouseDown: false,
+      toggleMenu: true,
     };
   },
   mounted() {
-    this.dragElement(document.getElementById("addNode"));
+    // this.dragElement(document.getElementById("addNode"));
   },
   methods: {
+    closeElement() {
+      document.getElementById("addNode").classList.remove("show");
+      document.getElementById("addNode").style.display = "none";
+      this.toggleMenu = true;
+    },
     dragElement(elmnt) {
       var pos1 = 0,
         pos2 = 0,
