@@ -24,6 +24,10 @@ i.fas {
 .row {
   --bs-gutter-x: 0;
 }
+
+h3{
+  user-select: none;
+}
 </style>
 
 <script>

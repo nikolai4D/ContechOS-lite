@@ -12,6 +12,7 @@
           class="form-control"
           placeholder="attribute"
           :value="attribute.name"
+          @change="changeName($event, attribute)"
         />
       </div>
       <div class="col-6">
@@ -21,6 +22,7 @@
           placeholder="value"
           name="attribute"
           :value="attribute.value"
+          @change="changeValue($event, attribute)"
         />
       </div>
       <div class="col-1">
@@ -56,6 +58,7 @@ i.fa-trash {
 </style>
 
 <script>
+import { indexOf } from "lodash";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -76,11 +79,16 @@ export default defineComponent({
       this.attributes.push({ name: "", value: "" });
     },
     removeAttribute(attr) {
-      console.log("a");
       var index = this.attributes.indexOf(attr);
       if (index !== -1) {
         this.attributes.splice(index, 1);
       }
+    },
+    changeValue(event, attribute){
+      this.attributes[this.attributes.indexOf(attribute)].value = event.path[0].value
+    },
+    changeName(event, attribute){
+      this.attributes[this.attributes.indexOf(attribute)].name = event.path[0].value
     },
   },
 });

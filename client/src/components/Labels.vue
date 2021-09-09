@@ -37,7 +37,6 @@ export default defineComponent({
   methods: {
     updateLabels() {
       this.labels = document.getElementById("labelInput").value.split(",");
-      console.log(this.labels);
     },
   },
 });
