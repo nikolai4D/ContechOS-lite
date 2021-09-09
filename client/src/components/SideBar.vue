@@ -195,7 +195,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    // this.dragElement(document.getElementById("addNode"));
+    this.enableDrag();
   },
   methods: {
     closeElement() {
@@ -203,7 +203,7 @@ export default defineComponent({
       document.getElementById("addNode").style.display = "none";
       this.toggleMenu = true;
     },
-    dragElement(element: HTMLElement): void {
+    enableDrag(): void {
       let x = 0;
       let y = 0;
 
