@@ -71,19 +71,19 @@ export default defineComponent({
       document.getElementById("editNode")!.style.display = "block";
     },
     createRelToExistingNode() {
-      return
+      return;
     },
     createRelToNewNode() {
-      return
+      return;
     },
     deleteNode() {
-      return
+      return;
     },
     editRel() {
-      return
+      return;
     },
     deleteRel() {
-      return
+      return;
     },
     hideAllMenus() {
       document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {

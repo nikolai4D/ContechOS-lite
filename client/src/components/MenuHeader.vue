@@ -27,30 +27,30 @@ i.fas {
 </style>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: "MenuHeader",
-    props: {
-        menuName: String
+  name: "MenuHeader",
+  props: {
+    menuName: String,
+  },
+  mounted() {
+    this.enableDrag();
+    console.log(this.$parent.$parent.$parent);
+  },
+  data() {
+    return {
+      toggleMenu: true,
+      parent: null,
+    };
+  },
+  methods: {
+    closeElement(event) {
+      this.parent = event.target.parentElement.parentElement.parentElement;
+      this.parent.classList.remove("show");
+      this.parent.style.display = "none";
+      this.toggleMenu = true;
     },
-    mounted() {
-        this.enableDrag();
-        // console.log(document.getElementById("header").parentElement.parentElement)
-    },
-    data() {
-        return {
-            toggleMenu: true,
-            parent: null,
-        };
-    },
-    methods: {
-      closeElement(event) {
-          this.parent = event.target.parentElement.parentElement.parentElement
-          this.parent.classList.remove("show");
-          this.parent.style.display = "none";
-          this.toggleMenu = true;
-      },
       menuToggle(newValue) {
         this.toggleMenu = newValue
         this.$emit('menuToggle', newValue)
@@ -93,7 +93,7 @@ export default defineComponent({
         document.addEventListener("mouseup", () => {
           isDragging = false;
         })
-      }
     },
-})
+  },
+});
 </script>
