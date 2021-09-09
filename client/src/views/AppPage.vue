@@ -63,29 +63,27 @@ export default defineComponent({
   },
   methods: {
     addNode() {
-      console.log("adding a node");
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
     },
     editNode() {
-      console.log("editNode");
       document.getElementById("editNode")!.classList.add("show");
       document.getElementById("editNode")!.style.display = "block";
     },
     createRelToExistingNode() {
-      console.log("createRelToExistingNode");
+      return
     },
     createRelToNewNode() {
-      console.log("createRelToNewNode");
+      return
     },
     deleteNode() {
-      console.log("deleteNode");
+      return
     },
     editRel() {
-      console.log("editRel");
+      return
     },
     deleteRel() {
-      console.log("deleteRel");
+      return
     },
     hideAllMenus() {
       document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {
@@ -104,17 +102,12 @@ export default defineComponent({
       var contMenu: any = null;
       if (clickedOn.tagName == "circle") {
         // if you click on a node
-        console.log(
-          "right clicked on a node of class " + clickedOn.className.baseVal
-        );
         contMenu = document.getElementById("node-context-menu")!;
       } else if (clickedOn.tagName == "line" || clickedOn.tagName == "text") {
         // if you click on a relationship
-        console.log("right clicked on a relationship");
         contMenu = document.getElementById("rel-context-menu")!;
       } else if (clickedOn.tagName == "svg") {
         // if you clicked on the background
-        console.log("right clicked on the background");
         contMenu = document.getElementById("bg-context-menu")!;
       }
 
