@@ -2,6 +2,9 @@
   <div>
     <svg @contextmenu="rightClick($event)"></svg>
 
+    <AddNode />
+    <EditNode />
+
     <ContextMenu
       :menuId="'bg-context-menu'"
       :options="[{ name: 'Add Node', action: addNode }]"
@@ -25,8 +28,6 @@
         { name: 'Delete Relation', action: deleteRel },
       ]"
     />
-
-    <SideBarComp />
   </div>
 </template>
 
@@ -42,7 +43,8 @@ import { defineComponent } from "vue";
 import { uniqBy } from "lodash";
 import * as d3 from "d3";
 import ContextMenu from "../components/ContextMenu.vue";
-import SideBarComp from "../components/SideBar.vue";
+import AddNode from "../components/AddNode.vue";
+import EditNode from "../components/EditNode.vue";
 
 export default defineComponent({
   name: "AppPage",
@@ -56,7 +58,8 @@ export default defineComponent({
   },
   components: {
     ContextMenu,
-    SideBarComp,
+    AddNode,
+    EditNode,
   },
   methods: {
     addNode() {
@@ -66,6 +69,8 @@ export default defineComponent({
     },
     editNode() {
       console.log("editNode");
+      document.getElementById("editNode")!.classList.add("show");
+      document.getElementById("editNode")!.style.display = "block";
     },
     createRelToExistingNode() {
       console.log("createRelToExistingNode");

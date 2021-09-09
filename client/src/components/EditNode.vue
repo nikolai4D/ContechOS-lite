@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav
-      id="addNode"
+      id="editNode"
       class="dropdown-menu dropdown-menu-sm inputMenu"
       style="display: none"
     >
@@ -17,7 +17,7 @@
             v-if="!toggleMenu"
             @click="toggleMenu = true"
           ></i>
-          <h3 id="addNodeHeader" class="col-sm-8">Add a Node</h3>
+          <h3 id="addNodeHeader" class="col-sm-8">Edit Node</h3>
           <i class="fas fa-times col-sm-2" @click="closeElement"></i>
         </div>
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
@@ -31,56 +31,32 @@
           />
           <label for="attributes" class="mb-1">Node Attributes</label>
           <div name="attributes">
-            <div class="row mb-1">
-              <div class="col-6">
+            <div class="row mb-1 attribute" v-for="(attribute, id) in attributes" :key="id">
+              <div class="col-5">
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="attribute1"
+                  placeholder="attribute"
+                  :value="attribute.name"
                 />
               </div>
               <div class="col-6">
                 <input
                   type="text"
                   class="form-control"
-                  placeholder="value1"
-                  name="attribute1"
+                  placeholder="value"
+                  name="attribute"
+                  :value="attribute.value"
                 />
               </div>
-            </div>
-            <div class="row mb-1">
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute2"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value2"
-                  name="attribute2"
-                />
+              <div class="col-1">
+                <i class="fa fa-trash" @click="removeAttribute(attribute)"></i>
               </div>
             </div>
-            <div class="row mb-1">
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="attribute3"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="value3"
-                  name="attribute3"
-                />
-              </div>
+
+            <div @click="addAttribute">
+              <i class="fas fa-plus"></i>
+              <label for="addAttribute">Add Attribute</label>
             </div>
           </div>
           <input
@@ -101,6 +77,10 @@ i.fas {
   padding: 3%;
   font-size: 1.2em;
 }
+i.fa-trash{
+  padding-top: 10px;
+}
+
 .row {
   --bs-gutter-x: 0;
 }
@@ -121,7 +101,7 @@ a:focus {
   transition: all 0.3s;
 }
 
-#addNode {
+#editNode {
   /* don't forget to add all the previously mentioned styles here too */
   background: white;
   box-shadow: 0px 0px 15px black;
@@ -186,22 +166,33 @@ ul ul a {
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "SideBarComp",
+  name: "EditNode",
   data() {
     return {
       startingPos: { x: null, y: null },
       currentPos: { x: null, y: null },
       isMouseDown: false,
       toggleMenu: true,
+      attributes: [{name:"name", value:"luke"}],
     };
   },
   mounted() {
     // this.dragElement(document.getElementById("addNode"));
   },
   methods: {
+    addAttribute() {
+      this.attributes.push({name: "", value: ""})
+    },
+    removeAttribute(attr) {
+      console.log("a")
+      var index = this.attributes.indexOf(attr);
+      if (index !== -1) {
+        this.attributes.splice(index, 1);
+      }
+    },
     closeElement() {
-      document.getElementById("addNode").classList.remove("show");
-      document.getElementById("addNode").style.display = "none";
+      document.getElementById("editNode").classList.remove("show");
+      document.getElementById("editNode").style.display = "none";
       this.toggleMenu = true;
     },
     dragElement(elmnt) {
@@ -209,9 +200,9 @@ export default defineComponent({
         pos2 = 0,
         pos3 = 0,
         pos4 = 0;
-      if (document.getElementById("addNodeHeader")) {
+      if (document.getElementById("editNodeHeader")) {
         // if present, the header is where you move the DIV from:
-        document.getElementById("addNodeHeader").onmousedown = dragMouseDown;
+        document.getElementById("editNodeHeader").onmousedown = dragMouseDown;
       } else {
         // otherwise, move the DIV from anywhere inside the DIV:
         elmnt.onmousedown = dragMouseDown;
