@@ -30,7 +30,11 @@
         </div>
     </div>
 
-
+    <div @click="addAttribute">
+      <i class="fas fa-plus"></i>
+      <label for="addAttribute">Add Attribute</label>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -54,7 +58,7 @@ i.fa-trash{
 </style>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
     name: "Attributes",
