@@ -29,12 +29,6 @@
             <label for="addAttribute">Add Attribute</label>
         </div>
     </div>
-
-    <div @click="addAttribute">
-      <i class="fas fa-plus"></i>
-      <label for="addAttribute">Add Attribute</label>
-    </div>
-  </div>
 </template>
 
 <style scoped>
