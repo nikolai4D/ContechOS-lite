@@ -30,15 +30,26 @@ export class NodesService {
       throw new ForbiddenException();
     }
 
+    if (
+      Object.keys(createNodeInput.properties).some((property) =>
+        Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
+      throw new BadRequestException();
+    }
+
     const result = await this.neo4jService.write(
       `
       MERGE (n${createNodeInput.labels
         .map((label) => `:${label}`)
         .join('')} { id: $id })
+      SET n += $properties
+      SET n.createdAt = datetime(), n.updatedAt = datetime()
       RETURN n
       `,
       {
         id: randomUUID(),
+        properties: createNodeInput.properties,
       },
     );
 
@@ -115,12 +126,72 @@ export class NodesService {
       }
     }
 
-    // TODO
+    if (
+      updateNodeInput.properties &&
+      Object.keys(updateNodeInput.properties).some((property) =>
+        Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
+      throw new BadRequestException();
+    }
+
+    const node = await this.findOne(id);
+
+    if (!node) {
+      throw new InternalServerErrorException();
+    }
+
+    if (
+      node.labels.some((label) =>
+        Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
+      )
+    ) {
+      throw new ForbiddenException();
+    }
+
+    const result = await this.neo4jService.write(
+      `
+      MATCH (n { id: $id })
+      ${
+        updateNodeInput.labels !== undefined
+          ? `SET n:${[...(updateNodeInput.labels ?? [])].join(':')}`
+          : ''
+      }
+      ${updateNodeInput.properties !== undefined ? 'SET n = $properties' : ''}
+      ${
+        updateNodeInput.labels !== undefined ||
+        updateNodeInput.properties !== undefined
+          ? 'SET n.updatedAt = datetime()'
+          : ''
+      }
+      RETURN n
+      `,
+      {
+        id,
+        properties: {
+          ...updateNodeInput.properties,
+          ...Object.fromEntries(
+            Config.FORBIDDEN_NODE_PROPERTIES_TO_UPDATE.map((property) => [
+              property,
+              node.properties[property],
+            ]),
+          ),
+        },
+      },
+    );
+
+    const record = result.records.at(0);
+
+    if (!record) {
+      throw new InternalServerErrorException();
+    }
+
+    const { labels, properties } = record.get('n');
 
     return new Node({
-      id: '123',
-      labels: ['User', 'Admin'],
-      properties: { id: '123' },
+      id: properties.id,
+      labels,
+      properties,
     });
   }
 

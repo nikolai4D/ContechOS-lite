@@ -10,7 +10,7 @@ export class Node {
   labels: string[];
 
   @Field(() => GraphQLJSONObject)
-  properties: any;
+  properties: { [key: string]: any };
 
   constructor(data: Node) {
     Object.assign(this, {

@@ -9,5 +9,10 @@ export class Config {
 
   public static readonly PASSWORD_HASH_ROUNDS = 11;
 
-  public static readonly FORBIDDEN_GENERIC_NODE_LABELS = ['User'];
+  public static readonly FORBIDDEN_GENERIC_NODE_LABELS = ['User', 'Role'];
+  public static readonly FORBIDDEN_NODE_PROPERTIES_TO_UPDATE = [
+    'id',
+    'createdAt',
+    'updatedAt',
+  ];
 }
