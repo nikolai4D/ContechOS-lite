@@ -147,7 +147,7 @@ export default defineComponent({
     this.enableDrag();
   },
   components: {
-    Attributes
+    Attributes,
   },
   methods: {
     closeElement() {

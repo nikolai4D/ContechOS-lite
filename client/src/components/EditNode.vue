@@ -48,7 +48,7 @@ i.fas {
   padding: 3%;
   font-size: 1.2em;
 }
-i.fa-trash{
+i.fa-trash {
   padding-top: 10px;
 }
 
@@ -137,14 +137,14 @@ export default defineComponent({
       currentPos: { x: null, y: null },
       isMouseDown: false,
       toggleMenu: true,
-      attributes: [{name:"name", value:"luke"}],
+      attributes: [{ name: "name", value: "luke" }],
     };
   },
   mounted() {
     // this.enableDrag();
   },
   components: {
-    Attributes
+    Attributes,
   },
   methods: {
     closeElement() {
@@ -152,5 +152,6 @@ export default defineComponent({
       document.getElementById("editNode").style.display = "none";
       this.toggleMenu = true;
     },
-    }});
+  },
+});
 </script>

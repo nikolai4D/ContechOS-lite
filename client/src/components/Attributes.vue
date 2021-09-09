@@ -1,35 +1,37 @@
 <template>
-    <div name="attributes">
-        <div class="row mb-1 attribute" v-for="(attribute, id) in attributes" :key="id">
-            <div class="col-5">
-            <input
-                type="text"
-                class="form-control"
-                placeholder="attribute"
-                :value="attribute.name"
-            />
-            </div>
-            <div class="col-6">
-            <input
-                type="text"
-                class="form-control"
-                placeholder="value"
-                name="attribute"
-                :value="attribute.value"
-            />
-            </div>
-            <div class="col-1">
-            <i class="fa fa-trash" @click="removeAttribute(attribute)"></i>
-            </div>
-        </div>
-
-        <div @click="addAttribute">
-            <i class="fas fa-plus"></i>
-            <label for="addAttribute">Add Attribute</label>
-        </div>
+  <div name="attributes">
+    <div
+      class="row mb-1 attribute"
+      v-for="(attribute, id) in attributes"
+      :key="id"
+    >
+      <div class="col-5">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="attribute"
+          :value="attribute.name"
+        />
+      </div>
+      <div class="col-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="value"
+          name="attribute"
+          :value="attribute.value"
+        />
+      </div>
+      <div class="col-1">
+        <i class="fa fa-trash" @click="removeAttribute(attribute)"></i>
+      </div>
     </div>
 
-
+    <div @click="addAttribute">
+      <i class="fas fa-plus"></i>
+      <label for="addAttribute">Add Attribute</label>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -39,7 +41,7 @@ i.fas {
   padding: 3%;
   font-size: 1.2em;
 }
-i.fa-trash{
+i.fa-trash {
   padding-top: 10px;
 }
 
@@ -117,26 +119,26 @@ ul ul a {
 </style>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: "Attributes",
-    data() {
-        return{
-            attributes: [{name:"name", value:"luke"}],
-        }
+  name: "Attributes",
+  data() {
+    return {
+      attributes: [{ name: "name", value: "luke" }],
+    };
+  },
+  methods: {
+    addAttribute() {
+      this.attributes.push({ name: "", value: "" });
     },
-    methods: {
-        addAttribute() {
-        this.attributes.push({name: "", value: ""})
-        },
-        removeAttribute(attr) {
-        console.log("a")
-        var index = this.attributes.indexOf(attr);
-        if (index !== -1) {
-            this.attributes.splice(index, 1);
-        }
-        },
-    }
-})
+    removeAttribute(attr) {
+      console.log("a");
+      var index = this.attributes.indexOf(attr);
+      if (index !== -1) {
+        this.attributes.splice(index, 1);
+      }
+    },
+  },
+});
 </script>
