@@ -263,7 +263,9 @@ export default defineComponent({
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1.5);
 
-      nodesSelection.append("title").text((data: any) => data.properties.name ?? data.labels[0]);
+      nodesSelection
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
       linksSelection.append("title").text((data: any) => data.name);
 
       nodesSelection.call(drag(simulation));
