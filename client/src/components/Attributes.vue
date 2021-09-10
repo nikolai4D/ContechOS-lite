@@ -80,27 +80,25 @@ export default defineComponent({
   },
   methods: {
     addAttribute() {
-      if(!this.attributes[""])
-        this.attributes[""] = "";
-      this.attributesChanged()
+      if (!this.attributes[""]) this.attributes[""] = "";
+      this.attributesChanged();
     },
     removeAttribute(name) {
-      delete this.attributes[name]
-      this.attributesChanged()
+      delete this.attributes[name];
+      this.attributesChanged();
     },
     changeValue(event, name) {
-      if(!this.attributes[name])
-        this.attributes[name] = event.path[0].value
-      this.attributesChanged()
+      if (!this.attributes[name]) this.attributes[name] = event.path[0].value;
+      this.attributesChanged();
     },
     changeName(event, name, value) {
-      delete this.attributes[name]
-      this.attributes[event.path[0].value] = value
-      this.attributesChanged()
+      delete this.attributes[name];
+      this.attributes[event.path[0].value] = value;
+      this.attributesChanged();
     },
     attributesChanged() {
       this.$emit("attributesChanged", this.attributes);
-    }
+    },
   },
 });
 </script>
