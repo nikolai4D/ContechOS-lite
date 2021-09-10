@@ -280,10 +280,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute(
-            "style",
-            "user-select: none;"
-          );
+          text.setAttribute("style", "user-select: none;");
 
           text.textContent = circle.querySelector("title")!.textContent!;
 
@@ -300,10 +297,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute(
-            "style",
-            "user-select: none;"
-          );
+          text.setAttribute("style", "user-select: none;");
           text.setAttribute(
             "x",
             (
