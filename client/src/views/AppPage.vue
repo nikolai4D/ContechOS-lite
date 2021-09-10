@@ -224,17 +224,6 @@ export default defineComponent({
           });
         });
 
-      const nodesSelection = d3
-        .select("svg")
-        .append("g")
-        .selectAll("circle")
-        .data(nodes)
-        .join("circle")
-        .attr("r", 40)
-        .attr("fill", (data: any) => stringToColor(data.labels[0]))
-        .attr("stroke", "#ffffff")
-        .attr("stroke-width", 1.5);
-
       const linksSelection = d3
         .select("svg")
         .append("g")
@@ -262,6 +251,17 @@ export default defineComponent({
         .append("path")
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
         .attr("style", "fill: #f00;");
+
+      const nodesSelection = d3
+        .select("svg")
+        .append("g")
+        .selectAll("circle")
+        .data(nodes)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5);
 
       nodesSelection.append("title").text((data: any) => data.labels[0]);
       linksSelection.append("title").text((data: any) => data.name);
