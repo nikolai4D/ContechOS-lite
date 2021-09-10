@@ -111,7 +111,10 @@ export class RelationshipsService {
     });
   }
 
-  async update(id: string, updateRelationshipInput: UpdateRelationshipInput): Promise<Relationship> {
+  async update(
+    id: string,
+    updateRelationshipInput: UpdateRelationshipInput,
+  ): Promise<Relationship> {
     const relationship = await this.findOne(id);
 
     if (!relationship) {
