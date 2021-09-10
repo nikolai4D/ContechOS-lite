@@ -51,17 +51,17 @@ export class RelationshipsService {
     });
   }
 
-  async findAll(from: string, to: string): Promise<Relationship[]> {
+  async findAll(from?: string, to?: string): Promise<Relationship[]> {
     if (
-      !Utilities.isValidNeo4jLabel(from) ||
-      !Utilities.isValidNeo4jLabel(to)
+      (from && !Utilities.isValidNeo4jLabel(from)) ||
+      (to && !Utilities.isValidNeo4jLabel(to))
     ) {
       throw new BadRequestException();
     }
 
     const result = await this.neo4jService.read(
       `
-      MATCH (from:${from})-[rel]->(to:${to})
+      MATCH (from${typeof from === "string" ? `:${from}` : ''})-[rel]->(to${typeof to === "string" ? `:${to}` : ''})
       RETURN from, rel, to
       `,
     );
