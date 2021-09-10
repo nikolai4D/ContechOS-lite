@@ -48,7 +48,7 @@ export default defineComponent({
       isMouseDown: false,
       toggleMenu: true,
       labels: ["user", "admin"],
-      attributes: [{ name: "name", value: "luke" }],
+      attributes: {name: "luke"},
     };
   },
   components: {

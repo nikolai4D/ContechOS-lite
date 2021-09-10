@@ -3,7 +3,7 @@
     <label for="attributes" class="mb-1">Node Attributes</label>
     <div
       class="row mb-1 attribute"
-      v-for="(attribute, id) in attributes"
+      v-for="(value, name, id) in attributes"
       :key="id"
     >
       <div class="col-5">
@@ -11,8 +11,8 @@
           type="text"
           class="form-control"
           placeholder="attribute"
-          :value="attribute.name"
-          @change="changeName($event, attribute)"
+          :value="name"
+          @change="changeName($event, name, value)"
         />
       </div>
       <div class="col-6">
@@ -21,12 +21,12 @@
           class="form-control"
           placeholder="value"
           name="attribute"
-          :value="attribute.value"
-          @change="changeValue($event, attribute)"
+          :value="value"
+          @change="changeValue($event, name)"
         />
       </div>
       <div class="col-1">
-        <i class="fa fa-trash" @click="removeAttribute(attribute)"></i>
+        <i class="fa fa-trash" @click="removeAttribute(name)"></i>
       </div>
     </div>
 
@@ -58,40 +58,44 @@ i.fa-trash {
 </style>
 
 <script>
-import { indexOf } from "lodash";
 import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Attributes",
   data() {
     return {
-      attributes: [],
+      attributes: {},
     };
   },
   props: {
-    attr: Array,
+    attr: Object,
   },
   mounted() {
     this.attributes = this.attr;
   },
   methods: {
     addAttribute() {
-      this.attributes.push({ name: "", value: "" });
+      if(!this.attributes[""])
+        this.attributes[""] = "";
+      this.attributesChanged()
     },
-    removeAttribute(attr) {
-      var index = this.attributes.indexOf(attr);
-      if (index !== -1) {
-        this.attributes.splice(index, 1);
-      }
+    removeAttribute(name) {
+      delete this.attributes[name]
+      this.attributesChanged()
     },
-    changeValue(event, attribute) {
-      this.attributes[this.attributes.indexOf(attribute)].value =
-        event.path[0].value;
+    changeValue(event, name) {
+      if(!this.attributes[name])
+        this.attributes[name] = event.path[0].value
+      this.attributesChanged()
     },
-    changeName(event, attribute) {
-      this.attributes[this.attributes.indexOf(attribute)].name =
-        event.path[0].value;
+    changeName(event, name, value) {
+      delete this.attributes[name]
+      this.attributes[event.path[0].value] = value
+      this.attributesChanged()
     },
+    attributesChanged() {
+      this.$emit("attributesChanged", this.attributes);
+    }
   },
 });
 </script>
