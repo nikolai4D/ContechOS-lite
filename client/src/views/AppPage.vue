@@ -45,11 +45,18 @@ import stringToColor from "string-to-color";
 import ContextMenu from "../components/ContextMenu.vue";
 import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
+import { useMutation, useQuery } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 
 export default defineComponent({
   name: "AppPage",
   created() {
     this.getAllUsers();
+  },
+  data() {
+    return{
+      activeElementId: String
+    }
   },
   components: {
     ContextMenu,
@@ -73,7 +80,25 @@ export default defineComponent({
     createRelToNewNode() {
       return;
     },
-    deleteNode() {
+    deleteNode() {      
+      var id = this.activeElementId;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation ($id: String!) {
+         removeNode(id: $id) { success }
+        }
+      `);
+
+      mutate({ id:id });
+
+      onDone((result) => {
+        this.getAllUsers()
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
       return;
     },
     editRel() {
@@ -105,6 +130,7 @@ export default defineComponent({
       var contMenu: any = null;
       if (clickedOn.tagName == "circle") {
         // if you click on a node
+        this.activeElementId = clickedOn.id
         contMenu = document.getElementById("node-context-menu")!;
       } else if (clickedOn.tagName == "line" || clickedOn.tagName == "text") {
         // if you click on a relationship
@@ -262,7 +288,8 @@ export default defineComponent({
         .attr("r", 40)
         .attr("fill", (data: any) => stringToColor(data.labels[0]))
         .attr("stroke", "#ffffff")
-        .attr("stroke-width", 1.5);
+        .attr("stroke-width", 1.5)
+        .attr("id", (data:any) => data.id);
 
       nodesSelection
         .append("title")
