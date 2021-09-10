@@ -15,4 +15,6 @@ export class Config {
     'createdAt',
     'updatedAt',
   ];
+
+  public static readonly FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE = ['id'];
 }

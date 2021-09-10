@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { RelationshipEdge } from './relationship-edge.entity';
 
 @ObjectType()
@@ -8,6 +9,9 @@ export class Relationship {
 
   @Field()
   name: string;
+
+  @Field(() => GraphQLJSONObject)
+  properties: { [key: string]: any };
 
   @Field()
   source: RelationshipEdge;

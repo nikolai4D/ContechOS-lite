@@ -2,7 +2,7 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
     <h1>Homepage</h1>
-    <p v-if="getUser()" id="username">Welcome {{ getUser().name }}</p>
+    <p v-if="getUser()">Welcome {{ getUser().name }}</p>
     <p v-if="!getUser()">You are not logged in yet</p>
     <router-link
       to="/app"
@@ -33,9 +33,5 @@ export default defineComponent({
 
 #access-app:hover {
   color: white;
-}
-
-#username {
-  text-transform: capitalize;
 }
 </style>

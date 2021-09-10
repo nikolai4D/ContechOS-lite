@@ -264,7 +264,9 @@ export default defineComponent({
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1.5);
 
-      nodesSelection.append("title").text((data: any) => data.labels[0]);
+      nodesSelection
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
       linksSelection.append("title").text((data: any) => data.name);
 
       nodesSelection.call(drag(simulation));
@@ -281,10 +283,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute(
-            "style",
-            "text-transform: capitalize; user-select: none;"
-          );
+          text.setAttribute("style", "user-select: none;");
 
           text.textContent = circle.querySelector("title")!.textContent!;
 
@@ -301,10 +300,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute(
-            "style",
-            "text-transform: capitalize; user-select: none;"
-          );
+          text.setAttribute("style", "user-select: none;");
           text.setAttribute(
             "x",
             (

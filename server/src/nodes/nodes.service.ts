@@ -141,6 +141,8 @@ export class NodesService {
       throw new InternalServerErrorException();
     }
 
+    // Block updates for any node with a forbidden label (like User)
+    // For this nodes, if updatable, a separate endpoint will be exposed
     if (
       node.labels.some((label) =>
         Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
