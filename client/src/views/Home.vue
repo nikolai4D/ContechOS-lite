@@ -34,8 +34,4 @@ export default defineComponent({
 #access-app:hover {
   color: white;
 }
-
-#username {
-  text-transform: capitalize;
-}
 </style>

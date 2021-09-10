@@ -282,7 +282,7 @@ export default defineComponent({
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute(
             "style",
-            "text-transform: capitalize; user-select: none;"
+            "user-select: none;"
           );
 
           text.textContent = circle.querySelector("title")!.textContent!;
@@ -302,7 +302,7 @@ export default defineComponent({
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute(
             "style",
-            "text-transform: capitalize; user-select: none;"
+            "user-select: none;"
           );
           text.setAttribute(
             "x",
