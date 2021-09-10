@@ -62,7 +62,7 @@ export default defineComponent({
       let y = 0;
 
       let isDragging = false;
-      let parent = this.parent
+      let parent = this.parent;
 
       const draggableElement = parent.firstElementChild.firstElementChild;
 
