@@ -40,19 +40,14 @@ svg {
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { uniqBy } from "lodash";
 import * as d3 from "d3";
+import stringToColor from "string-to-color";
 import ContextMenu from "../components/ContextMenu.vue";
 import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
 
 export default defineComponent({
   name: "AppPage",
-  data() {
-    return {
-      users: [],
-    };
-  },
   created() {
     this.getAllUsers();
   },
@@ -143,16 +138,13 @@ export default defineComponent({
           variables: {},
           query: `
           {
-            users {
+            nodes {
               id
-              name
-              email
-              role {
-                id
-              }
+              labels
+              properties
             }
 
-            relationships(from: "User", to: "Role") {
+            relationships(from: null, to: null) {
               id
               name
               source {
@@ -167,29 +159,22 @@ export default defineComponent({
         }),
       });
 
-      const { users, relationships } = (await response.json()).data;
-
-      const roles = uniqBy(
-        users.map((user: any) => user.role),
-        "id"
-      );
+      const { nodes, relationships } = (await response.json()).data;
 
       const links = relationships.map((relationship: any) => {
         return {
           id: relationship.id,
           name: relationship.name,
-          source: users.find((user: any) => user.id === relationship.source.id),
-          target: roles.find((role: any) => role.id === relationship.target.id),
+          source: nodes.find((node: any) => node.id === relationship.source.id),
+          target: nodes.find((node: any) => node.id === relationship.target.id),
         };
       });
-
-      this.users = users;
 
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
       const simulation = d3
-        .forceSimulation([...users, ...roles])
+        .forceSimulation(nodes)
         .force(
           "link",
           d3
@@ -209,11 +194,7 @@ export default defineComponent({
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
-          userNodesSelection
-            .attr("cx", (data: any) => data.x)
-            .attr("cy", (data: any) => data.y);
-
-          roleNodesSelection
+          nodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
 
@@ -243,6 +224,27 @@ export default defineComponent({
           });
         });
 
+      const nodesSelection = d3
+        .select("svg")
+        .append("g")
+        .selectAll("circle")
+        .data(nodes)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5);
+
+      const linksSelection = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .selectAll("line")
+        .data(links)
+        .join("line")
+        .attr("marker-end", "url(#arrowhead)");
+
       const arrowHeads = d3
         .select("svg")
         .append("g")
@@ -261,47 +263,13 @@ export default defineComponent({
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
         .attr("style", "fill: #f00;");
 
-      const linksSelection = d3
-        .select("svg")
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
-        .selectAll("line")
-        .data(links)
-        .join("line")
-        .attr("marker-end", "url(#arrowhead)");
-
-      const userNodesSelection = d3
-        .select("svg")
-        .append("g")
-        .selectAll("circle")
-        .data(users)
-        .join("circle")
-        .attr("r", 40)
-        .attr("fill", "#3c3c3c")
-        .attr("stroke", "#ffffff")
-        .attr("stroke-width", 1.5)
-        .classed("user", true);
-
-      const roleNodesSelection = d3
-        .select("svg")
-        .append("g")
-        .selectAll("circle")
-        .data(roles)
-        .join("circle")
-        .attr("r", 40)
-        .attr("fill", "#f02e51")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
-        .classed("role", true);
-
-      userNodesSelection.append("title").text((data: any) => data.name);
-      roleNodesSelection.append("title").text((data: any) => data.id);
+      nodesSelection.append("title").text((data: any) => data.labels[0]);
       linksSelection.append("title").text((data: any) => data.name);
-      userNodesSelection.call(dragUsers(simulation));
 
-      function dragUsers(simulation: any): any {
-        document.querySelectorAll("circle.user").forEach((circle) => {
+      nodesSelection.call(drag(simulation));
+
+      function drag(simulation: any): any {
+        document.querySelectorAll("circle").forEach((circle) => {
           const text = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "text"
@@ -356,36 +324,6 @@ export default defineComponent({
           line.insertAdjacentElement("afterend", text);
         });
 
-        return drag(simulation);
-      }
-
-      roleNodesSelection.call(dragRoles(simulation));
-
-      function dragRoles(simulation: any): any {
-        document.querySelectorAll("circle.role").forEach((circle) => {
-          const text = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text"
-          );
-
-          text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "14px");
-          text.setAttribute("text-anchor", "middle");
-          text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("pointer-events", "none");
-          text.setAttribute(
-            "style",
-            "text-transform: capitalize; user-select: none;"
-          );
-          text.textContent = circle.querySelector("title")!.textContent!;
-
-          circle.insertAdjacentElement("afterend", text);
-        });
-
-        return drag(simulation);
-      }
-
-      function drag(simulation: any) {
         function dragstarted(event: any) {
           // first hide all open menus
           document
