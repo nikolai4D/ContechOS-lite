@@ -15,12 +15,11 @@
           :attr="attributes"
           @attributesChanged="changeAttributes($event)"
         />
-        <input
+        <button
           type="submit"
           class="form form-control btn btn-primary mt-3"
-          value="Add Node"
           @click="addNode"
-        />
+        >Add Node</button>
       </ul>
     </div>
   </nav>
