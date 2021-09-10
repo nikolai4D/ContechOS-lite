@@ -2,7 +2,7 @@
   <nav
     id="addNode"
     class="dropdown-menu dropdown-menu-sm inputMenu"
-    style="display: none"
+   
   >
     <div>
       <MenuHeader
@@ -27,15 +27,19 @@
   </nav>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #addNode {
   background: white;
   box-shadow: 0px 0px 15px black;
   width: 20%;
-  display: block;
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
+
+  &.show {
+    display: block;
+  }
 }
 </style>
 
@@ -93,7 +97,7 @@ export default defineComponent({
         console.log(result);
         console.log(this.$el);
         this.$el.classList.remove("show");
-        this.$el.style.display = "none";
+        //this.$el.style.display = "none";
         this.labels = [""];
         this.attributes = { "": "" };
         this.$emit("addedNode");
