@@ -34,8 +34,8 @@ export default defineComponent({
   },
   watch: {
     lbl(newValue, oldValue) {
-      this.labels = newValue
-    }
+      this.labels = newValue;
+    },
   },
   mounted() {
     this.labels = this.lbl;
