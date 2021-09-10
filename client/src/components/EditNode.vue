@@ -1,24 +1,25 @@
 <template>
-  <div>
-    <nav
-      id="editNode"
-      class="dropdown-menu dropdown-menu-sm inputMenu"
-      style="display: none"
-    >
-      <form action="">
-        <MenuHeader :menuName="'Edit Node'" @menuToggle="toggleMenu = $event" />
-        <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-          <Labels :lbl="labels" />
-          <Attributes :attr="attributes" />
-          <input
-            type="submit"
-            class="form form-control btn btn-primary mt-3"
-            value="Edit Node"
-          />
-        </ul>
-      </form>
-    </nav>
-  </div>
+  <nav
+    id="editNode"
+    class="dropdown-menu dropdown-menu-sm inputMenu"
+    style="display: none"
+  >
+    <div>
+      <MenuHeader :menuName="'Edit Node'" @menuToggle="toggleMenu = $event" />
+      <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
+        <Labels :lbl="labels" @labelsChanged="changeLabels($event)" />
+        <Attributes
+          :attr="attributes"
+          @attributesChanged="changeAttributes($event)"
+        />
+        <input
+          type="submit"
+          class="form form-control btn btn-primary mt-3"
+          value="Edit Node"
+        />
+      </ul>
+    </div>
+  </nav>
 </template>
 
 <style scoped>
@@ -47,7 +48,7 @@ export default defineComponent({
       currentPos: { x: null, y: null },
       isMouseDown: false,
       toggleMenu: true,
-      labels: ["user", "admin"],
+      labels: ["User", "Admin"],
       attributes: { name: "luke" },
     };
   },
@@ -56,5 +57,13 @@ export default defineComponent({
     Labels,
     MenuHeader,
   },
+  methods: {
+    changeAttributes(event) {
+      this.attributes = event;
+    },
+    changeLabels(event) {
+      this.labels = event;
+    },
+  }
 });
 </script>
