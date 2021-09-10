@@ -1,27 +1,29 @@
 <template>
-  <div>
-    <nav
-      id="addNode"
-      class="dropdown-menu dropdown-menu-sm inputMenu"
-      style="display: none"
-    >
-      <form action="">
-        <MenuHeader
-          :menuName="'Add New Node'"
-          @menuToggle="toggleMenu = $event"
+  <nav
+    id="addNode"
+    class="dropdown-menu dropdown-menu-sm inputMenu"
+    style="display: none"
+  >
+    <div>
+      <MenuHeader
+        :menuName="'Add New Node'"
+        @menuToggle="toggleMenu = $event"
+      />
+      <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
+        <Labels :lbl="labels" @labelsChanged="changeLabels($event)" />
+        <Attributes
+          :attr="attributes"
+          @attributesChanged="changeAttributes($event)"
         />
-        <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-          <Labels :lbl="labels" />
-          <Attributes :attr="attributes" />
-          <input
-            type="submit"
-            class="form form-control btn btn-primary mt-3"
-            value="Add Node"
-          />
-        </ul>
-      </form>
-    </nav>
-  </div>
+        <input
+          type="submit"
+          class="form form-control btn btn-primary mt-3"
+          value="Add Node"
+          @click="addNode"
+        />
+      </ul>
+    </div>
+  </nav>
 </template>
 
 <style scoped>
@@ -41,6 +43,8 @@ import { defineComponent } from "vue";
 import Attributes from "./Attributes.vue";
 import Labels from "./Labels.vue";
 import MenuHeader from "./MenuHeader.vue";
+import { useMutation, useQuery } from "@vue/apollo-composable";
+import gql from "graphql-tag";
 
 export default defineComponent({
   name: "AddNode",
@@ -50,14 +54,52 @@ export default defineComponent({
       currentPos: { x: null, y: null },
       isMouseDown: false,
       toggleMenu: true,
-      labels: [],
-      attributes: [{ name: "", value: "" }],
+      labels: [""],
+      attributes: { "": "" },
     };
   },
   components: {
     Attributes,
     Labels,
     MenuHeader,
+  },
+  methods: {
+    changeAttributes(event) {
+      this.attributes = event;
+    },
+    changeLabels(event) {
+      this.labels = event;
+    },
+    async addNode() {
+      var labels = this.labels;
+      var properties = this.attributes;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation ($labels: [String!]!, $properties: JSONObject!) {
+          createNode(
+            createNodeInput: { labels: $labels, properties: $properties }
+          ) {
+            id
+            labels
+            properties
+          }
+        }
+      `);
+
+      mutate({ labels: labels, properties: properties });
+
+      onDone((result) => {
+        console.log(result);
+        console.log(this.$el);
+        this.$el.classList.remove("show");
+        this.$el.style.display = "none";
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
+    },
   },
 });
 </script>
