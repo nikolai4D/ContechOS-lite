@@ -12,10 +12,9 @@
           :attr="attributes"
           @attributesChanged="changeAttributes($event)"
         />
-        <button
-          type="submit"
-          class="form form-control btn btn-primary mt-3"
-        >Edit Node</button>
+        <button type="submit" class="form form-control btn btn-primary mt-3">
+          Edit Node
+        </button>
       </ul>
     </div>
   </nav>

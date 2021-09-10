@@ -19,7 +19,9 @@
           type="submit"
           class="form form-control btn btn-primary mt-3"
           @click="addNode"
-        >Add Node</button>
+        >
+          Add Node
+        </button>
       </ul>
     </div>
   </nav>
