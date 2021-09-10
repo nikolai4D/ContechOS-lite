@@ -19,7 +19,10 @@ export class RelationshipsResolver {
   }
 
   @Query(() => [Relationship], { name: 'relationships' })
-  findAll(@Args('from', { nullable: true }) from?: string, @Args('to', { nullable: true }) to?: string) {
+  findAll(
+    @Args('from', { nullable: true }) from?: string,
+    @Args('to', { nullable: true }) to?: string,
+  ) {
     return this.relationshipsService.findAll(from, to);
   }
 

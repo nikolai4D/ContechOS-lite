@@ -61,7 +61,9 @@ export class RelationshipsService {
 
     const result = await this.neo4jService.read(
       `
-      MATCH (from${typeof from === "string" ? `:${from}` : ''})-[rel]->(to${typeof to === "string" ? `:${to}` : ''})
+      MATCH (from${typeof from === 'string' ? `:${from}` : ''})-[rel]->(to${
+        typeof to === 'string' ? `:${to}` : ''
+      })
       RETURN from, rel, to
       `,
     );
