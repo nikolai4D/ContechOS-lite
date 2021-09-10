@@ -64,6 +64,6 @@ export default defineComponent({
     changeLabels(event) {
       this.labels = event;
     },
-  }
+  },
 });
 </script>
