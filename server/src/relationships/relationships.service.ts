@@ -2,12 +2,14 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Utilities } from 'src/utilities/Utilities';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
+import { UpdateRelationshipInput } from './dto/update-relationship.input';
 import { Relationship } from './entities/relationship.entity';
 
 @Injectable()
@@ -95,6 +97,50 @@ export class RelationshipsService {
 
     if (!record) {
       return null;
+    }
+
+    const { properties: from } = record.get('from');
+    const { properties: rel, type: name } = record.get('rel');
+    const { properties: to } = record.get('to');
+
+    return new Relationship({
+      id: rel.id,
+      name,
+      source: { id: from.id },
+      target: { id: to.id },
+    });
+  }
+
+  async update(id: string, updateRelationshipInput: UpdateRelationshipInput): Promise<Relationship> {
+    const relationship = await this.findOne(id);
+
+    if (!relationship) {
+      throw new NotFoundException();
+    }
+
+    const result = await this.neo4jService.write(
+      `
+      MATCH (from)-[rel { id: $id }]->(to)
+      SET rel += {
+        name: $name,
+        email: $email,
+        password: $password,
+        updatedAt: datetime()
+      }
+      RETURN from, rel, to
+      `,
+      {
+        id,
+        name: updateUserInput.name ?? user.name,
+        email: updateUserInput.email ?? user.email,
+        password: updateUserInput.password ?? user.password,
+      },
+    );
+
+    const record = result.records.at(0);
+
+    if (!record) {
+      throw new InternalServerErrorException();
     }
 
     const { properties: from } = record.get('from');

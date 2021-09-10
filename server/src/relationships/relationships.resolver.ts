@@ -4,6 +4,7 @@ import { Relationship } from './entities/relationship.entity';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { UpdateRelationshipInput } from './dto/update-relationship.input';
 
 @Resolver(() => Relationship)
 @UseGuards(JwtAuthGuard)
@@ -35,6 +36,14 @@ export class RelationshipsResolver {
     }
 
     return relationship;
+  }
+
+  @Mutation(() => Node)
+  updateRelationship(
+    @Args('id') id: string,
+    @Args('updateRelationshipInput') updateRelationshipInput: UpdateRelationshipInput,
+  ) {
+    return this.relationshipsService.update(id, updateRelationshipInput);
   }
 
   @Mutation(() => Relationship)
