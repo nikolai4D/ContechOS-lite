@@ -52,6 +52,7 @@ export default defineComponent({
       this.parent.classList.remove("show");
       this.parent.style.display = "none";
       this.toggleMenu = true;
+      this.$emit("menuToggle", this.toggleMenu);
     },
     menuToggle(newValue) {
       this.toggleMenu = newValue;

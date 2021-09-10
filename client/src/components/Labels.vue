@@ -32,6 +32,11 @@ export default defineComponent({
   props: {
     lbl: Array,
   },
+  watch: {
+    lbl(newValue, oldValue) {
+      this.labels = newValue;
+    },
+  },
   mounted() {
     this.labels = this.lbl;
   },

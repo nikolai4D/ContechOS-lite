@@ -70,7 +70,7 @@ export default defineComponent({
     changeLabels(event: any) {
       this.labels = event;
     },
-    async addNode() {
+    addNode() {
       var labels = this.labels;
       var properties = this.attributes;
 
@@ -93,6 +93,8 @@ export default defineComponent({
         console.log(this.$el);
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
+        this.labels = [""];
+        this.attributes = { "": "" };
       });
 
       onError((result) => {
