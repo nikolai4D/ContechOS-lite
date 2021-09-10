@@ -70,6 +70,11 @@ export default defineComponent({
   props: {
     attr: Object,
   },
+  watch: {
+    attr(newValue, oldValue) {
+      this.attributes = newValue
+    }
+  },
   mounted() {
     this.attributes = this.attr;
   },
