@@ -64,10 +64,10 @@ export default defineComponent({
     MenuHeader,
   },
   methods: {
-    changeAttributes(event) {
+    changeAttributes(event: any) {
       this.attributes = event;
     },
-    changeLabels(event) {
+    changeLabels(event: any) {
       this.labels = event;
     },
     async addNode() {
