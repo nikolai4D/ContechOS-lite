@@ -63,10 +63,12 @@ export default defineComponent({
   },
   methods: {
     addNode() {
+      this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
     },
     editNode() {
+      this.hideAllInputMenus();
       document.getElementById("editNode")!.classList.add("show");
       document.getElementById("editNode")!.style.display = "block";
     },
@@ -85,8 +87,14 @@ export default defineComponent({
     deleteRel() {
       return;
     },
-    hideAllMenus() {
+    hideAllContextMenus() {
       document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {
+        el.classList.remove("show");
+        el.style.display = "none";
+      });
+    },
+    hideAllInputMenus() {
+      document.querySelectorAll<HTMLElement>(".inputMenu").forEach((el) => {
         el.classList.remove("show");
         el.style.display = "none";
       });
@@ -95,7 +103,7 @@ export default defineComponent({
       e.preventDefault();
 
       // first let's remove all opened menus
-      this.hideAllMenus();
+      this.hideAllContextMenus();
 
       // select menu to display  based on where you clicked
       var clickedOn = e.path[0]; // get the element you directly clicked on
@@ -201,10 +209,6 @@ export default defineComponent({
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
-          // linksArrow
-          //   .attr("refX", (data: any) => data.target.x)
-          //   .attr("refY", (data: any) => data.target.y);
-
           userNodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
@@ -266,18 +270,6 @@ export default defineComponent({
         .data(links)
         .join("line")
         .attr("marker-end", "url(#arrowhead)");
-
-      //     <marker
-      //   id="arrow"
-      //   markerUnits="strokeWidth"
-      //   markerWidth="12"
-      //   markerHeight="12"
-      //   viewBox="0 0 12 12"
-      //   refX="6"
-      //   refY="6"
-      //   orient="auto">
-      //   <path d="M2,2 L10,6 L2,10 L6,6 L2,2" style="fill: #f00;"></path>
-      // </marker>
 
       const userNodesSelection = d3
         .select("svg")

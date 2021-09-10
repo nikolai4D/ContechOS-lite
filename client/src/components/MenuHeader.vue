@@ -38,8 +38,8 @@ export default defineComponent({
     menuName: String,
   },
   mounted() {
+    this.parent = this.$el.parentElement.parentElement;
     this.enableDrag();
-    console.log(this.$parent.$parent.$parent);
   },
   data() {
     return {
@@ -49,7 +49,6 @@ export default defineComponent({
   },
   methods: {
     closeElement(event) {
-      this.parent = event.target.parentElement.parentElement.parentElement;
       this.parent.classList.remove("show");
       this.parent.style.display = "none";
       this.toggleMenu = true;
@@ -63,18 +62,16 @@ export default defineComponent({
       let y = 0;
 
       let isDragging = false;
+      let parent = this.parent
 
-      const draggableElement = document.getElementById("header");
+      const draggableElement = parent.firstElementChild.firstElementChild;
 
       draggableElement.addEventListener("mousedown", () => {
         function update() {
           if (isDragging) {
             requestAnimationFrame(update);
           }
-
-          document.getElementById(
-            "addNode"
-          ).style.transform = `translate(${x}px, ${y}px)`;
+          parent.style.transform = `translate(${x}px, ${y}px)`;
         }
 
         isDragging = true;
