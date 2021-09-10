@@ -7,6 +7,7 @@ import {
 import { randomUUID } from 'crypto';
 import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
+import { Config } from 'src/config/Config';
 import { Utilities } from 'src/utilities/Utilities';
 import { CreateRelationshipInput } from './dto/create-relationship.input';
 import { UpdateRelationshipInput } from './dto/update-relationship.input';
@@ -48,6 +49,7 @@ export class RelationshipsService {
     return new Relationship({
       id: rel.id,
       name,
+      properties: rel,
       source: { id: from.id },
       target: { id: to.id },
     });
@@ -78,6 +80,7 @@ export class RelationshipsService {
       return new Relationship({
         id: rel.id,
         name,
+        properties: rel,
         source: { id: from.id },
         target: { id: to.id },
       });
@@ -106,6 +109,7 @@ export class RelationshipsService {
     return new Relationship({
       id: rel.id,
       name,
+      properties: rel,
       source: { id: from.id },
       target: { id: to.id },
     });
@@ -115,6 +119,15 @@ export class RelationshipsService {
     id: string,
     updateRelationshipInput: UpdateRelationshipInput,
   ): Promise<Relationship> {
+    if (
+      updateRelationshipInput.properties &&
+      Object.keys(updateRelationshipInput.properties).some((property) =>
+        Config.FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
+      throw new BadRequestException();
+    }
+
     const relationship = await this.findOne(id);
 
     if (!relationship) {
@@ -123,20 +136,21 @@ export class RelationshipsService {
 
     const result = await this.neo4jService.write(
       `
-      MATCH (from)-[rel { id: $id }]->(to)
-      SET rel += {
-        name: $name,
-        email: $email,
-        password: $password,
-        updatedAt: datetime()
-      }
-      RETURN from, rel, to
+      MATCH (from)-[rel]->(to)
+      ${updateRelationshipInput.properties !== undefined ? 'SET n = $properties' : ''}
+      RETURN n
       `,
       {
         id,
-        name: updateUserInput.name ?? user.name,
-        email: updateUserInput.email ?? user.email,
-        password: updateUserInput.password ?? user.password,
+        properties: {
+          ...updateRelationshipInput.properties,
+          ...Object.fromEntries(
+            Config.FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE.map((property) => [
+              property,
+              relationship.properties[property],
+            ]),
+          ),
+        },
       },
     );
 
@@ -153,6 +167,7 @@ export class RelationshipsService {
     return new Relationship({
       id: rel.id,
       name,
+      properties: rel,
       source: { id: from.id },
       target: { id: to.id },
     });

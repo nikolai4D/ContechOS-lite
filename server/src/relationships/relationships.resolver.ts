@@ -38,7 +38,7 @@ export class RelationshipsResolver {
     return relationship;
   }
 
-  @Mutation(() => Node)
+  @Mutation(() => Relationship)
   updateRelationship(
     @Args('id') id: string,
     @Args('updateRelationshipInput')
