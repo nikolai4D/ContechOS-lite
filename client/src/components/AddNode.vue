@@ -71,9 +71,9 @@ export default defineComponent({
       this.labels = event;
     },
     addNode() {
-      var labels = this.labels
-      var properties = this.attributes
-     
+      var labels = this.labels;
+      var properties = this.attributes;
+
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject!) {
           createNode(
@@ -92,9 +92,9 @@ export default defineComponent({
         console.log(result);
         console.log(this.$el);
         this.$el.classList.remove("show");
-        this.$el.style.display = "none";  
-        this.labels = [""]
-        this.attributes = {"": ""}
+        this.$el.style.display = "none";
+        this.labels = [""];
+        this.attributes = { "": "" };
       });
 
       onError((result) => {

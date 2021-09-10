@@ -72,8 +72,8 @@ export default defineComponent({
   },
   watch: {
     attr(newValue, oldValue) {
-      this.attributes = newValue
-    }
+      this.attributes = newValue;
+    },
   },
   mounted() {
     this.attributes = this.attr;
