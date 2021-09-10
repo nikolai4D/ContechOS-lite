@@ -2,7 +2,7 @@
   <div>
     <svg @contextmenu="rightClick($event)"></svg>
 
-    <AddNode />
+    <AddNode @addedNode="getAllUsers" />
     <EditNode />
 
     <ContextMenu
@@ -171,6 +171,7 @@ export default defineComponent({
       });
 
       const svg = document.querySelector("svg") as SVGElement;
+      svg.innerHTML = ''
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
       const simulation = d3

@@ -95,6 +95,7 @@ export default defineComponent({
         this.$el.style.display = "none";
         this.labels = [""];
         this.attributes = { "": "" };
+        this.$emit("addedNode")
       });
 
       onError((result) => {
