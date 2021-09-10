@@ -1,9 +1,5 @@
 <template>
-  <nav
-    id="addNode"
-    class="dropdown-menu dropdown-menu-sm inputMenu"
-   
-  >
+  <nav id="addNode" class="dropdown-menu dropdown-menu-sm inputMenu">
     <div>
       <MenuHeader
         :menuName="'Add New Node'"
