@@ -2,7 +2,7 @@
   <div class="container">
     <div class="card" style="width: 18rem">
       <i class="fas fa-user-circle fa-5x" id="account-icon"></i>
-      <div class="card-body">
+      <form class="card-body" @submit.prevent="formSubmit">
         <h5 class="card-title mb-5">Log in</h5>
         <div class="mb-3">
           <label for="mailInput" class="form-label">Email address</label>
@@ -49,9 +49,9 @@
           >
         </div>
         <div class="d-grid gap-2 mb-3">
-          <button class="btn btn-primary" @click="formSubmit">Log in</button>
+          <button class="btn btn-primary">Log in</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>

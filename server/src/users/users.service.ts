@@ -1,12 +1,11 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
-import { Neo4jService } from 'nest-neo4j/dist';
+import { Neo4jService } from 'nest-neo4j';
 import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 import { Config } from 'src/config/Config';
 import { CreateUserInput } from './dto/create-user.input';
@@ -31,6 +30,7 @@ export class UsersService {
 
     const result = await this.neo4jService.write(
       `
+      MERGE (r:Role { id: "user" })
       CREATE (u:User {
         id: $id,
         name: $name,
@@ -38,22 +38,22 @@ export class UsersService {
         password: $password,
         createdAt: datetime(),
         updatedAt: datetime()
-      })
-      RETURN u
+      })-[:HAS_ROLE { id: $relationshipId }]->(r)
+      RETURN u, r
       `,
       {
         id: randomUUID(),
         name: createUserInput.name,
         email: createUserInput.email,
         password,
+        relationshipId: randomUUID(),
       },
     );
 
-    const user = result.records.at(0)?.get('u').properties;
-
-    if (!user) {
-      throw new InternalServerErrorException();
-    }
+    const user = {
+      ...result.records.at(0)?.get('u').properties,
+      role: result.records.at(0)?.get('r').properties,
+    };
 
     return new User(user);
   }
@@ -61,8 +61,8 @@ export class UsersService {
   async findOne(id: string): Promise<User | null> {
     const result = await this.neo4jService.read(
       `
-      MATCH (u:User { id: $id })
-      RETURN u
+      MATCH (u:User { id: $id })-[:HAS_ROLE]->(r:Role)
+      RETURN u, r
       `,
       { id },
     );
@@ -73,14 +73,17 @@ export class UsersService {
       return null;
     }
 
-    return new User(user);
+    return new User({
+      ...user,
+      role: result.records.at(0)?.get('r').properties,
+    });
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
     const result = await this.neo4jService.read(
       `
-      MATCH (u:User { email: $email })
-      RETURN u
+      MATCH (u:User { email: $email })-[:HAS_ROLE]->(r:Role)
+      RETURN u, r
       `,
       { email },
     );
@@ -91,7 +94,26 @@ export class UsersService {
       return null;
     }
 
-    return new User(user);
+    return new User({
+      ...user,
+      role: result.records.at(0)?.get('r').properties,
+    });
+  }
+
+  async findAll(): Promise<User[]> {
+    const result = await this.neo4jService.read(
+      `
+      MATCH (u:User)-[:HAS_ROLE]->(r:Role)
+      RETURN u, r
+      `,
+    );
+
+    const users = result.records.map((record) => ({
+      ...record.get('u').properties,
+      role: record.get('r').properties,
+    }));
+
+    return users.map((user) => new User(user));
   }
 
   async existsByEmail(email: string): Promise<boolean> {
@@ -116,14 +138,14 @@ export class UsersService {
 
     const result = await this.neo4jService.write(
       `
-      MATCH (u:User { id: $id })
+      MATCH (u:User { id: $id })-[:HAS_ROLE]->(r:Role)
       SET u += {
         name: $name,
         email: $email,
         password: $password,
         updatedAt: datetime()
       }
-      RETURN u
+      RETURN u, r
       `,
       {
         id,
@@ -133,11 +155,10 @@ export class UsersService {
       },
     );
 
-    const newUser = result.records.at(0)?.get('u').properties;
-
-    if (!newUser) {
-      throw new InternalServerErrorException();
-    }
+    const newUser = {
+      ...result.records.at(0)?.get('u').properties,
+      role: result.records.at(0)?.get('r').properties,
+    };
 
     return new User(newUser);
   }

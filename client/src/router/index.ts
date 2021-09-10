@@ -26,10 +26,10 @@ const routes: Array<RouteRecordRaw> = [
     name: "AppPage",
     component: AppPage,
     beforeEnter: (to, from, next) => {
-      if(!localStorage["auth.token"]){
+      if (!localStorage["auth.token"]) {
         next("/");
-      } else{
-        next()
+      } else {
+        next();
       }
     },
   },

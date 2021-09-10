@@ -2,7 +2,7 @@
   <div class="container">
     <div class="card" style="width: 18rem">
       <i class="fas fa-user-circle fa-5x" id="account-icon"></i>
-      <div class="card-body">
+      <form class="card-body" @submit.prevent="formSubmit">
         <h5 class="card-title mb-5">Sign up</h5>
         <div class="mb-3">
           <label for="nameInput" class="form-label">Name</label>
@@ -60,11 +60,9 @@
           >
         </div>
         <div class="d-grid gap-2 mb-3">
-          <button class="btn btn-primary" type="submit" @click="formSubmit">
-            Sign up
-          </button>
+          <button class="btn btn-primary" type="submit">Sign up</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
