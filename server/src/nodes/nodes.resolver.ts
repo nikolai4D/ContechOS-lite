@@ -5,6 +5,7 @@ import { CreateNodeInput } from './dto/create-node.input';
 import { UpdateNodeInput } from './dto/update-node.input';
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 
 @Resolver(() => Node)
 @UseGuards(JwtAuthGuard)
@@ -40,7 +41,7 @@ export class NodesResolver {
     return this.nodesService.update(id, updateNodeInput);
   }
 
-  @Mutation(() => Node)
+  @Mutation(() => GraphQLDeleteResult)
   removeNode(@Args('id') id: string) {
     return this.nodesService.remove(id);
   }

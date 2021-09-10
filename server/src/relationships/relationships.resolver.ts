@@ -5,6 +5,7 @@ import { CreateRelationshipInput } from './dto/create-relationship.input';
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { UpdateRelationshipInput } from './dto/update-relationship.input';
+import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.graphql.type';
 
 @Resolver(() => Relationship)
 @UseGuards(JwtAuthGuard)
@@ -47,7 +48,7 @@ export class RelationshipsResolver {
     return this.relationshipsService.update(id, updateRelationshipInput);
   }
 
-  @Mutation(() => Relationship)
+  @Mutation(() => GraphQLDeleteResult)
   removeRelationship(@Args('id', { type: () => String }) id: string) {
     return this.relationshipsService.remove(id);
   }
