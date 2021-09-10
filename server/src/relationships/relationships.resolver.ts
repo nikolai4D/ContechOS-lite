@@ -41,7 +41,8 @@ export class RelationshipsResolver {
   @Mutation(() => Node)
   updateRelationship(
     @Args('id') id: string,
-    @Args('updateRelationshipInput') updateRelationshipInput: UpdateRelationshipInput,
+    @Args('updateRelationshipInput')
+    updateRelationshipInput: UpdateRelationshipInput,
   ) {
     return this.relationshipsService.update(id, updateRelationshipInput);
   }
