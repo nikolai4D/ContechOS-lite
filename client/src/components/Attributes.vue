@@ -84,11 +84,13 @@ export default defineComponent({
         this.attributes.splice(index, 1);
       }
     },
-    changeValue(event, attribute){
-      this.attributes[this.attributes.indexOf(attribute)].value = event.path[0].value
+    changeValue(event, attribute) {
+      this.attributes[this.attributes.indexOf(attribute)].value =
+        event.path[0].value;
     },
-    changeName(event, attribute){
-      this.attributes[this.attributes.indexOf(attribute)].name = event.path[0].value
+    changeName(event, attribute) {
+      this.attributes[this.attributes.indexOf(attribute)].name =
+        event.path[0].value;
     },
   },
 });
