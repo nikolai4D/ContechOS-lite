@@ -37,8 +37,11 @@ export default defineComponent({
   },
   methods: {
     updateLabels() {
-      this.labels = document.getElementById("labelInput").value.split(",").map(w => w.charAt(0).toUpperCase() + w.slice(1));
-      this.$emit("labelsChanged", this.labels)
+      this.labels = document
+        .getElementById("labelInput")
+        .value.split(",")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1));
+      this.$emit("labelsChanged", this.labels);
     },
   },
 });
