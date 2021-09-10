@@ -137,7 +137,11 @@ export class RelationshipsService {
     const result = await this.neo4jService.write(
       `
       MATCH (from)-[rel]->(to)
-      ${updateRelationshipInput.properties !== undefined ? 'SET n = $properties' : ''}
+      ${
+        updateRelationshipInput.properties !== undefined
+          ? 'SET n = $properties'
+          : ''
+      }
       RETURN n
       `,
       {
@@ -145,10 +149,9 @@ export class RelationshipsService {
         properties: {
           ...updateRelationshipInput.properties,
           ...Object.fromEntries(
-            Config.FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE.map((property) => [
-              property,
-              relationship.properties[property],
-            ]),
+            Config.FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE.map(
+              (property) => [property, relationship.properties[property]],
+            ),
           ),
         },
       },
