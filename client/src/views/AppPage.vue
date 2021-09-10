@@ -54,9 +54,9 @@ export default defineComponent({
     this.getAllUsers();
   },
   data() {
-    return{
-      activeElementId: String
-    }
+    return {
+      activeElementId: String,
+    };
   },
   components: {
     ContextMenu,
@@ -80,19 +80,21 @@ export default defineComponent({
     createRelToNewNode() {
       return;
     },
-    deleteNode() {      
+    deleteNode() {
       var id = this.activeElementId;
 
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($id: String!) {
-         removeNode(id: $id) { success }
+          removeNode(id: $id) {
+            success
+          }
         }
       `);
 
-      mutate({ id:id });
+      mutate({ id: id });
 
       onDone((result) => {
-        this.getAllUsers()
+        this.getAllUsers();
       });
 
       onError((result) => {
@@ -130,7 +132,7 @@ export default defineComponent({
       var contMenu: any = null;
       if (clickedOn.tagName == "circle") {
         // if you click on a node
-        this.activeElementId = clickedOn.id
+        this.activeElementId = clickedOn.id;
         contMenu = document.getElementById("node-context-menu")!;
       } else if (clickedOn.tagName == "line" || clickedOn.tagName == "text") {
         // if you click on a relationship
@@ -289,7 +291,7 @@ export default defineComponent({
         .attr("fill", (data: any) => stringToColor(data.labels[0]))
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1.5)
-        .attr("id", (data:any) => data.id);
+        .attr("id", (data: any) => data.id);
 
       nodesSelection
         .append("title")
