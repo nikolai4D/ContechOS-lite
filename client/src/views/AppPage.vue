@@ -107,6 +107,27 @@ export default defineComponent({
       return;
     },
     deleteRel() {
+      const id = this.activeElementId;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation ($id: String!) {
+          removeRelationship(id: $id) {
+            success
+          }
+        }
+      `);
+
+      mutate({ id });
+
+      onDone((result) => {
+        this.getAllUsers();
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
+
       return;
     },
     hideAllContextMenus() {
@@ -136,6 +157,7 @@ export default defineComponent({
         contMenu = document.getElementById("node-context-menu")!;
       } else if (clickedOn.tagName == "line" || clickedOn.tagName == "text") {
         // if you click on a relationship
+        this.activeElementId = clickedOn.id;
         contMenu = document.getElementById("rel-context-menu")!;
       } else if (clickedOn.tagName == "svg") {
         // if you clicked on the background
@@ -261,7 +283,8 @@ export default defineComponent({
         .selectAll("line")
         .data(links)
         .join("line")
-        .attr("marker-end", "url(#arrowhead)");
+        .attr("marker-end", "url(#arrowhead)")
+        .attr("id", (data: any) => data.id);
 
       const arrowHeads = d3
         .select("svg")
