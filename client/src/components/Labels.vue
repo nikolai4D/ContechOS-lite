@@ -42,13 +42,14 @@ export default defineComponent({
   },
   methods: {
     updateLabels(event) {
-      this.labels = event.target.value.split(",")
+      this.labels = event.target.value
+        .split(",")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1));
       this.$emit("labelsChanged", this.labels);
     },
     getLabels() {
-      return this.labels.join(",")
-    }
+      return this.labels.join(",");
+    },
   },
 });
 </script>
