@@ -1,8 +1,5 @@
 <template>
-  <nav
-    id="editNode"
-    class="dropdown-menu dropdown-menu-sm inputMenu"
-  >
+  <nav id="editNode" class="dropdown-menu dropdown-menu-sm inputMenu">
     <div>
       <MenuHeader :menuName="'Edit Node'" @menuToggle="toggleMenu = $event" />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
@@ -103,7 +100,7 @@ export default defineComponent({
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject, $id: String!) {
           updateNode(
-            updateNodeInput: {labels: $labels, properties: $properties}
+            updateNodeInput: { labels: $labels, properties: $properties }
             id: $id
           ) {
             id
