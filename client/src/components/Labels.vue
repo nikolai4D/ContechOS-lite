@@ -7,8 +7,8 @@
       class="form form-control ml-2 mr-2 mb-3"
       name="node-labels"
       placeholder='divide labels with a ","'
-      :value="labels"
-      @change="updateLabels"
+      :value="getLabels()"
+      @change="updateLabels($event)"
     />
   </div>
 </template>
@@ -41,12 +41,14 @@ export default defineComponent({
     this.labels = this.lbl;
   },
   methods: {
-    updateLabels() {
-      this.labels = document
-        .getElementById("labelInput")
-        .value.split(",")
+    updateLabels(event) {
+      this.labels = event.target.value
+        .split(",")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1));
       this.$emit("labelsChanged", this.labels);
+    },
+    getLabels() {
+      return this.labels.join(",");
     },
   },
 });

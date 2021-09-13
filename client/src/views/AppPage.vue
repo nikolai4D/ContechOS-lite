@@ -3,7 +3,11 @@
     <svg @contextmenu="rightClick($event)"></svg>
 
     <AddNode @addedNode="getAllUsers" />
-    <EditNode />
+    <EditNode
+      :labelsProps="labels"
+      :propertiesProps="properties"
+      :nodeId="activeElementId"
+    />
 
     <ContextMenu
       :menuId="'bg-context-menu'"
@@ -55,7 +59,9 @@ export default defineComponent({
   },
   data() {
     return {
-      activeElementId: String,
+      activeElementId: "",
+      labels: [],
+      properties: {},
     };
   },
   components: {
@@ -71,8 +77,32 @@ export default defineComponent({
     },
     editNode() {
       this.hideAllInputMenus();
-      document.getElementById("editNode")!.classList.add("show");
-      document.getElementById("editNode")!.style.display = "block";
+
+      var id = this.activeElementId;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        query ($id: String!) {
+          node(id: $id) {
+            labels
+            properties
+          }
+        }
+      `);
+
+      mutate({ id: id });
+
+      onDone((result) => {
+        this.labels = result.data.node.labels;
+        this.properties = result.data.node.properties;
+
+        document.getElementById("editNode")!.classList.add("show");
+        document.getElementById("editNode")!.style.display = "block";
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
     },
     createRelToExistingNode() {
       return;
@@ -101,7 +131,6 @@ export default defineComponent({
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
-      return;
     },
     editRel() {
       return;

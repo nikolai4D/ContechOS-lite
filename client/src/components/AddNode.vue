@@ -90,10 +90,8 @@ export default defineComponent({
       mutate({ labels: labels, properties: properties });
 
       onDone((result) => {
-        console.log(result);
-        console.log(this.$el);
         this.$el.classList.remove("show");
-        //this.$el.style.display = "none";
+        this.$el.style.display = "none";
         this.labels = [""];
         this.attributes = { "": "" };
         this.$emit("addedNode");
