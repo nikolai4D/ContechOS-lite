@@ -105,6 +105,55 @@ export default defineComponent({
       });
     },
     createRelToExistingNode() {
+      const svg = document.querySelector("svg")!;
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+      line.setAttribute("stroke", "#999")
+      line.setAttribute("stroke-opacity", "0.6");
+
+      text.textContent = "";
+
+      const activeElement = document.getElementById(this.activeElementId) as unknown as SVGCircleElement;
+
+      line.setAttribute("x1", activeElement.cx.baseVal.value.toString());
+      line.setAttribute("y1", activeElement.cy.baseVal.value.toString());
+
+      const mousemove = ({ x, y }: MouseEvent) => {
+        svg.addEventListener("click", click);
+
+        {
+          const navBar = document.getElementById("nav")!;
+
+          line.setAttribute("x2", x.toString());
+          line.setAttribute("y2", (y - navBar.clientHeight).toString());
+        }
+      };
+
+      const click = ({ target }: MouseEvent) => {
+        svg.removeEventListener("mousemove", mousemove);
+        svg.removeEventListener("click", click);
+
+        const targetElement = target as SVGElement;
+
+        if (targetElement instanceof SVGCircleElement) {
+          console.log(targetElement.id);
+
+          // TODO: Show dialog with relationship's name and props fields
+
+          // TODO: Create relationship
+        }
+
+        line.remove();
+        text.remove();
+      }
+
+      svg.addEventListener("mousemove", mousemove);
+
+      svg.appendChild(line);
+      svg.appendChild(text);
+
       return;
     },
     createRelToNewNode() {
