@@ -154,6 +154,7 @@ export class NodesService {
     const result = await this.neo4jService.write(
       `
       MATCH (n { id: $id })
+      ${node.labels.map(label => `REMOVE n:${label}`)}
       ${
         updateNodeInput.labels !== undefined
           ? `SET n:${[...(updateNodeInput.labels ?? [])].join(':')}`
