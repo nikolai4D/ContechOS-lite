@@ -177,39 +177,38 @@ export default defineComponent({
       });
     },
     async getAllUsers() {
-      const response = await fetch("http://localhost:3000/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth.token")}`,
-        },
-        body: JSON.stringify({
-          operationName: null,
-          variables: {},
-          query: `
-          {
-            nodes {
-              id
-              labels
-              properties
-            }
+      const { onResult, onError } = useQuery(gql`
+        query {
+          nodes {
+            id
+            labels
+            properties
+          }
 
-            relationships(from: null, to: null) {
+          relationships(from: null, to: null) {
+            id
+            name
+            source {
               id
-              name
-              source {
-                id
-              }
-              target {
-                id
-              }
+            }
+            target {
+              id
             }
           }
-          `,
-        }),
-      });
+        }
+      `);
 
-      const { nodes, relationships } = (await response.json()).data;
+      const { nodes, relationships } = await new Promise((resolve, reject) => {
+        onResult((result) => {
+          resolve(JSON.parse(JSON.stringify(result.data))); // Fix: object is not extensible
+        });
+
+        onError((result) => {
+          reject(result.graphQLErrors[0].extensions?.response.message);
+          console.log(result.graphQLErrors[0].extensions?.response.message);
+          alert(result.graphQLErrors[0].extensions?.response.message);
+        });
+      });
 
       const links = relationships.map((relationship: any) => {
         return {
