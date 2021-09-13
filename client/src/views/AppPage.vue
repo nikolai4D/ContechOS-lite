@@ -3,7 +3,11 @@
     <svg @contextmenu="rightClick($event)"></svg>
 
     <AddNode @addedNode="getAllUsers" />
-    <EditNode :labelsProps="labels" :propertiesProps="properties" :nodeId="activeElementId"/>
+    <EditNode
+      :labelsProps="labels"
+      :propertiesProps="properties"
+      :nodeId="activeElementId"
+    />
 
     <ContextMenu
       :menuId="'bg-context-menu'"
@@ -57,7 +61,7 @@ export default defineComponent({
     return {
       activeElementId: "",
       labels: [],
-      properties: {}
+      properties: {},
     };
   },
   components: {
@@ -88,8 +92,8 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.labels = result.data.node.labels
-        this.properties = result.data.node.properties
+        this.labels = result.data.node.labels;
+        this.properties = result.data.node.properties;
 
         document.getElementById("editNode")!.classList.add("show");
         document.getElementById("editNode")!.style.display = "block";
