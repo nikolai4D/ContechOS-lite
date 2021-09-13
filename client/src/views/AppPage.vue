@@ -9,6 +9,11 @@
       :nodeId="activeElementId"
       @editedNode="getAllUsers"
     />
+    <EditRelationship
+      :propertiesProps="properties"
+      :nodeId="activeElementId"
+      @editedRelationship="getAllUsers"
+    />
 
     <ContextMenu
       :menuId="'bg-context-menu'"
@@ -50,6 +55,7 @@ import stringToColor from "string-to-color";
 import ContextMenu from "../components/ContextMenu.vue";
 import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
+import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
@@ -63,12 +69,15 @@ export default defineComponent({
       activeElementId: "",
       labels: [],
       properties: {},
+      from: String,
+      to: String
     };
   },
   components: {
     ContextMenu,
     AddNode,
     EditNode,
+    EditRelationship,
   },
   methods: {
     addNode() {
@@ -134,7 +143,40 @@ export default defineComponent({
       });
     },
     editRel() {
-      return;
+      var id = this.activeElementId;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        query ($id:String!){
+          relationship(
+            id:$id
+          ) {
+            name
+            source{
+              id
+            }
+            target{
+              id
+            }
+          }
+        }
+              `);
+
+      mutate({ id: id });
+
+      onDone((result) => {
+        this.properties = {"name" : ""}; // delete all old values first
+        (this.properties as any).name = result.data.relationship.name;
+        (this.properties as any).from = result.data.relationship.source.id;
+        (this.properties as any).to = result.data.relationship.target.id;
+        
+        document.getElementById("editRelationship")!.classList.add("show");
+        document.getElementById("editRelationship")!.style.display = "block";
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
     },
     deleteRel() {
       const id = this.activeElementId;
@@ -157,8 +199,6 @@ export default defineComponent({
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
-
-      return;
     },
     hideAllContextMenus() {
       document.querySelectorAll<HTMLElement>(".context-menu").forEach((el) => {
@@ -381,6 +421,7 @@ export default defineComponent({
           text.setAttribute("text-anchor", "middle");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("style", "user-select: none;");
+          text.setAttribute("id", line.id);
           text.setAttribute(
             "x",
             (

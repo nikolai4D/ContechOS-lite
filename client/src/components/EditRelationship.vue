@@ -1,0 +1,111 @@
+<template>
+  <nav id="editRelationship" class="dropdown-menu dropdown-menu-sm inputMenu">
+    <div>
+      <MenuHeader :menuName="'Edit Relationship'" @menuToggle="toggleMenu = $event" />
+      <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
+        <Attributes
+          :attr="properties"
+          @attributesChanged="changeProperties($event)"
+        />
+        <button
+          type="submit"
+          class="form form-control btn btn-primary mt-3"
+          @click="editRelationship"
+        >
+          Edit Relationship
+        </button>
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<style lang="scss" scoped>
+#editRelationship {
+  background: white;
+  box-shadow: 0px 0px 15px black;
+  width: 20%;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &.show {
+    display: block;
+  }
+}
+</style>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import Attributes from "./Attributes.vue";
+import MenuHeader from "./MenuHeader.vue";
+import { useMutation, useQuery } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+
+export default defineComponent({
+  name: "EditRelationship",
+  data() {
+    return {
+      properties: {},
+      activeRelationshipId: "",
+      toggleMenu: true
+    };
+  },
+  props: {
+    nodeId: String,
+    propertiesProps: {}
+  },
+  watch: {
+    propertiesProps(newValue, oldValue) {
+      var cleanProperties = this.removeUnnecessaryProperties(newValue);
+      this.properties = cleanProperties;
+    },
+    nodeId(newValue, oldValue) {
+      this.activeRelationshipId = newValue;
+    },
+  },
+  components: {
+    Attributes,
+    MenuHeader,
+  },
+  methods: {
+    changeProperties(event: any) {
+      this.properties = event;
+    },
+    removeUnnecessaryProperties(properties: any) {
+      delete properties["createdAt"];
+      delete properties["id"];
+      delete properties["updatedAt"];
+      return properties;
+    },
+    editRelationship() {
+      var properties = this.properties;
+      var id = this.activeRelationshipId;
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation ($properties: JSONObject, $id: String!) {
+          updateRelationship(
+            updateRelationshipInput: { properties: $properties }
+            id: $id
+          ) {
+          }
+        }
+      `);
+
+      mutate({ properties: properties, id: id });
+
+      onDone((result) => {
+        console.log(result)
+        this.$el.classList.remove("show");
+        this.$el.style.display = "none";
+        this.$emit("editedRelationship");
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
+    },
+  },
+});
+</script>

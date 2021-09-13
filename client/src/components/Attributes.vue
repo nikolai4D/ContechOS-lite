@@ -1,6 +1,6 @@
 <template>
   <div name="attributes">
-    <label for="attributes" class="mb-1">Node Attributes</label>
+    <label for="attributes" class="mb-1">Attributes</label>
     <div
       class="row mb-1 attribute"
       v-for="(value, name, id) in attributes"
