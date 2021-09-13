@@ -379,7 +379,6 @@ export default defineComponent({
           text.setAttribute("fill", "black");
           text.setAttribute("font-size", "10px");
           text.setAttribute("text-anchor", "middle");
-          text.setAttribute("pointer-events", "none");
           text.setAttribute("alignment-baseline", "middle");
           text.setAttribute("style", "user-select: none;");
           text.setAttribute(
