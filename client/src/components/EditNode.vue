@@ -2,7 +2,6 @@
   <nav
     id="editNode"
     class="dropdown-menu dropdown-menu-sm inputMenu"
-    style="display: none"
   >
     <div>
       <MenuHeader :menuName="'Edit Node'" @menuToggle="toggleMenu = $event" />
@@ -24,15 +23,19 @@
   </nav>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #editNode {
   background: white;
   box-shadow: 0px 0px 15px black;
   width: 20%;
-  display: block;
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
+
+  &.show {
+    display: block;
+  }
 }
 </style>
 
@@ -100,7 +103,7 @@ export default defineComponent({
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject, $id: String!) {
           updateNode(
-            updateNodeInput: { labels: $labels, properties: $properties }
+            updateNodeInput: {labels: $labels, properties: $properties}
             id: $id
           ) {
             id
@@ -115,6 +118,7 @@ export default defineComponent({
       onDone((result) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
+        this.$emit("editedNode");
       });
 
       onError((result) => {

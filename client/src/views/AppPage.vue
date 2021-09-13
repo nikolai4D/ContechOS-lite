@@ -7,6 +7,7 @@
       :labelsProps="labels"
       :propertiesProps="properties"
       :nodeId="activeElementId"
+      @editedNode="getAllUsers"
     />
 
     <ContextMenu
