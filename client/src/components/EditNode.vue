@@ -12,7 +12,11 @@
           :attr="properties"
           @attributesChanged="changeProperties($event)"
         />
-        <button type="submit" class="form form-control btn btn-primary mt-3" @click="editNode">
+        <button
+          type="submit"
+          class="form form-control btn btn-primary mt-3"
+          @click="editNode"
+        >
           Edit Node
         </button>
       </ul>
@@ -50,25 +54,25 @@ export default defineComponent({
       toggleMenu: true,
       labels: [],
       properties: {},
-      activeNodeId: ""
+      activeNodeId: "",
     };
   },
-  props:{
+  props: {
     nodeId: String,
     labelsProps: [],
     propertiesProps: {},
   },
   watch: {
-    labelsProps(newValue, oldValue){
-      this.labels = newValue
+    labelsProps(newValue, oldValue) {
+      this.labels = newValue;
     },
-    propertiesProps(newValue, oldValue){
-      var cleanProperties = this.removeUnnecessaryProperties(newValue)
-      this.properties = cleanProperties
+    propertiesProps(newValue, oldValue) {
+      var cleanProperties = this.removeUnnecessaryProperties(newValue);
+      this.properties = cleanProperties;
     },
-    nodeId(newValue, oldValue){
-      this.activeNodeId = newValue
-    }
+    nodeId(newValue, oldValue) {
+      this.activeNodeId = newValue;
+    },
   },
   components: {
     Attributes,
@@ -82,25 +86,22 @@ export default defineComponent({
     changeLabels(event: any) {
       this.labels = event;
     },
-    removeUnnecessaryProperties(properties:any) {
+    removeUnnecessaryProperties(properties: any) {
       delete properties["createdAt"];
       delete properties["id"];
       delete properties["updatedAt"];
-      return properties
+      return properties;
     },
     editNode() {
-      var properties = this.properties
-      var labels = this.labels
-      var id = this.activeNodeId
+      var properties = this.properties;
+      var labels = this.labels;
+      var id = this.activeNodeId;
 
       const { mutate, onDone, onError } = useMutation(gql`
-        mutation ($labels: [String!]!, $properties: JSONObject, $id:String!){
+        mutation ($labels: [String!]!, $properties: JSONObject, $id: String!) {
           updateNode(
-            updateNodeInput: {
-              labels:$labels
-              properties:$properties
-            }
-            id:$id
+            updateNodeInput: { labels: $labels, properties: $properties }
+            id: $id
           ) {
             id
             labels
@@ -109,7 +110,7 @@ export default defineComponent({
         }
       `);
 
-      mutate({ properties:properties, labels:labels, id:id });
+      mutate({ properties: properties, labels: labels, id: id });
 
       onDone((result) => {
         this.$el.classList.remove("show");
@@ -120,7 +121,7 @@ export default defineComponent({
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
-    }
+    },
   },
 });
 </script>
