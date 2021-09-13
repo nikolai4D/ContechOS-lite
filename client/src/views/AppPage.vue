@@ -70,7 +70,7 @@ export default defineComponent({
       labels: [],
       properties: {},
       from: String,
-      to: String
+      to: String,
     };
   },
   components: {
@@ -146,29 +146,27 @@ export default defineComponent({
       var id = this.activeElementId;
 
       const { mutate, onDone, onError } = useMutation(gql`
-        query ($id:String!){
-          relationship(
-            id:$id
-          ) {
+        query ($id: String!) {
+          relationship(id: $id) {
             name
-            source{
+            source {
               id
             }
-            target{
+            target {
               id
             }
           }
         }
-              `);
+      `);
 
       mutate({ id: id });
 
       onDone((result) => {
-        this.properties = {"name" : ""}; // delete all old values first
+        this.properties = { name: "" }; // delete all old values first
         (this.properties as any).name = result.data.relationship.name;
         (this.properties as any).from = result.data.relationship.source.id;
         (this.properties as any).to = result.data.relationship.target.id;
-        
+
         document.getElementById("editRelationship")!.classList.add("show");
         document.getElementById("editRelationship")!.style.display = "block";
       });

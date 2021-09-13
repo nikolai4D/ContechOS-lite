@@ -1,7 +1,10 @@
 <template>
   <nav id="editRelationship" class="dropdown-menu dropdown-menu-sm inputMenu">
     <div>
-      <MenuHeader :menuName="'Edit Relationship'" @menuToggle="toggleMenu = $event" />
+      <MenuHeader
+        :menuName="'Edit Relationship'"
+        @menuToggle="toggleMenu = $event"
+      />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
         <Attributes
           :attr="properties"
@@ -48,12 +51,12 @@ export default defineComponent({
     return {
       properties: {},
       activeRelationshipId: "",
-      toggleMenu: true
+      toggleMenu: true,
     };
   },
   props: {
     nodeId: String,
-    propertiesProps: {}
+    propertiesProps: {},
   },
   watch: {
     propertiesProps(newValue, oldValue) {
@@ -95,7 +98,7 @@ export default defineComponent({
       mutate({ properties: properties, id: id });
 
       onDone((result) => {
-        console.log(result)
+        console.log(result);
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
         this.$emit("editedRelationship");
