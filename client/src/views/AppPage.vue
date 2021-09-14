@@ -90,18 +90,16 @@ export default defineComponent({
 
       var id = this.activeElementId;
 
-      const { mutate, onDone, onError } = useMutation(gql`
+      const { onResult, onError } = useQuery(gql`
         query ($id: String!) {
           node(id: $id) {
             labels
             properties
           }
         }
-      `);
+      `, { id });
 
-      mutate({ id: id });
-
-      onDone((result) => {
+      onResult((result) => {
         this.labels = result.data.node.labels;
         this.properties = result.data.node.properties;
 
