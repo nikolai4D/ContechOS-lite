@@ -49,7 +49,7 @@
 import { defineComponent } from "vue";
 import MenuHeader from "./MenuHeader.vue";
 import Attributes from "./Attributes.vue";
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
 export default defineComponent({

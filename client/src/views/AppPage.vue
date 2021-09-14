@@ -63,7 +63,7 @@ import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
 import CreateRelationship from "../components/CreateRelationship.vue";
 import EditRelationship from "../components/EditRelationship.vue";
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
 export default defineComponent({
@@ -98,19 +98,18 @@ export default defineComponent({
 
       var id = this.activeElementId;
 
-      const { onResult, onError } = useQuery(
-        gql`
-          query ($id: String!) {
-            node(id: $id) {
-              labels
-              properties
-            }
+      const { mutate, onDone, onError } = useMutation(gql`
+        query ($id: String!) {
+          node(id: $id) {
+            labels
+            properties
           }
-        `,
-        { id }
-      );
+        }
+      `);
 
-      onResult((result) => {
+      mutate({ id });
+
+      onDone((result) => {
         this.labels = result.data.node.labels;
         this.properties = result.data.node.properties;
 

@@ -1,12 +1,12 @@
 export { getAllUsers };
 
 import * as d3 from "d3";
-import { useMutation, useQuery } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import stringToColor from "string-to-color";
 
 async function getAllUsers() {
-  const { onResult, onError } = useQuery(gql`
+  const { mutate, onDone, onError } = useMutation(gql`
     query {
       nodes {
         id
@@ -27,8 +27,10 @@ async function getAllUsers() {
     }
   `);
 
+  mutate();
+
   const { nodes, relationships } = await new Promise((resolve, reject) => {
-    onResult((result) => {
+    onDone((result) => {
       resolve(JSON.parse(JSON.stringify(result.data))); // Fix: object is not extensible
     });
 

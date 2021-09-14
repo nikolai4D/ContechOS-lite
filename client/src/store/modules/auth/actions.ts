@@ -7,7 +7,6 @@ import { RootState } from "@/store";
 import {
   provideApolloClient,
   useMutation,
-  useQuery,
 } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { apolloClient } from "@/mixins/apollo.mixin";
@@ -122,21 +121,19 @@ export const actions: ActionTree<State, RootState> & Actions = {
     return new Promise((resolve, reject) => {
       provideApolloClient(apolloClient);
 
-      const { onResult, onError } = useQuery(
-        gql`
-          query {
-            currentUser {
-              id
-              name
-              email
-            }
+      const { mutate, onDone, onError } = useMutation(gql`
+        query {
+          currentUser {
+            id
+            name
+            email
           }
-        `,
-        undefined,
-        {}
-      );
+        }
+      `);
 
-      onResult((result) => {
+      mutate();
+
+      onDone((result) => {
         if (!result.data) {
           return dispatch(ActionTypes.SIGN_OUT);
         }
