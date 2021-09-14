@@ -100,13 +100,13 @@ export default defineComponent({
   },
   methods: {
     changeAttributes(event: any) {
-      this.nodeProperties = event.path[0].value;
+      this.nodeProperties = { ...this.nodeProperties, ...event };
     },
     changeLabels(event: any) {
       this.labels = event;
     },
     changeProperties(event: any) {
-      this.relationProperties = event.path[0].value;
+      this.relationProperties = { ...this.relationProperties, ...event };
     },
     changeName(event: any) {
       this.relationshipName = event.path[0].value.toUpperCase();
@@ -121,45 +121,85 @@ export default defineComponent({
         .filter(([key]) => key !== "")
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
       var relSource = this.activeElementId;
-      var relTarget = this.targetElementId;
 
-      const { mutate, onDone, onError } = useMutation(gql`
+      const { mutate: createNode, onDone: onCreateNodeDone, onError: onCreateNodeError } = useMutation(gql`
         mutation (
-          $name: String!
+          $labels: [String!]!
           $properties: JSONObject!
-          $source: String!
-          $target: String!
         ) {
-          createRelationship(
-            createRelationshipInput: {
-              name: $name
+          createNode(
+            createNodeInput: {
+              labels: $labels
               properties: $properties
-              source: $source
-              target: $target
             }
           ) {
             id
-            properties
           }
         }
       `);
+      
+      console.log(nodeLabels);
 
-      mutate({
-        nodeLabels: nodeLabels,
-        nodeProperties: nodeProperties,
-        relName: relName,
-        relProperties: relProperties,
-        relSource: relSource,
-        relTarget: relTarget,
+      createNode({
+        labels: nodeLabels,
+        properties: nodeProperties,
       });
 
-      onDone((result) => {
+      onCreateNodeDone((result) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
         this.$emit("createRelationshiptoNewNode");
+
+        const target = result.data.createNode.id;
+
+        const { mutate: createRelationship, onDone: onCreateRelationshipDone, onError: onCreateRelationshipError } = useMutation(gql`
+          mutation (
+            $name: String!
+            $properties: JSONObject!
+            $source: String!
+            $target: String!
+          ) {
+            createRelationship(
+              createRelationshipInput: {
+                name: $name
+                properties: $properties
+                source: $source
+                target: $target
+              }
+            ) {
+              id
+              properties
+            }
+          }
+        `);
+
+        createRelationship({
+          name: relName,
+          properties: relProperties,
+          source: relSource,
+          target,
+        });
+
+        onCreateRelationshipDone((result) => {
+          this.$el.classList.remove("show");
+          this.$el.style.display = "none";
+          this.$emit("createRelationshiptoNewNode");
+
+          this.labels = [""];
+          this.nodeProperties = { "": "" };
+          this.relationProperties = { "": "" };
+          this.relationshipName = "";
+          this.activeElementId = "";
+          this.targetElementId = "";
+        });
+
+        onCreateRelationshipError((result) => {
+          console.log(result.graphQLErrors[0].extensions?.response.message);
+          alert(result.graphQLErrors[0].extensions?.response.message);
+        });
       });
 
-      onError((result) => {
+      onCreateNodeError((result) => {
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
