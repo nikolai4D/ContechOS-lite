@@ -2,10 +2,11 @@
   <div>
     <svg @contextmenu="rightClick($event)"></svg>
 
-    <RelationshipToNewNode 
+    <RelationshipToNewNode
       :activeElmntId="activeElementId"
-      :targetElmntId="targetElementId" 
-      @createRelationshiptoNewNode="getAllUsers"/>
+      :targetElmntId="targetElementId"
+      @createRelationshiptoNewNode="getAllUsers"
+    />
 
     <AddNode @addedNode="getAllUsers" />
     <EditNode
@@ -92,7 +93,7 @@ export default defineComponent({
     EditNode,
     EditRelationship,
     CreateRelationship,
-    RelationshipToNewNode
+    RelationshipToNewNode,
   },
   methods: {
     addNode() {
