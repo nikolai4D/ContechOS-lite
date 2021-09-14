@@ -136,7 +136,7 @@ export class RelationshipsService {
 
     const result = await this.neo4jService.write(
       `
-      MATCH (from)-[rel]->(to)
+      MATCH (from)-[rel { id: $id }]->(to)
       ${
         updateRelationshipInput.properties !== undefined
           ? 'SET rel = $properties'
