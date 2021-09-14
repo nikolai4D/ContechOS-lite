@@ -122,22 +122,20 @@ export default defineComponent({
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
       var relSource = this.activeElementId;
 
-      const { mutate: createNode, onDone: onCreateNodeDone, onError: onCreateNodeError } = useMutation(gql`
-        mutation (
-          $labels: [String!]!
-          $properties: JSONObject!
-        ) {
+      const {
+        mutate: createNode,
+        onDone: onCreateNodeDone,
+        onError: onCreateNodeError,
+      } = useMutation(gql`
+        mutation ($labels: [String!]!, $properties: JSONObject!) {
           createNode(
-            createNodeInput: {
-              labels: $labels
-              properties: $properties
-            }
+            createNodeInput: { labels: $labels, properties: $properties }
           ) {
             id
           }
         }
       `);
-      
+
       console.log(nodeLabels);
 
       createNode({
@@ -152,7 +150,11 @@ export default defineComponent({
 
         const target = result.data.createNode.id;
 
-        const { mutate: createRelationship, onDone: onCreateRelationshipDone, onError: onCreateRelationshipError } = useMutation(gql`
+        const {
+          mutate: createRelationship,
+          onDone: onCreateRelationshipDone,
+          onError: onCreateRelationshipError,
+        } = useMutation(gql`
           mutation (
             $name: String!
             $properties: JSONObject!
