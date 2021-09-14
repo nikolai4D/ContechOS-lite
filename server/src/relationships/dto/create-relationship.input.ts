@@ -13,10 +13,10 @@ export class CreateRelationshipInput {
   properties: { [key: string]: any };
 
   @Field()
-  @IsUUID('4')
+  @IsString()
   source: string;
 
   @Field()
-  @IsUUID('4')
+  @IsString()
   target: string;
 }
