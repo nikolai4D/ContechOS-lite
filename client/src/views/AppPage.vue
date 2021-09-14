@@ -90,14 +90,17 @@ export default defineComponent({
 
       var id = this.activeElementId;
 
-      const { onResult, onError } = useQuery(gql`
-        query ($id: String!) {
-          node(id: $id) {
-            labels
-            properties
+      const { onResult, onError } = useQuery(
+        gql`
+          query ($id: String!) {
+            node(id: $id) {
+              labels
+              properties
+            }
           }
-        }
-      `, { id });
+        `,
+        { id }
+      );
 
       onResult((result) => {
         this.labels = result.data.node.labels;
@@ -115,15 +118,23 @@ export default defineComponent({
     createRelToExistingNode() {
       const svg = document.querySelector("svg")!;
 
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const line = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line"
+      );
+      const text = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
 
-      line.setAttribute("stroke", "#999")
+      line.setAttribute("stroke", "#999");
       line.setAttribute("stroke-opacity", "0.6");
 
       text.textContent = "";
 
-      const activeElement = document.getElementById(this.activeElementId) as unknown as SVGCircleElement;
+      const activeElement = document.getElementById(
+        this.activeElementId
+      ) as unknown as SVGCircleElement;
 
       line.setAttribute("x1", activeElement.cx.baseVal.value.toString());
       line.setAttribute("y1", activeElement.cy.baseVal.value.toString());
@@ -155,7 +166,7 @@ export default defineComponent({
 
         line.remove();
         text.remove();
-      }
+      };
 
       svg.addEventListener("mousemove", mousemove);
 
