@@ -93,6 +93,9 @@ export default defineComponent({
     },
     editNode() {
       var properties = this.properties;
+      properties = Object.entries(properties)
+        .filter(([key]) => key !== "")
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
       var labels = this.labels;
       var id = this.activeNodeId;
 

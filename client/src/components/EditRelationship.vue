@@ -97,6 +97,9 @@ export default defineComponent({
     },
     editRelationship() {
       var properties = this.properties;
+      properties = Object.entries(properties)
+        .filter(([key]) => key !== "")
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
       var id = this.activeRelationshipId;
 
       const { mutate, onDone, onError } = useMutation(gql`

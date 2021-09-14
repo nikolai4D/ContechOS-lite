@@ -87,6 +87,9 @@ export default defineComponent({
       this.relationshipName = event.path[0].value.toUpperCase();
     },
     createRelationship() {
+        var properties = Object.entries(this.properties)
+        .filter(([key]) => key !== "")
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
       const { mutate, onDone, onError } = useMutation(gql`
         mutation (
           $name: String!
@@ -110,7 +113,7 @@ export default defineComponent({
 
       mutate({
         name: this.relationshipName,
-        properties: this.properties,
+        properties: properties,
         source: this.activeElementId,
         target: this.targetElementId,
       });

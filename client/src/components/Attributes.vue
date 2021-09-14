@@ -13,6 +13,7 @@
           placeholder="attribute"
           :value="name"
           @change="changeName($event, name, value)"
+          required
         />
       </div>
       <div class="col-6">
@@ -23,6 +24,7 @@
           name="attribute"
           :value="value"
           @change="changeValue($event, name)"
+          required
         />
       </div>
       <div class="col-1">

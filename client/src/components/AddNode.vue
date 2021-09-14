@@ -8,7 +8,7 @@
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
         <Labels :lbl="labels" @labelsChanged="changeLabels($event)" />
         <Attributes
-          :attr="attributes"
+          :attr="properties"
           @attributesChanged="changeAttributes($event)"
         />
         <button
@@ -56,7 +56,7 @@ export default defineComponent({
       isMouseDown: false,
       toggleMenu: true,
       labels: [""],
-      attributes: { "": "" },
+      properties: {"": "" },
     };
   },
   components: {
@@ -66,14 +66,16 @@ export default defineComponent({
   },
   methods: {
     changeAttributes(event: any) {
-      this.attributes = event;
+      this.properties = event;
     },
     changeLabels(event: any) {
       this.labels = event;
     },
     addNode() {
       var labels = this.labels;
-      var properties = this.attributes;
+      var properties = Object.entries(this.properties)
+        .filter(([key]) => key !== "")
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
 
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject!) {
@@ -93,7 +95,7 @@ export default defineComponent({
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
         this.labels = [""];
-        this.attributes = { "": "" };
+        this.properties = { "": "" };
         this.$emit("addedNode");
       });
 
