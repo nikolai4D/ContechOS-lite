@@ -4,10 +4,7 @@ import { Mutations } from "./mutations";
 import { ActionTypes } from "./actions.types";
 import { MutationTypes } from "./mutations.types";
 import { RootState } from "@/store";
-import {
-  provideApolloClient,
-  useMutation,
-} from "@vue/apollo-composable";
+import { provideApolloClient, useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { apolloClient } from "@/mixins/apollo.mixin";
 
