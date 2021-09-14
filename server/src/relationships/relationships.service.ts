@@ -26,9 +26,8 @@ export class RelationshipsService {
 
     const result = await this.neo4jService.write(
       `
-      MERGE (from { id: $from })-[rel:${createRelationshipInput.name} {
-        id: $id
-      }]->(to { id: $to })
+      MATCH (from { id: $from }), (to { id: $to })
+      CREATE (from)-[rel:${createRelationshipInput.name} { id: $id }]->(to)
       RETURN from, rel, to
       `,
       {
