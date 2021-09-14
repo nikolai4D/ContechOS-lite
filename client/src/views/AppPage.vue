@@ -215,8 +215,8 @@ export default defineComponent({
 
       onDone((result) => {
         this.properties = result.data.relationship.properties; // delete all old values first
-        this.relationshipName = result.data.relationship.properties.name
-        delete (this.properties as any)["name"]
+        this.relationshipName = result.data.relationship.properties.name;
+        delete (this.properties as any)["name"];
 
         document.getElementById("editRelationship")!.classList.add("show");
         document.getElementById("editRelationship")!.style.display = "block";

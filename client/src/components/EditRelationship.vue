@@ -100,7 +100,7 @@ export default defineComponent({
     },
     editRelationship() {
       var properties = this.properties;
-      (properties as any)["name"] = this.relationshipName
+      (properties as any)["name"] = this.relationshipName;
       var id = this.activeRelationshipId;
 
       const { mutate, onDone, onError } = useMutation(gql`
