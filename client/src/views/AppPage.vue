@@ -12,6 +12,7 @@
     <EditRelationship
       :propertiesProps="properties"
       :nodeId="activeElementId"
+      :relName="relationshipName"
       @editedRelationship="getAllUsers"
     />
 
@@ -69,8 +70,7 @@ export default defineComponent({
       activeElementId: "",
       labels: [],
       properties: {},
-      from: String,
-      to: String,
+      relationshipName: ""
     };
   },
   components: {
@@ -209,8 +209,8 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.properties = { name: "" }; // delete all old values first
-        (this.properties as any).name = result.data.relationship.name;
+        this.properties = {}; // delete all old values first
+        this.relationshipName = result.data.relationship.name;
         (this.properties as any).from = result.data.relationship.source.id;
         (this.properties as any).to = result.data.relationship.target.id;
 
