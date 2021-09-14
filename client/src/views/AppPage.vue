@@ -326,7 +326,9 @@ export default defineComponent({
       });
     },
     async getAllUsers() {
-      const { onResult, onError } = useQuery(gql`
+      // Not a mutation but useMutation forces it to go to the server
+      // and not to the cache, unlike useQuery.
+      const { mutate, onDone, onError } = useMutation(gql`
         query {
           nodes {
             id
@@ -347,19 +349,17 @@ export default defineComponent({
         }
       `);
 
-      const { nodes, relationships } = await new Promise((resolve, reject) => {
-        onResult((result) => {
-          resolve(JSON.parse(JSON.stringify(result.data))); // Fix: object is not extensible
-        });
+      mutate();
 
-        onError((result) => {
-          reject(result.graphQLErrors[0].extensions?.response.message);
+      onError((result) => {
           console.log(result.graphQLErrors[0].extensions?.response.message);
           alert(result.graphQLErrors[0].extensions?.response.message);
         });
-      });
 
-      const links = relationships.map((relationship: any) => {
+      onDone((result) => {
+        const { nodes, relationships } = result.data;
+
+const links = relationships.map((relationship: any) => {
         return {
           id: relationship.id,
           name: relationship.name,
@@ -552,6 +552,7 @@ export default defineComponent({
           .on("drag", dragged)
           .on("end", dragended);
       }
+      });
     },
   },
 });
