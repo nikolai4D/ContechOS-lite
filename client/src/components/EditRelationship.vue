@@ -6,6 +6,16 @@
         @menuToggle="toggleMenu = $event"
       />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
+        <div class="mb-3">
+          <label for="rel-name" class="mb-1">Relationship Name</label>
+          <input
+            type="text"
+            placeholder="relationship name"
+            class="form-control"
+            :value="relationshipName"
+            @change="changeName($event)"
+          />
+        </div>
         <Attributes
           :attr="properties"
           @attributesChanged="changeProperties($event)"
@@ -52,11 +62,13 @@ export default defineComponent({
       properties: {},
       activeRelationshipId: "",
       toggleMenu: true,
+      relationshipName: "",
     };
   },
   props: {
     nodeId: String,
     propertiesProps: {},
+    relName: String,
   },
   watch: {
     propertiesProps(newValue, oldValue) {
@@ -66,6 +78,9 @@ export default defineComponent({
     nodeId(newValue, oldValue) {
       this.activeRelationshipId = newValue;
     },
+    relName(newValue, oldValue) {
+      this.relationshipName = newValue;
+    },
   },
   components: {
     Attributes,
@@ -74,6 +89,9 @@ export default defineComponent({
   methods: {
     changeProperties(event: any) {
       this.properties = event;
+    },
+    changeName(event: any) {
+      this.relationshipName = event;
     },
     removeUnnecessaryProperties(properties: any) {
       return Object
@@ -91,6 +109,7 @@ export default defineComponent({
             updateRelationshipInput: { properties: $properties }
             id: $id
           ) {
+            id
           }
         }
       `);
