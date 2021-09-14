@@ -157,11 +157,41 @@ export default defineComponent({
         const targetElement = target as SVGElement;
 
         if (targetElement instanceof SVGCircleElement) {
-          console.log(targetElement.id);
-
           // TODO: Show dialog with relationship's name and props fields
 
-          // TODO: Create relationship
+          const { mutate, onDone, onError } = useMutation(gql`
+            mutation ($name: String!, $properties: JSONObject!, $source: String!, $target: String!) {
+              createRelationship(
+                createRelationshipInput: {
+                  name: $name
+                  properties: $properties
+                  source: $source
+                  target: $target
+                }
+              ) {
+                id
+                properties
+              }
+            }
+          `);
+
+          mutate({
+            name: "TODO",
+            properties: {
+              todo: "TODO",
+            },
+            source: this.activeElementId,
+            target: targetElement.id,
+          });
+
+          onDone((result) => {
+            this.getAllUsers();
+          });
+
+          onError((result) => {
+            console.log(result.graphQLErrors[0].extensions?.response.message);
+            alert(result.graphQLErrors[0].extensions?.response.message);
+          });
         }
 
         line.remove();

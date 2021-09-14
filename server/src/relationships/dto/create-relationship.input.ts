@@ -1,21 +1,22 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { ValidateNested } from 'class-validator';
+import { IsObject, IsString, IsUUID } from 'class-validator';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { RelationshipEdgeDto } from './relationship-edge.dto';
 
 @InputType()
 export class CreateRelationshipInput {
   @Field()
+  @IsString()
   name: string;
 
   @Field(() => GraphQLJSONObject)
+  @IsObject()
   properties: { [key: string]: any };
 
-  @Field(() => RelationshipEdgeDto)
-  @ValidateNested()
-  source: RelationshipEdgeDto;
+  @Field()
+  @IsUUID("4")
+  source: string;
 
-  @Field(() => RelationshipEdgeDto)
-  @ValidateNested()
-  target: RelationshipEdgeDto;
+  @Field()
+  @IsUUID("4")
+  target: string;
 }

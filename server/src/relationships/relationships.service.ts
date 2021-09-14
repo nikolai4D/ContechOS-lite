@@ -33,6 +33,8 @@ export class RelationshipsService {
       `,
       {
         id: randomUUID(),
+        from: createRelationshipInput.source,
+        to: createRelationshipInput.target,
       },
     );
 
