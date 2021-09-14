@@ -24,14 +24,25 @@ export class RelationshipsService {
       throw new BadRequestException();
     }
 
+    if (
+      createRelationshipInput.properties &&
+      Object.keys(createRelationshipInput.properties).some((property) =>
+        Config.FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE.includes(property),
+      )
+    ) {
+      throw new BadRequestException();
+    }
+
     const result = await this.neo4jService.write(
       `
       MATCH (from { id: $from }), (to { id: $to })
       CREATE (from)-[rel:${createRelationshipInput.name} { id: $id }]->(to)
+      SET rel += $properties
       RETURN from, rel, to
       `,
       {
         id: randomUUID(),
+        properties: createRelationshipInput.properties,
         from: createRelationshipInput.source,
         to: createRelationshipInput.target,
       },
