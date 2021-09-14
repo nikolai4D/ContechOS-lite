@@ -2,6 +2,11 @@
   <div>
     <svg @contextmenu="rightClick($event)"></svg>
 
+    <RelationshipToNewNode 
+      :activeElmntId="activeElementId"
+      :targetElmntId="targetElementId" 
+      @createRelationshiptoNewNode="getAllUsers"/>
+
     <AddNode @addedNode="getAllUsers" />
     <EditNode
       :labelsProps="labels"
@@ -62,6 +67,7 @@ import ContextMenu from "../components/ContextMenu.vue";
 import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
 import CreateRelationship from "../components/CreateRelationship.vue";
+import RelationshipToNewNode from "../components/CreateRelToNewNode.vue";
 import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
@@ -86,6 +92,7 @@ export default defineComponent({
     EditNode,
     EditRelationship,
     CreateRelationship,
+    RelationshipToNewNode
   },
   methods: {
     addNode() {
@@ -164,8 +171,6 @@ export default defineComponent({
         const targetElement = target as SVGElement;
 
         if (targetElement instanceof SVGCircleElement) {
-          // TODO: Show dialog with relationship's name and props fields
-
           this.targetElementId = targetElement.id;
 
           document.getElementById("createRelationship")!.classList.add("show");
@@ -185,6 +190,8 @@ export default defineComponent({
       return;
     },
     createRelToNewNode() {
+      document.getElementById("createRelToNewNode")!.classList.add("show");
+      document.getElementById("createRelToNewNode")!.style.display = "block";
       return;
     },
     deleteNode() {
