@@ -56,7 +56,7 @@ export default defineComponent({
       isMouseDown: false,
       toggleMenu: true,
       labels: [""],
-      properties: {"": "" },
+      properties: { "": "" },
     };
   },
   components: {
