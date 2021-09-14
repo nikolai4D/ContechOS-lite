@@ -3,28 +3,28 @@
     <div>
       <MenuHeader :menuName="'Create Relationship'" />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-            <div class="mb-3">
-            <label for="rel-name" class="mb-1">Relationship Name</label>
-            <input
-                type="text"
-                placeholder="relationship name"
-                class="form-control"
-                @change="changeName($event)"
-                :value="relationshipName"
-            />
-            </div>
-            <Attributes
-                :attr="properties"
-                @attributesChanged="changeProperties($event)"
-            />
-            <button
-                type="submit"
-                class="form form-control btn btn-primary mt-3"
-                @click="createRelationship"
-            >
-            Create Relationship
-            </button>
-        </ul>
+        <div class="mb-3">
+          <label for="rel-name" class="mb-1">Relationship Name</label>
+          <input
+            type="text"
+            placeholder="relationship name"
+            class="form-control"
+            @change="changeName($event)"
+            :value="relationshipName"
+          />
+        </div>
+        <Attributes
+          :attr="properties"
+          @attributesChanged="changeProperties($event)"
+        />
+        <button
+          type="submit"
+          class="form form-control btn btn-primary mt-3"
+          @click="createRelationship"
+        >
+          Create Relationship
+        </button>
+      </ul>
     </div>
   </nav>
 </template>
@@ -115,13 +115,13 @@ export default defineComponent({
         target: this.targetElementId,
       });
 
-          onDone((result) => {
-            this.$el.classList.remove("show");
-            this.$el.style.display = "none";
-            this.properties = {"": ""};
-            this.relationshipName = "";
-            this.$emit("createRelationship")
-          });
+      onDone((result) => {
+        this.$el.classList.remove("show");
+        this.$el.style.display = "none";
+        this.properties = { "": "" };
+        this.relationshipName = "";
+        this.$emit("createRelationship");
+      });
 
       onError((result) => {
         console.log(result.graphQLErrors[0].extensions?.response.message);
