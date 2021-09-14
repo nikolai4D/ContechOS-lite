@@ -76,10 +76,10 @@ export default defineComponent({
       this.properties = event;
     },
     removeUnnecessaryProperties(properties: any) {
-      delete properties["createdAt"];
-      delete properties["id"];
-      delete properties["updatedAt"];
-      return properties;
+      return Object
+        .entries(properties)
+        .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
     editRelationship() {
       var properties = this.properties;

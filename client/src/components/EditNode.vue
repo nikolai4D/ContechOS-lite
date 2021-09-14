@@ -86,11 +86,11 @@ export default defineComponent({
     changeLabels(event: any) {
       this.labels = event;
     },
-    removeUnnecessaryProperties(properties: any) {
-      delete properties["createdAt"];
-      delete properties["id"];
-      delete properties["updatedAt"];
-      return properties;
+    removeUnnecessaryProperties(properties: { [key: string]: any }) {
+      return Object
+        .entries(properties)
+        .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
+        .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
     editNode() {
       var properties = this.properties;
