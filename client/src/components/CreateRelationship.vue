@@ -3,21 +3,6 @@
     <div>
       <MenuHeader :menuName="'Create Relationship'" />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
-        <div class="mb-3">
-          <label for="rel-name" class="mb-1">Relationship Name</label>
-          <input
-            type="text"
-            placeholder="relationship name"
-            class="form-control"
-            @change="changeName($event)"
-            :value="relationshipName"
-          />
-        </div>
-        <Attributes
-          :attr="properties"
-          @attributesChanged="changeProperties($event)"
-        />
-        <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
             <div class="mb-3">
             <label for="rel-name" class="mb-1">Relationship Name</label>
             <input
@@ -29,13 +14,13 @@
             />
             </div>
             <Attributes
-            :attr="properties"
-            @attributesChanged="changeProperties($event)"
+                :attr="properties"
+                @attributesChanged="changeProperties($event)"
             />
             <button
-            type="submit"
-            class="form form-control btn btn-primary mt-3"
-            @click="createRelationship"
+                type="submit"
+                class="form form-control btn btn-primary mt-3"
+                @click="createRelationship"
             >
             Create Relationship
             </button>
