@@ -1,8 +1,21 @@
 <template>
-    <nav id="createRelationship" class="dropdown-menu dropdown-menu-sm inputMenu">
-        <div>
-        <MenuHeader
-            :menuName="'Create Relationship'"
+  <nav id="createRelationship" class="dropdown-menu dropdown-menu-sm inputMenu">
+    <div>
+      <MenuHeader :menuName="'Create Relationship'" />
+      <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
+        <div class="mb-3">
+          <label for="rel-name" class="mb-1">Relationship Name</label>
+          <input
+            type="text"
+            placeholder="relationship name"
+            class="form-control"
+            @change="changeName($event)"
+            :value="relationshipName"
+          />
+        </div>
+        <Attributes
+          :attr="properties"
+          @attributesChanged="changeProperties($event)"
         />
         <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
             <div class="mb-3">
@@ -28,8 +41,7 @@
             </button>
         </ul>
     </div>
-    </nav>
-    
+  </nav>
 </template>
 
 <style lang="scss" scoped>
@@ -56,62 +68,67 @@ import { useMutation, useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 
 export default defineComponent({
-    name:"CreateRelationship",
-    components: {
-        MenuHeader,
-        Attributes
+  name: "CreateRelationship",
+  components: {
+    MenuHeader,
+    Attributes,
+  },
+  data() {
+    return {
+      properties: { "": "" },
+      toggleMenu: true,
+      relationshipName: "",
+      activeElementId: "",
+      targetElementId: "",
+    };
+  },
+  props: {
+    activeElmntId: String,
+    targetElmntId: String,
+  },
+  watch: {
+    activeElmntId(newValue, oldValue) {
+      this.activeElementId = newValue;
     },
-    data() {
-        return {
-            properties: {"": ""},
-            toggleMenu: true,
-            relationshipName: "",
-            activeElementId: "",
-            targetElementId: ""
-        }
+    targetElmntId(newValue, oldValue) {
+      this.targetElementId = newValue;
     },
-    props: {
-        activeElmntId: String,
-        targetElmntId: String
+  },
+  methods: {
+    changeProperties(event: any) {
+      this.properties = event;
     },
-    watch: {
-        activeElmntId(newValue, oldValue) {
-            this.activeElementId = newValue
-        },
-        targetElmntId(newValue, oldValue) {
-            this.targetElementId = newValue
-        }
+    changeName(event: any) {
+      this.relationshipName = event.path[0].value.toUpperCase();
     },
-    methods: {
-        changeProperties(event: any) {
-            this.properties = event;
-        },
-        changeName(event: any) {
-            this.relationshipName = event.path[0].value.toUpperCase()
-        },
-        createRelationship() {
-            const { mutate, onDone, onError } = useMutation(gql`
-            mutation ($name: String!, $properties: JSONObject!, $source: String!, $target: String!) {
-              createRelationship(
-                createRelationshipInput: {
-                  name: $name
-                  properties: $properties
-                  source: $source
-                  target: $target
-                }
-              ) {
-                id
-                properties
-              }
+    createRelationship() {
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation (
+          $name: String!
+          $properties: JSONObject!
+          $source: String!
+          $target: String!
+        ) {
+          createRelationship(
+            createRelationshipInput: {
+              name: $name
+              properties: $properties
+              source: $source
+              target: $target
             }
-          `);
+          ) {
+            id
+            properties
+          }
+        }
+      `);
 
-          mutate({
-            name: this.relationshipName,
-            properties: this.properties,
-            source: this.activeElementId,
-            target: this.targetElementId,
-          });
+      mutate({
+        name: this.relationshipName,
+        properties: this.properties,
+        source: this.activeElementId,
+        target: this.targetElementId,
+      });
 
           onDone((result) => {
             this.$el.classList.remove("show");
@@ -121,11 +138,11 @@ export default defineComponent({
             this.$emit("createRelationship")
           });
 
-          onError((result) => {
-            console.log(result.graphQLErrors[0].extensions?.response.message);
-            alert(result.graphQLErrors[0].extensions?.response.message);
-          });
-        }
-    }
-})
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+      });
+    },
+  },
+});
 </script>

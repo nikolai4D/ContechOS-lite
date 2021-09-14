@@ -15,7 +15,7 @@
       :relName="relationshipName"
       @editedRelationship="getAllUsers"
     />
-    <CreateRelationship 
+    <CreateRelationship
       :activeElmntId="activeElementId"
       :targetElmntId="targetElementId"
       @createRelationship="getAllUsers"
@@ -77,7 +77,7 @@ export default defineComponent({
       labels: [],
       properties: {},
       relationshipName: "",
-      targetElementId: ""
+      targetElementId: "",
     };
   },
   components: {
@@ -167,10 +167,11 @@ export default defineComponent({
         if (targetElement instanceof SVGCircleElement) {
           // TODO: Show dialog with relationship's name and props fields
 
-          this.targetElementId = targetElement.id
-          
+          this.targetElementId = targetElement.id;
+
           document.getElementById("createRelationship")!.classList.add("show");
-          document.getElementById("createRelationship")!.style.display = "block";
+          document.getElementById("createRelationship")!.style.display =
+            "block";
         }
 
         line.remove();
