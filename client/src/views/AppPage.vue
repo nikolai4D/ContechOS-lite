@@ -206,13 +206,7 @@ export default defineComponent({
       const { mutate, onDone, onError } = useMutation(gql`
         query ($id: String!) {
           relationship(id: $id) {
-            name
-            source {
-              id
-            }
-            target {
-              id
-            }
+            properties
           }
         }
       `);
@@ -220,10 +214,9 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.properties = {}; // delete all old values first
-        this.relationshipName = result.data.relationship.name;
-        (this.properties as any).from = result.data.relationship.source.id;
-        (this.properties as any).to = result.data.relationship.target.id;
+        this.properties = result.data.relationship.properties; // delete all old values first
+        this.relationshipName = result.data.relationship.properties.name
+        delete (this.properties as any)["name"]
 
         document.getElementById("editRelationship")!.classList.add("show");
         document.getElementById("editRelationship")!.style.display = "block";

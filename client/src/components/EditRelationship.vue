@@ -91,7 +91,7 @@ export default defineComponent({
       this.properties = event;
     },
     changeName(event: any) {
-      this.relationshipName = event;
+      this.relationshipName = event.path[0].value;
     },
     removeUnnecessaryProperties(properties: any) {
       return Object.entries(properties)
@@ -100,6 +100,7 @@ export default defineComponent({
     },
     editRelationship() {
       var properties = this.properties;
+      (properties as any)["name"] = this.relationshipName
       var id = this.activeRelationshipId;
 
       const { mutate, onDone, onError } = useMutation(gql`
