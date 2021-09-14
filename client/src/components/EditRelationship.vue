@@ -94,8 +94,7 @@ export default defineComponent({
       this.relationshipName = event;
     },
     removeUnnecessaryProperties(properties: any) {
-      return Object
-        .entries(properties)
+      return Object.entries(properties)
         .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
