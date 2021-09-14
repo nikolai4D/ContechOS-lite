@@ -139,10 +139,10 @@ export class RelationshipsService {
       MATCH (from)-[rel]->(to)
       ${
         updateRelationshipInput.properties !== undefined
-          ? 'SET n = $properties'
+          ? 'SET rel = $properties'
           : ''
       }
-      RETURN n
+      RETURN from, rel, to
       `,
       {
         id,
