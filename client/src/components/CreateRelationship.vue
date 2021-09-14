@@ -24,7 +24,7 @@
             class="form form-control btn btn-primary mt-3"
             @click="createRelationship"
             >
-            Edit Relationship
+            Create Relationship
             </button>
         </ul>
     </div>
@@ -114,7 +114,11 @@ export default defineComponent({
           });
 
           onDone((result) => {
-              this.$emit("createRelationship")
+            this.$el.classList.remove("show");
+            this.$el.style.display = "none";
+            this.properties = {"": ""};
+            this.relationshipName = "";
+            this.$emit("createRelationship")
           });
 
           onError((result) => {
