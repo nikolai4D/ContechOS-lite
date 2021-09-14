@@ -160,7 +160,12 @@ export default defineComponent({
           // TODO: Show dialog with relationship's name and props fields
 
           const { mutate, onDone, onError } = useMutation(gql`
-            mutation ($name: String!, $properties: JSONObject!, $source: String!, $target: String!) {
+            mutation (
+              $name: String!
+              $properties: JSONObject!
+              $source: String!
+              $target: String!
+            ) {
               createRelationship(
                 createRelationshipInput: {
                   name: $name
