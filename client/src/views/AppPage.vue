@@ -15,6 +15,11 @@
       :relName="relationshipName"
       @editedRelationship="getAllUsers"
     />
+    <CreateRelationship 
+      :activeElmntId="activeElementId"
+      :targetElmntId="targetElementId"
+      @createRelationship="getAllUsers"
+    />
 
     <ContextMenu
       :menuId="'bg-context-menu'"
@@ -56,6 +61,7 @@ import stringToColor from "string-to-color";
 import ContextMenu from "../components/ContextMenu.vue";
 import AddNode from "../components/AddNode.vue";
 import EditNode from "../components/EditNode.vue";
+import CreateRelationship from "../components/CreateRelationship.vue";
 import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import gql from "graphql-tag";
@@ -71,6 +77,7 @@ export default defineComponent({
       labels: [],
       properties: {},
       relationshipName: "",
+      targetElementId: ""
     };
   },
   components: {
@@ -78,6 +85,7 @@ export default defineComponent({
     AddNode,
     EditNode,
     EditRelationship,
+    CreateRelationship,
   },
   methods: {
     addNode() {
@@ -159,39 +167,10 @@ export default defineComponent({
         if (targetElement instanceof SVGCircleElement) {
           // TODO: Show dialog with relationship's name and props fields
 
-          const { mutate, onDone, onError } = useMutation(gql`
-            mutation ($name: String!, $properties: JSONObject!, $source: String!, $target: String!) {
-              createRelationship(
-                createRelationshipInput: {
-                  name: $name
-                  properties: $properties
-                  source: $source
-                  target: $target
-                }
-              ) {
-                id
-                properties
-              }
-            }
-          `);
-
-          mutate({
-            name: "TODO",
-            properties: {
-              todo: "TODO",
-            },
-            source: this.activeElementId,
-            target: targetElement.id,
-          });
-
-          onDone((result) => {
-            this.getAllUsers();
-          });
-
-          onError((result) => {
-            console.log(result.graphQLErrors[0].extensions?.response.message);
-            alert(result.graphQLErrors[0].extensions?.response.message);
-          });
+          this.targetElementId = targetElement.id
+          
+          document.getElementById("createRelationship")!.classList.add("show");
+          document.getElementById("createRelationship")!.style.display = "block";
         }
 
         line.remove();
@@ -237,6 +216,7 @@ export default defineComponent({
         query ($id: String!) {
           relationship(id: $id) {
             properties
+            name
           }
         }
       `);
@@ -245,8 +225,7 @@ export default defineComponent({
 
       onDone((result) => {
         this.properties = result.data.relationship.properties; // delete all old values first
-        this.relationshipName = result.data.relationship.properties.name;
-        delete (this.properties as any)["name"];
+        this.relationshipName = result.data.relationship.name;
 
         document.getElementById("editRelationship")!.classList.add("show");
         document.getElementById("editRelationship")!.style.display = "block";

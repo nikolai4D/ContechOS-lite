@@ -13,7 +13,7 @@
             placeholder="relationship name"
             class="form-control"
             :value="relationshipName"
-            @change="changeName($event)"
+            disabled
           />
         </div>
         <Attributes
@@ -90,9 +90,6 @@ export default defineComponent({
     changeProperties(event: any) {
       this.properties = event;
     },
-    changeName(event: any) {
-      this.relationshipName = event.path[0].value;
-    },
     removeUnnecessaryProperties(properties: any) {
       return Object.entries(properties)
         .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
@@ -100,7 +97,6 @@ export default defineComponent({
     },
     editRelationship() {
       var properties = this.properties;
-      (properties as any)["name"] = this.relationshipName;
       var id = this.activeRelationshipId;
 
       const { mutate, onDone, onError } = useMutation(gql`
@@ -117,7 +113,6 @@ export default defineComponent({
       mutate({ properties: properties, id: id });
 
       onDone((result) => {
-        console.log(result);
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
         this.$emit("editedRelationship");
