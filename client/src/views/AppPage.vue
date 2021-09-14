@@ -70,7 +70,7 @@ export default defineComponent({
       activeElementId: "",
       labels: [],
       properties: {},
-      relationshipName: ""
+      relationshipName: "",
     };
   },
   components: {

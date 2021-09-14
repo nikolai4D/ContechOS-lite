@@ -8,9 +8,13 @@
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
         <div class="mb-3">
           <label for="rel-name" class="mb-1">Relationship Name</label>
-          <input type="text" placeholder="relationship name" 
-            class="form-control" :value="relationshipName" @change="changeName($event)">
-
+          <input
+            type="text"
+            placeholder="relationship name"
+            class="form-control"
+            :value="relationshipName"
+            @change="changeName($event)"
+          />
         </div>
         <Attributes
           :attr="properties"
@@ -58,13 +62,13 @@ export default defineComponent({
       properties: {},
       activeRelationshipId: "",
       toggleMenu: true,
-      relationshipName: ""
+      relationshipName: "",
     };
   },
   props: {
     nodeId: String,
     propertiesProps: {},
-    relName: String
+    relName: String,
   },
   watch: {
     propertiesProps(newValue, oldValue) {
