@@ -59,7 +59,7 @@ export default defineComponent({
   },
   props: {
     nodeId: String,
-    labelsProps: [],
+    labelsProps: Array,
     propertiesProps: {},
   },
   watch: {
