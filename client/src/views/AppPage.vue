@@ -95,8 +95,8 @@ export default defineComponent({
       relationshipName: string;
       targetElementId: string;
       simulation: any;
-      nodes: any[],
-      relationships: any[],
+      nodes: any[];
+      relationships: any[];
     };
   },
   components: {
@@ -275,7 +275,9 @@ export default defineComponent({
       onDone((result) => {
         this.update({
           nodes: this.nodes,
-          relationships: this.relationships.filter((relationship) => relationship.id !== id),
+          relationships: this.relationships.filter(
+            (relationship) => relationship.id !== id
+          ),
         });
       });
 
@@ -389,13 +391,7 @@ export default defineComponent({
             .id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
-        .force(
-          "collide",
-          d3
-            .forceCollide()
-            .radius(100)
-            .iterations(2)
-        )
+        .force("collide", d3.forceCollide().radius(100).iterations(2))
         .force(
           "center",
           d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
