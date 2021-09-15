@@ -86,6 +86,8 @@ export default defineComponent({
       relationshipName: "",
       targetElementId: "",
       simulation: null,
+      nodesSelection: null,
+      linksSelection: null,
       nodes: [],
       relationships: [],
     } as {
@@ -95,6 +97,8 @@ export default defineComponent({
       relationshipName: string;
       targetElementId: string;
       simulation: any;
+      nodesSelection: any;
+      linksSelection: any;
       nodes: any[];
       relationships: any[];
     };
@@ -221,10 +225,9 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.update({
-          nodes: this.nodes.filter((node) => node.id !== id),
-          relationships: this.relationships,
-        });
+        this.nodes = this.nodes.filter((node) => node.id !== id);
+
+        this.nodesSelection.data(this.nodes);
       });
 
       onError((result) => {
@@ -273,12 +276,9 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.update({
-          nodes: this.nodes,
-          relationships: this.relationships.filter(
-            (relationship) => relationship.id !== id
-          ),
-        });
+        this.relationships = this.relationships.filter((node) => node.id !== id);
+
+        this.linksSelection.data(this.relationships);
       });
 
       onError((result) => {
@@ -367,12 +367,11 @@ export default defineComponent({
         this.nodes = result.data.nodes;
         this.relationships = result.data.relationships;
 
-        this.update(result.data);
+        this.init(result.data);
       });
     },
-    async update({ nodes, relationships }: any) {
+    async init({ nodes, relationships }: any) {
       const svg = document.querySelector("svg") as SVGElement;
-      svg.innerHTML = "";
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
       const links = relationships.map((relationship: any) => {
@@ -400,13 +399,13 @@ export default defineComponent({
           d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
         )
         .on("tick", () => {
-          linksSelection
+          this.linksSelection
             .attr("x1", (data: any) => data.source.x)
             .attr("y1", (data: any) => data.source.y)
             .attr("x2", (data: any) => data.target.x)
             .attr("y2", (data: any) => data.target.y);
 
-          nodesSelection
+          this.nodesSelection
             .attr("cx", (data: any) => data.x)
             .attr("cy", (data: any) => data.y);
 
@@ -436,9 +435,7 @@ export default defineComponent({
           });
         });
 
-      this.simulation.stop();
-
-      const linksSelection = d3
+      this.linksSelection = d3
         .select("svg")
         .append("g")
         .attr("stroke", "#999")
@@ -469,7 +466,7 @@ export default defineComponent({
         .attr("style", "fill: #f00;");
         */
 
-      const nodesSelection = d3
+      this.nodesSelection = d3
         .select("svg")
         .append("g")
         .selectAll("circle")
@@ -481,14 +478,12 @@ export default defineComponent({
         .attr("stroke-width", 1.5)
         .attr("id", (data: any) => data.id);
 
-      nodesSelection
+      this.nodesSelection
         .append("title")
         .text((data: any) => data.properties.name ?? data.labels[0]);
-      linksSelection.append("title").text((data: any) => data.name);
+      this.linksSelection.append("title").text((data: any) => data.name);
 
-      nodesSelection.call(drag(this.simulation));
-
-      this.simulation.restart();
+      this.nodesSelection.call(drag(this.simulation));
 
       function drag(simulation: any): any {
         document.querySelectorAll("circle").forEach((circle) => {
