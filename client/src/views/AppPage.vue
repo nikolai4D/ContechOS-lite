@@ -364,6 +364,9 @@ export default defineComponent({
       });
 
       onDone((result) => {
+        this.nodes = result.data.nodes;
+        this.relationships = result.data.relationships;
+
         this.update(result.data);
       });
     },
@@ -485,7 +488,7 @@ export default defineComponent({
 
       nodesSelection.call(drag(this.simulation));
 
-      this.simulation!.restart();
+      this.simulation.restart();
 
       function drag(simulation: any): any {
         document.querySelectorAll("circle").forEach((circle) => {
