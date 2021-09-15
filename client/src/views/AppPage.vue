@@ -276,7 +276,9 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.relationships = this.relationships.filter((node) => node.id !== id);
+        this.relationships = this.relationships.filter(
+          (node) => node.id !== id
+        );
 
         this.linksSelection.data(this.relationships);
       });
