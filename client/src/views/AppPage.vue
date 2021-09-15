@@ -391,7 +391,7 @@ export default defineComponent({
             .id((data: any) => data.id)
         )
         .force("charge", d3.forceManyBody())
-        .force("collide", d3.forceCollide().radius(100).iterations(2))
+        .force("collide", d3.forceCollide().radius(70).iterations(2))
         .force(
           "center",
           d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
