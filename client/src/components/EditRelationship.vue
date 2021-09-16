@@ -108,7 +108,14 @@ export default defineComponent({
             updateRelationshipInput: { properties: $properties }
             id: $id
           ) {
+            name
             properties
+            source {
+              id
+            }
+            target {
+              id
+            }
           }
         }
       `);

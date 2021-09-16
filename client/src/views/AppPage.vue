@@ -578,7 +578,7 @@ export default defineComponent({
 
       this.nodesSelection.call(this.drag(this.simulation));
 
-      this.tick();
+      this.simulation.alpha(1).restart();
     },
     tick() {
 
@@ -704,8 +704,12 @@ export default defineComponent({
         return {
           id: relationship.id,
           name: relationship.name,
-          source: this.nodes.find((node: any) => node.id === relationship.source.id),
-          target: this.nodes.find((node: any) => node.id === relationship.target.id),
+          source: this.nodes.find(
+            (node: any) => node.id === relationship.source.id
+          ),
+          target: this.nodes.find(
+            (node: any) => node.id === relationship.target.id
+          ),
         };
       });
 
@@ -772,37 +776,37 @@ export default defineComponent({
         .text((node: any) => node.properties.name ?? node.labels[0]);
     },
     drag(simulation: any): any {
-        function dragstarted(event: any) {
-          // first hide all open menus
-          document
-            .querySelectorAll<HTMLElement>(".context-menu")
-            .forEach((el) => {
-              el.classList.remove("show");
-              el.style.display = "none";
-            });
+      function dragstarted(event: any) {
+        // first hide all open menus
+        document
+          .querySelectorAll<HTMLElement>(".context-menu")
+          .forEach((el) => {
+            el.classList.remove("show");
+            el.style.display = "none";
+          });
 
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        }
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
 
-        function dragged(event: any) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        }
+      function dragged(event: any) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
 
-        function dragended(event: any) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }
+      function dragended(event: any) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
 
-        return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
-      },
+      return d3
+        .drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    },
   },
 });
 </script>
