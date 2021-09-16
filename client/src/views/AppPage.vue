@@ -181,15 +181,15 @@ export default defineComponent({
       line.setAttribute("stroke-opacity", "0.6");
       line.setAttribute("marker-end", "url(#arrowhead)");
 
-      arrow.setAttribute("id", "arrowhead")
-      arrow.setAttribute("markerUnits", "strokeWidth")
-      arrow.setAttribute("markerWidth", "12")
-      arrow.setAttribute("markerHeight", "12")
-      arrow.setAttribute("viewBox", "0 0 12 12")
-      arrow.setAttribute("refX", "6")
-      arrow.setAttribute("refY", "6")
-      arrow.setAttribute("orient", "auto")
-      arrow.appendChild(path)
+      arrow.setAttribute("id", "arrowhead");
+      arrow.setAttribute("markerUnits", "strokeWidth");
+      arrow.setAttribute("markerWidth", "12");
+      arrow.setAttribute("markerHeight", "12");
+      arrow.setAttribute("viewBox", "0 0 12 12");
+      arrow.setAttribute("refX", "6");
+      arrow.setAttribute("refY", "6");
+      arrow.setAttribute("orient", "auto");
+      arrow.appendChild(path);
 
       text.textContent = "";
 
