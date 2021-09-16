@@ -444,23 +444,28 @@ export default defineComponent({
         .select("svg")
         .append("g")
         .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6);
+        .attr("stroke-opacity", 0.6)
+        .classed("links", true);
 
       this.linkLabelsSelection = d3
         .select("svg")
-        .append("g");
+        .append("g")
+        .classed("linkLabels", true);
 
       this.arrowsSelection = d3
         .select("svg")
-        .append("g");
+        .append("g")
+        .classed("arrows", true);
 
       this.nodesSelection = d3
         .select("svg")
-        .append("g");
+        .append("g")
+        .classed("nodes", true);
 
       this.nodeLabelsSelection = d3
         .select("svg")
-        .append("g");
+        .append("g")
+        .classed("nodeLabels", true);
 
       this.updateSelections();
 
@@ -576,6 +581,32 @@ export default defineComponent({
       this.tick();
     },
     tick() {
+
+      this.linksSelection = d3
+        .select("svg")
+        .select(".links")
+        .selectAll("line")
+
+      this.linkLabelsSelection = d3
+        .select("svg")
+        .select(".linkLabels")
+        .selectAll("text")
+
+      this.arrowsSelection = d3
+        .select("svg")
+        .select(".arrow")
+        .selectAll("marker")
+
+      this.nodesSelection = d3
+        .select("svg")
+        .select(".nodes")
+        .selectAll("circle")
+
+      this.nodeLabelsSelection = d3
+        .select("svg")
+        .select(".nodeLabels")
+        .selectAll("text")
+
       // arrows management
       this.linksSelection
         .attr("x1", (data: any) => {
