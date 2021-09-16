@@ -604,6 +604,8 @@ export default defineComponent({
         .select(".nodeLabels")
         .selectAll("text");
 
+      this.nodesSelection.call(this.drag(this.simulation));
+
       // arrows management
       this.linksSelection
         .attr("x1", (data: any) => {
