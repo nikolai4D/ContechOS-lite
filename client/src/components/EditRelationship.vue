@@ -120,7 +120,7 @@ export default defineComponent({
         this.$el.style.display = "none";
         this.$emit("editedRelationship", {
           id,
-          ...result.data.properties,
+          ...result.data.updateRelationship,
         });
       });
 

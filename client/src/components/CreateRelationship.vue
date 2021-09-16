@@ -123,7 +123,8 @@ export default defineComponent({
         this.$el.style.display = "none";
         this.properties = { "": "" };
         this.relationshipName = "";
-        this.$emit("createRelationship", result.data);
+
+        this.$emit("createRelationship", result.data.createRelationship);
       });
 
       onError((result) => {

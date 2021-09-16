@@ -186,8 +186,8 @@ export default defineComponent({
           this.$el.classList.remove("show");
           this.$el.style.display = "none";
           this.$emit("createRelationshiptoNewNode", {
-            node: nodeResult.data,
-            relationshipResult: relationshipResult.data,
+            node: nodeResult.data.createNode,
+            relationshipResult: relationshipResult.data.createRelationship,
           });
 
           this.labels = [""];

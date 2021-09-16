@@ -118,7 +118,7 @@ export default defineComponent({
         this.$el.style.display = "none";
         this.$emit("editedNode", {
           id,
-          ...result.data,
+          ...result.data.updateNode,
         });
       });
 
