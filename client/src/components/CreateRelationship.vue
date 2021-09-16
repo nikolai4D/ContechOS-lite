@@ -106,7 +106,14 @@ export default defineComponent({
             }
           ) {
             id
+            name
             properties
+            source {
+              id
+            }
+            target {
+              id
+            }
           }
         }
       `);

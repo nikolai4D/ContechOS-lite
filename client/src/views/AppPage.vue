@@ -90,8 +90,10 @@ export default defineComponent({
       nodeLabelsSelection: null,
       linksSelection: null,
       linkLabelsSelection: null,
+      arrowsSelection: null,
       nodes: [],
       relationships: [],
+      selectionsInitialized: false,
     } as {
       activeElementId: string;
       labels: string[];
@@ -103,8 +105,10 @@ export default defineComponent({
       nodeLabelsSelection: any;
       linksSelection: any;
       linkLabelsSelection: any;
+      arrowsSelection: any;
       nodes: any[];
       relationships: any[];
+      selectionsInitialized: boolean;
     };
   },
   mounted() {
@@ -412,51 +416,33 @@ export default defineComponent({
         )
         .on("tick", this.tick);
 
+      this.linksSelection = d3
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6);
+
+      this.linkLabelsSelection = d3
+        .select("svg")
+        .append("g");
+
+      this.arrowsSelection = d3
+        .select("svg")
+        .append("g");
+
+      this.nodesSelection = d3
+        .select("svg")
+        .append("g");
+
+      this.nodeLabelsSelection = d3
+        .select("svg")
+        .append("g");
+
       this.updateSelections();
 
-      this.nodesSelection.call(drag(this.simulation));
-
-      function drag(simulation: any): any {
-        function dragstarted(event: any) {
-          // first hide all open menus
-          document
-            .querySelectorAll<HTMLElement>(".context-menu")
-            .forEach((el) => {
-              el.classList.remove("show");
-              el.style.display = "none";
-            });
-
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-        }
-
-        function dragged(event: any) {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
-        }
-
-        function dragended(event: any) {
-          if (!event.active) simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
-        }
-
-        return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
-      }
+      this.nodesSelection.call(this.drag(this.simulation));
     },
     restart() {
-      this.nodesSelection
-        .data(this.nodes, (node: any) => node.id)
-        .exit()
-        .remove();
-
-      this.updateSelections();
-
       const links = this.relationships.map((relationship: any) => {
         return {
           id: relationship.id,
@@ -469,6 +455,13 @@ export default defineComponent({
           ),
         };
       });
+
+      this.simulation.nodes(this.nodes);
+
+      this.nodesSelection
+        .data(this.nodes, (node: any) => node.id)
+        .exit()
+        .remove();
 
       this.linksSelection
         .data(links, (link: any) => link.id)
@@ -485,6 +478,67 @@ export default defineComponent({
         .exit()
         .remove();
 
+      this.linksSelection
+        .data(links, (link: any) => link.id)
+        .enter()
+        .append("line")
+        .attr("marker-end", "url(#arrowhead)")
+        .attr("id", (data: any) => data.id)
+        .append("title")
+        .text((data: any) => data.name);
+
+      this.linkLabelsSelection
+        .selectAll("text")
+        .data(links, (link: any) => link.id)
+        .join("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
+
+      this.arrowsSelection
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("id", "arrowhead")
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 12)
+        .attr("markerHeight", 12)
+        .attr("viewBox", "0 0 12 12")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+        .attr("style", "fill: rgba(0,0,0,0.3);");
+
+      this.nodesSelection
+        .data(this.nodes, (node: any) => node.id)
+        .enter()
+        .append("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
+        .attr("id", (data: any) => data.id)
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
+
+      this.nodeLabelsSelection
+        .data(this.nodes, (node: any) => node.id)
+        .enter()
+        .append("text")
+        .attr("fill", "#ffffff")
+        .attr("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr("pointer-events", "none")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none;")
+        .text((node: any) => node.properties.name ?? node.labels[0]);
+
       this.simulation.force(
         "link",
         d3
@@ -492,6 +546,10 @@ export default defineComponent({
           .distance(200)
           .id((data: any) => data.id)
       );
+
+      this.nodesSelection.call(this.drag(this.simulation));
+
+      this.tick();
     },
     tick() {
       // arrows management
@@ -596,20 +654,14 @@ export default defineComponent({
         };
       });
 
-      this.linksSelection = d3
-        .select("svg")
-        .append("g")
-        .attr("stroke", "#999")
-        .attr("stroke-opacity", 0.6)
+      this.linksSelection = this.linksSelection
         .selectAll("line")
         .data(links, (link: any) => link.id)
         .join("line")
         .attr("marker-end", "url(#arrowhead)")
         .attr("id", (data: any) => data.id);
 
-      this.linkLabelsSelection = d3
-        .select("svg")
-        .append("g")
+      this.linkLabelsSelection = this.linkLabelsSelection
         .selectAll("text")
         .data(links, (link: any) => link.id)
         .join("text")
@@ -621,9 +673,7 @@ export default defineComponent({
         .attr("id", (link: any) => link.id)
         .text((link: any) => link.name);
 
-      d3
-        .select("svg")
-        .append("g")
+      this.arrowsSelection = this.arrowsSelection
         .selectAll("marker")
         .data(links)
         .join("marker")
@@ -639,9 +689,7 @@ export default defineComponent({
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
         .attr("style", "fill: rgba(0,0,0,0.3);");
 
-      this.nodesSelection = d3
-        .select("svg")
-        .append("g")
+      this.nodesSelection = this.nodesSelection
         .selectAll("circle")
         .data(this.nodes, (node: any) => node.id)
         .join("circle")
@@ -656,9 +704,7 @@ export default defineComponent({
         .text((data: any) => data.properties.name ?? data.labels[0]);
       this.linksSelection.append("title").text((data: any) => data.name);
 
-      this.nodeLabelsSelection = d3
-        .select("svg")
-        .append("g")
+      this.nodeLabelsSelection = this.nodeLabelsSelection
         .selectAll("text")
         .data(this.nodes, (node: any) => node.id)
         .join("text")
@@ -670,8 +716,40 @@ export default defineComponent({
         .attr("style", "user-select: none;")
         .text((node: any) => node.properties.name ?? node.labels[0]);
     },
+    drag(simulation: any): any {
+        function dragstarted(event: any) {
+          // first hide all open menus
+          document
+            .querySelectorAll<HTMLElement>(".context-menu")
+            .forEach((el) => {
+              el.classList.remove("show");
+              el.style.display = "none";
+            });
+
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event: any) {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        }
+
+        function dragended(event: any) {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
+
+        return d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended);
+      },
   },
 });
 
-// implement zoom in and out from https://codepen.io/osublake/pen/oGoyYb?editors=0010
+// TODO: implement zoom in and out from https://codepen.io/osublake/pen/oGoyYb?editors=0010
 </script>

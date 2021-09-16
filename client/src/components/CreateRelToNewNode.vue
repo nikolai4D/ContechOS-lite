@@ -132,11 +132,11 @@ export default defineComponent({
             createNodeInput: { labels: $labels, properties: $properties }
           ) {
             id
+            labels
+            properties
           }
         }
       `);
-
-      console.log(nodeLabels);
 
       createNode({
         labels: nodeLabels,
@@ -146,7 +146,6 @@ export default defineComponent({
       onCreateNodeDone((nodeResult) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
-        this.$emit("createRelationshiptoNewNode");
 
         const target = nodeResult.data.createNode.id;
 
@@ -170,7 +169,14 @@ export default defineComponent({
               }
             ) {
               id
+              name
               properties
+              source {
+                id
+              }
+              target {
+                id
+              }
             }
           }
         `);
@@ -187,7 +193,7 @@ export default defineComponent({
           this.$el.style.display = "none";
           this.$emit("createRelationshiptoNewNode", {
             node: nodeResult.data.createNode,
-            relationshipResult: relationshipResult.data.createRelationship,
+            relationship: relationshipResult.data.createRelationship,
           });
 
           this.labels = [""];
