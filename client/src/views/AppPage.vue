@@ -565,7 +565,7 @@ export default defineComponent({
 
       this.nodesSelection.call(this.drag(this.simulation));
 
-      this.tick();
+      this.simulation.alpha(1).restart();
     },
     tick() {
       // arrows management
