@@ -562,17 +562,6 @@ export default defineComponent({
           .distance(200)
           .id((data: any) => data.id)
       );
-      /*
-        this.nodesSelection = update_nodes.enter()
-          .append("circle")
-          .merge(update_nodes);
-          
-        var update_links = this.linksSelection.selectAll("line")
-          .data(links);
-        update_links.exit().remove()
-        this.linksSelection = update_links.enter()
-          .append("line")
-          .merge(update_links)*/
     },
     tick() {
       // arrows management
