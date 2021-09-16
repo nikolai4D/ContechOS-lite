@@ -107,6 +107,11 @@ export default defineComponent({
       relationships: any[];
     };
   },
+  mounted () {
+    let navHeight = document.getElementById("nav")!.offsetHeight
+    let docHeight = window.innerHeight
+    document.getElementsByTagName("svg")![0].style.height = (docHeight - navHeight) + "px"
+  },
   components: {
     ContextMenu,
     AddNode,
@@ -254,7 +259,7 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.properties = result.data.relationship.properties; // delete all old values first
+        this.properties = result.data.relationship.properties;
         this.relationshipName = result.data.relationship.name;
 
         document.getElementById("editRelationship")!.classList.add("show");
@@ -417,7 +422,20 @@ export default defineComponent({
         .attr("marker-end", "url(#arrowhead)")
         .attr("id", (data: any) => data.id);
 
-      /*
+      this.linkLabelsSelection = d3
+        .select("svg")
+        .append("g")
+        .selectAll("text")
+        .data(links, (link: any) => link.id)
+        .join("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
+      
       const arrowHeads = d3
         .select("svg")
         .append("g")
@@ -434,8 +452,7 @@ export default defineComponent({
         .attr("orient", "auto")
         .append("path")
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-        .attr("style", "fill: #f00;");
-        */
+        .attr("style", "fill: rgba(0,0,0,0.3);");
 
       this.nodesSelection = d3
         .select("svg")
@@ -467,20 +484,6 @@ export default defineComponent({
         .attr("alignment-baseline", "middle")
         .attr("style", "user-select: none;")
         .text((node: any) => node.properties.name ?? node.labels[0]);
-
-      this.linkLabelsSelection = d3
-        .select("svg")
-        .append("g")
-        .selectAll("text")
-        .data(links, (link: any) => link.id)
-        .join("text")
-        .attr("fill", "black")
-        .attr("font-size", "10px")
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "middle")
-        .attr("style", "user-select: none")
-        .attr("id", (link: any) => link.id)
-        .text((link: any) => link.name);
 
       this.nodesSelection.call(drag(this.simulation));
 
@@ -571,11 +574,40 @@ export default defineComponent({
           .merge(update_links)*/
     },
     tick() {
-      this.linksSelection
-        .attr("x1", (data: any) => data.source.x)
-        .attr("y1", (data: any) => data.source.y)
-        .attr("x2", (data: any) => data.target.x)
-        .attr("y2", (data: any) => data.target.y);
+    // arrows management
+    this.linksSelection
+      .attr("x1", (data: any) => {
+        let distanceX = (data.target.x - data.source.x)
+        let distanceY = (data.target.y - data.source.y)
+        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
+        let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
+        let result = startingX
+        return result
+      })
+      .attr("y1", (data: any) => {
+        let distanceX = (data.target.x - data.source.x)
+        let distanceY = (data.target.y - data.source.y)
+        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
+        let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
+        let result = startingY
+        return result
+      })
+      .attr("x2", (data: any) => {
+        let distanceX = (data.target.x - data.source.x)
+        let distanceY = (data.target.y - data.source.y)
+        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
+        let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
+        let result = data.target.x -(startingX - data.source.x)
+        return result
+      })
+      .attr("y2", (data: any) => {
+        let distanceX = (data.target.x - data.source.x)
+        let distanceY = (data.target.y - data.source.y)
+        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
+        let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
+        let result = data.target.y - (startingY - data.source.y)
+        return result
+      });
 
       this.nodesSelection
         .attr("cx", (data: any) => data.x)
@@ -623,4 +655,6 @@ export default defineComponent({
     },
   },
 });
+
+// implement zoom in and out from https://codepen.io/osublake/pen/oGoyYb?editors=0010
 </script>
