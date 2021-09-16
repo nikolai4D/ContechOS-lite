@@ -637,12 +637,17 @@ export default defineComponent({
       this.restart();
     },
     handleEditedNode(newNode: any) {
-      this.nodes[this.nodes.findIndex((node: any) => node.id == newNode.id)] = newNode;
+      this.nodes[this.nodes.findIndex((node: any) => node.id == newNode.id)] =
+        newNode;
 
       this.restart();
     },
     handleEditedRelationship(newRelationship: any) {
-      this.relationships[this.relationships.findIndex((relationship: any) => relationship.id == newRelationship.id)] = newRelationship;
+      this.relationships[
+        this.relationships.findIndex(
+          (relationship: any) => relationship.id == newRelationship.id
+        )
+      ] = newRelationship;
 
       this.restart();
     },
