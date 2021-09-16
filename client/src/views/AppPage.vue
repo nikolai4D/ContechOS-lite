@@ -517,9 +517,9 @@ export default defineComponent({
         .text((data: any) => data.name);
 
       this.linkLabelsSelection
-        .selectAll("text")
         .data(links, (link: any) => link.id)
-        .join("text")
+        .enter()
+        .append("text")
         .attr("fill", "black")
         .attr("font-size", "10px")
         .attr("text-anchor", "middle")
@@ -581,7 +581,7 @@ export default defineComponent({
       this.simulation.alpha(1).restart();
     },
     tick() {
-
+      
       this.linksSelection = d3
         .select("svg")
         .select(".links")
