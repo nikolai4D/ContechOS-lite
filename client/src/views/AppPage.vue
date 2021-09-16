@@ -586,11 +586,7 @@ export default defineComponent({
       this.simulation.alpha(1).restart();
     },
     tick() {
-      
-      this.linksSelection = d3
-        .select("svg")
-        .select(".links")
-        .selectAll("line")
+      this.linksSelection = d3.select("svg").select(".links").selectAll("line");
 
       this.linkLabelsSelection = d3
         .select("svg")
@@ -611,6 +607,8 @@ export default defineComponent({
         .select("svg")
         .select(".nodeLabels")
         .selectAll("text");
+
+      this.nodesSelection.call(this.drag(this.simulation));
 
       // arrows management
       this.linksSelection
