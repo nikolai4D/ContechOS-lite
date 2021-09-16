@@ -156,7 +156,7 @@ export default defineComponent({
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
     },
-    createRelToExistingNode(event:any) {
+    createRelToExistingNode(event: any) {
       const svg = document.querySelector("svg")!;
 
       const line = document.createElementNS(
@@ -197,19 +197,17 @@ export default defineComponent({
         this.activeElementId
       ) as unknown as SVGCircleElement;
 
-      
       const navBar = document.getElementById("nav")!;
 
       line.setAttribute("x1", activeElement.cx.baseVal.value.toString());
       line.setAttribute("y1", activeElement.cy.baseVal.value.toString());
       line.setAttribute("x2", event.clientX);
-      line.setAttribute("y2", (event.clientY- navBar.clientHeight).toString());
+      line.setAttribute("y2", (event.clientY - navBar.clientHeight).toString());
 
       const mousemove = ({ x, y }: MouseEvent) => {
         svg.addEventListener("click", click);
 
         {
-
           line.setAttribute("x2", x.toString());
           line.setAttribute("y2", (y - navBar.clientHeight).toString());
         }
