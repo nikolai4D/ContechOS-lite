@@ -87,6 +87,11 @@ export default defineComponent({
       targetElementId: "",
     };
   },
+  mounted () {
+    let navHeight = document.getElementById("nav")!.offsetHeight
+    let docHeight = window.innerHeight
+    document.getElementsByTagName("svg")![0].style.height = (docHeight - navHeight) + "px"
+  },
   components: {
     ContextMenu,
     AddNode,
@@ -209,7 +214,12 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.getAllUsers();
+        if(result.data.removeNode.success)
+          this.getAllUsers();
+        else{
+          console.log("Couldn't delete node because it has existing relationships, delete them first");
+          alert("Couldn't delete node because it has existing relationships, delete them first");
+        }
       });
 
       onError((result) => {
@@ -232,7 +242,7 @@ export default defineComponent({
       mutate({ id: id });
 
       onDone((result) => {
-        this.properties = result.data.relationship.properties; // delete all old values first
+        this.properties = result.data.relationship.properties;
         this.relationshipName = result.data.relationship.name;
 
         document.getElementById("editRelationship")!.classList.add("show");
@@ -376,16 +386,46 @@ export default defineComponent({
               .id((data: any) => data.id)
           )
           .force("charge", d3.forceManyBody())
+          .force("collide", d3.forceCollide().radius(70).iterations(2))
           .force(
             "center",
             d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
           )
           .on("tick", () => {
+            // arrows management
             linksSelection
-              .attr("x1", (data: any) => data.source.x)
-              .attr("y1", (data: any) => data.source.y)
-              .attr("x2", (data: any) => data.target.x)
-              .attr("y2", (data: any) => data.target.y);
+              .attr("x1", (data: any) => {
+                let distanceX = (data.target.x - data.source.x)
+                let distanceY = (data.target.y - data.source.y)
+                let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
+                let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
+                let result = startingX
+                return result
+              })
+              .attr("y1", (data: any) => {
+                let distanceX = (data.target.x - data.source.x)
+                let distanceY = (data.target.y - data.source.y)
+                let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
+                let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
+                let result = startingY
+                return result
+              })
+              .attr("x2", (data: any) => {
+                let distanceX = (data.target.x - data.source.x)
+                let distanceY = (data.target.y - data.source.y)
+                let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
+                let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
+                let result = data.target.x -(startingX - data.source.x)
+                return result
+              })
+              .attr("y2", (data: any) => {
+                let distanceX = (data.target.x - data.source.x)
+                let distanceY = (data.target.y - data.source.y)
+                let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
+                let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
+                let result = data.target.y - (startingY - data.source.y)
+                return result
+              });
 
             nodesSelection
               .attr("cx", (data: any) => data.x)
@@ -444,7 +484,7 @@ export default defineComponent({
           .attr("orient", "auto")
           .append("path")
           .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-          .attr("style", "fill: #f00;");
+          .attr("style", "fill: black;");
 
         const nodesSelection = d3
           .select("svg")
@@ -550,4 +590,6 @@ export default defineComponent({
     },
   },
 });
+
+// implement zoom in and out from https://codepen.io/osublake/pen/oGoyYb?editors=0010
 </script>
