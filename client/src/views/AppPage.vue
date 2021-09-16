@@ -87,7 +87,9 @@ export default defineComponent({
       targetElementId: "",
       simulation: null,
       nodesSelection: null,
+      nodeLabelsSelection: null,
       linksSelection: null,
+      linkLabelsSelection: null,
       nodes: [],
       relationships: [],
     } as {
@@ -98,7 +100,9 @@ export default defineComponent({
       targetElementId: string;
       simulation: any;
       nodesSelection: any;
+      nodeLabelsSelection: any;
       linksSelection: any;
+      linkLabelsSelection: any;
       nodes: any[];
       relationships: any[];
     };
@@ -225,9 +229,9 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.nodes = this.nodes.filter((node) => node.id !== id);
+        this.nodes = this.nodes.filter((node: any) => node.id !== id);
 
-        this.nodesSelection.data(this.nodes);
+        this.restart();
       });
 
       onError((result) => {
@@ -277,10 +281,10 @@ export default defineComponent({
 
       onDone((result) => {
         this.relationships = this.relationships.filter(
-          (node) => node.id !== id
+          (relationship) => relationship.id !== id
         );
 
-        this.linksSelection.data(this.relationships);
+        this.restart();
       });
 
       onError((result) => {
@@ -400,42 +404,7 @@ export default defineComponent({
           "center",
           d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
         )
-        .on("tick", () => {
-          this.linksSelection
-            .attr("x1", (data: any) => data.source.x)
-            .attr("y1", (data: any) => data.source.y)
-            .attr("x2", (data: any) => data.target.x)
-            .attr("y2", (data: any) => data.target.y);
-
-          this.nodesSelection
-            .attr("cx", (data: any) => data.x)
-            .attr("cy", (data: any) => data.y);
-
-          document.querySelectorAll("circle").forEach((circle) => {
-            const text = circle.nextElementSibling!;
-
-            text.setAttribute("x", circle.getAttribute("cx")!);
-            text.setAttribute("y", circle.getAttribute("cy")!);
-          });
-
-          document.querySelectorAll("line").forEach((line) => {
-            const text = line.nextElementSibling!;
-            text.setAttribute(
-              "x",
-              (
-                (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
-                line.x1.baseVal.value
-              ).toString()
-            );
-            text.setAttribute(
-              "y",
-              (
-                (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
-                line.y1.baseVal.value
-              ).toString()
-            );
-          });
-        });
+        .on("tick", this.tick);
 
       this.linksSelection = d3
         .select("svg")
@@ -443,7 +412,7 @@ export default defineComponent({
         .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
         .selectAll("line")
-        .data(links)
+        .data(links, (link: any) => link.id)
         .join("line")
         .attr("marker-end", "url(#arrowhead)")
         .attr("id", (data: any) => data.id);
@@ -472,7 +441,7 @@ export default defineComponent({
         .select("svg")
         .append("g")
         .selectAll("circle")
-        .data(nodes)
+        .data(nodes, (node: any) => node.id)
         .join("circle")
         .attr("r", 40)
         .attr("fill", (data: any) => stringToColor(data.labels[0]))
@@ -485,58 +454,37 @@ export default defineComponent({
         .text((data: any) => data.properties.name ?? data.labels[0]);
       this.linksSelection.append("title").text((data: any) => data.name);
 
+      this.nodeLabelsSelection = d3
+        .select("svg")
+        .append("g")
+        .selectAll("text")
+        .data(nodes, (node: any) => node.id)
+        .join("text")
+        .attr("fill", "#ffffff")
+        .attr("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr("pointer-events", "none")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none;")
+        .text((node: any) => node.properties.name ?? node.labels[0]);
+
+      this.linkLabelsSelection = d3
+        .select("svg")
+        .append("g")
+        .selectAll("text")
+        .data(links, (link: any) => link.id)
+        .join("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
+
       this.nodesSelection.call(drag(this.simulation));
 
       function drag(simulation: any): any {
-        document.querySelectorAll("circle").forEach((circle) => {
-          const text = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text"
-          );
-
-          text.setAttribute("fill", "#ffffff");
-          text.setAttribute("font-size", "14px");
-          text.setAttribute("text-anchor", "middle");
-          text.setAttribute("pointer-events", "none");
-          text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("style", "user-select: none;");
-
-          text.textContent = circle.querySelector("title")!.textContent!;
-
-          circle.insertAdjacentElement("afterend", text);
-        });
-        document.querySelectorAll("line").forEach((line: any) => {
-          const text = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "text"
-          );
-
-          text.setAttribute("fill", "black");
-          text.setAttribute("font-size", "10px");
-          text.setAttribute("text-anchor", "middle");
-          text.setAttribute("alignment-baseline", "middle");
-          text.setAttribute("style", "user-select: none;");
-          text.setAttribute("id", line.id);
-          text.setAttribute(
-            "x",
-            (
-              (line.x2.baseVal.value - line.x1.baseVal.value) / 2 +
-              line.x1.baseVal.value
-            ).toString()
-          );
-          text.setAttribute(
-            "y",
-            (
-              (line.y2.baseVal.value - line.y1.baseVal.value) / 2 +
-              line.y1.baseVal.value
-            ).toString()
-          );
-
-          text.textContent = line.querySelector("title").textContent;
-
-          line.insertAdjacentElement("afterend", text);
-        });
-
         function dragstarted(event: any) {
           // first hide all open menus
           document
@@ -568,6 +516,81 @@ export default defineComponent({
           .on("drag", dragged)
           .on("end", dragended);
       }
+    },
+    restart() {
+      this.nodesSelection
+        .data(this.nodes, (node: any) => node.id)
+        .exit()
+        .remove();
+
+      const links = this.relationships.map((relationship: any) => {
+        return {
+          id: relationship.id,
+          name: relationship.name,
+          source: this.nodes.find((node: any) => node.id === relationship.source.id),
+          target: this.nodes.find((node: any) => node.id === relationship.target.id),
+        };
+      });
+
+      this.linksSelection
+        .data(links, (link: any) => link.id)
+        .exit()
+        .remove();
+
+        this.nodeLabelsSelection
+        .data(this.nodes, (node: any) => node.id)
+        .exit()
+        .remove();
+
+        this.linkLabelsSelection
+        .data(links, (link: any) => link.id)
+        .exit()
+        .remove();
+
+      this.simulation
+        .force(
+          "link",
+          d3
+            .forceLink(links)
+            .distance(200)
+            .id((data: any) => data.id)
+        );
+        /*
+        this.nodesSelection = update_nodes.enter()
+          .append("circle")
+          .merge(update_nodes);
+          
+        var update_links = this.linksSelection.selectAll("line")
+          .data(links);
+        update_links.exit().remove()
+        this.linksSelection = update_links.enter()
+          .append("line")
+          .merge(update_links)*/
+    },
+    tick() {
+      this.linksSelection
+            .attr("x1", (data: any) => data.source.x)
+            .attr("y1", (data: any) => data.source.y)
+            .attr("x2", (data: any) => data.target.x)
+            .attr("y2", (data: any) => data.target.y);
+
+          this.nodesSelection
+            .attr("cx", (data: any) => data.x)
+            .attr("cy", (data: any) => data.y);
+
+          this.nodeLabelsSelection
+            .attr("x", (data: any) => data.x)
+            .attr("y", (data: any) => data.y);
+
+            this.linkLabelsSelection
+            .attr("x", (data: any) => (
+                (data.target.x - data.source.x) / 2 +
+                data.source.x
+              ))
+            .attr("y", (data: any) => (
+                (data.target.y - data.source.y) / 2 +
+                data.source.y
+              ));
     },
   },
 });
