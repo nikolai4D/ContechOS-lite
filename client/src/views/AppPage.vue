@@ -527,8 +527,12 @@ export default defineComponent({
         return {
           id: relationship.id,
           name: relationship.name,
-          source: this.nodes.find((node: any) => node.id === relationship.source.id),
-          target: this.nodes.find((node: any) => node.id === relationship.target.id),
+          source: this.nodes.find(
+            (node: any) => node.id === relationship.source.id
+          ),
+          target: this.nodes.find(
+            (node: any) => node.id === relationship.target.id
+          ),
         };
       });
 
@@ -537,25 +541,24 @@ export default defineComponent({
         .exit()
         .remove();
 
-        this.nodeLabelsSelection
+      this.nodeLabelsSelection
         .data(this.nodes, (node: any) => node.id)
         .exit()
         .remove();
 
-        this.linkLabelsSelection
+      this.linkLabelsSelection
         .data(links, (link: any) => link.id)
         .exit()
         .remove();
 
-      this.simulation
-        .force(
-          "link",
-          d3
-            .forceLink(links)
-            .distance(200)
-            .id((data: any) => data.id)
-        );
-        /*
+      this.simulation.force(
+        "link",
+        d3
+          .forceLink(links)
+          .distance(200)
+          .id((data: any) => data.id)
+      );
+      /*
         this.nodesSelection = update_nodes.enter()
           .append("circle")
           .merge(update_nodes);
@@ -569,28 +572,28 @@ export default defineComponent({
     },
     tick() {
       this.linksSelection
-            .attr("x1", (data: any) => data.source.x)
-            .attr("y1", (data: any) => data.source.y)
-            .attr("x2", (data: any) => data.target.x)
-            .attr("y2", (data: any) => data.target.y);
+        .attr("x1", (data: any) => data.source.x)
+        .attr("y1", (data: any) => data.source.y)
+        .attr("x2", (data: any) => data.target.x)
+        .attr("y2", (data: any) => data.target.y);
 
-          this.nodesSelection
-            .attr("cx", (data: any) => data.x)
-            .attr("cy", (data: any) => data.y);
+      this.nodesSelection
+        .attr("cx", (data: any) => data.x)
+        .attr("cy", (data: any) => data.y);
 
-          this.nodeLabelsSelection
-            .attr("x", (data: any) => data.x)
-            .attr("y", (data: any) => data.y);
+      this.nodeLabelsSelection
+        .attr("x", (data: any) => data.x)
+        .attr("y", (data: any) => data.y);
 
-            this.linkLabelsSelection
-            .attr("x", (data: any) => (
-                (data.target.x - data.source.x) / 2 +
-                data.source.x
-              ))
-            .attr("y", (data: any) => (
-                (data.target.y - data.source.y) / 2 +
-                data.source.y
-              ));
+      this.linkLabelsSelection
+        .attr(
+          "x",
+          (data: any) => (data.target.x - data.source.x) / 2 + data.source.x
+        )
+        .attr(
+          "y",
+          (data: any) => (data.target.y - data.source.y) / 2 + data.source.y
+        );
     },
   },
 });
