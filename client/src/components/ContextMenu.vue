@@ -9,7 +9,7 @@
       href="#"
       v-for="(option, id) in options"
       :key="id"
-      @click="option.action"
+      @click="option.action($event)"
       >{{ option.name }}</a
     >
   </div>

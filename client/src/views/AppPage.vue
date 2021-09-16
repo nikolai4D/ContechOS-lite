@@ -156,7 +156,7 @@ export default defineComponent({
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
     },
-    createRelToExistingNode() {
+    createRelToExistingNode(event:any) {
       const svg = document.querySelector("svg")!;
 
       const line = document.createElementNS(
@@ -197,16 +197,18 @@ export default defineComponent({
         this.activeElementId
       ) as unknown as SVGCircleElement;
 
+      
+      const navBar = document.getElementById("nav")!;
+
       line.setAttribute("x1", activeElement.cx.baseVal.value.toString());
       line.setAttribute("y1", activeElement.cy.baseVal.value.toString());
-      line.setAttribute("x2", "100");
-      line.setAttribute("y2", "100");
+      line.setAttribute("x2", event.clientX);
+      line.setAttribute("y2", (event.clientY- navBar.clientHeight).toString());
 
       const mousemove = ({ x, y }: MouseEvent) => {
         svg.addEventListener("click", click);
 
         {
-          const navBar = document.getElementById("nav")!;
 
           line.setAttribute("x2", x.toString());
           line.setAttribute("y2", (y - navBar.clientHeight).toString());
@@ -229,6 +231,8 @@ export default defineComponent({
 
         line.remove();
         text.remove();
+        arrow.remove();
+        path.remove();
       };
 
       svg.addEventListener("mousemove", mousemove);
@@ -680,6 +684,4 @@ export default defineComponent({
     },
   },
 });
-
-// implement zoom in and out from https://codepen.io/osublake/pen/oGoyYb?editors=0010
 </script>
