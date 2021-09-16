@@ -168,8 +168,28 @@ export default defineComponent({
         "text"
       );
 
+      const arrow = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "marker"
+      );
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+
       line.setAttribute("stroke", "#999");
       line.setAttribute("stroke-opacity", "0.6");
+      line.setAttribute("marker-end", "url(#arrowhead)");
+
+      arrow.setAttribute("id", "arrowhead")
+      arrow.setAttribute("markerUnits", "strokeWidth")
+      arrow.setAttribute("markerWidth", "12")
+      arrow.setAttribute("markerHeight", "12")
+      arrow.setAttribute("viewBox", "0 0 12 12")
+      arrow.setAttribute("refX", "6")
+      arrow.setAttribute("refY", "6")
+      arrow.setAttribute("orient", "auto")
+      arrow.appendChild(path)
 
       text.textContent = "";
 
@@ -179,6 +199,8 @@ export default defineComponent({
 
       line.setAttribute("x1", activeElement.cx.baseVal.value.toString());
       line.setAttribute("y1", activeElement.cy.baseVal.value.toString());
+      line.setAttribute("x2", "100");
+      line.setAttribute("y2", "100");
 
       const mousemove = ({ x, y }: MouseEvent) => {
         svg.addEventListener("click", click);
