@@ -108,7 +108,7 @@ export default defineComponent({
             updateRelationshipInput: { properties: $properties }
             id: $id
           ) {
-            id
+            properties
           }
         }
       `);
@@ -118,7 +118,10 @@ export default defineComponent({
       onDone((result) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
-        this.$emit("editedRelationship");
+        this.$emit("editedRelationship", {
+          id,
+          ...result.data.properties,
+        });
       });
 
       onError((result) => {

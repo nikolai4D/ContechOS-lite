@@ -143,12 +143,12 @@ export default defineComponent({
         properties: nodeProperties,
       });
 
-      onCreateNodeDone((result) => {
+      onCreateNodeDone((nodeResult) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
         this.$emit("createRelationshiptoNewNode");
 
-        const target = result.data.createNode.id;
+        const target = nodeResult.data.createNode.id;
 
         const {
           mutate: createRelationship,
@@ -182,10 +182,13 @@ export default defineComponent({
           target,
         });
 
-        onCreateRelationshipDone((result) => {
+        onCreateRelationshipDone((relationshipResult) => {
           this.$el.classList.remove("show");
           this.$el.style.display = "none";
-          this.$emit("createRelationshiptoNewNode");
+          this.$emit("createRelationshiptoNewNode", {
+            node: nodeResult.data,
+            relationshipResult: relationshipResult.data,
+          });
 
           this.labels = [""];
           this.nodeProperties = { "": "" };

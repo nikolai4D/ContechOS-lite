@@ -105,7 +105,6 @@ export default defineComponent({
             updateNodeInput: { labels: $labels, properties: $properties }
             id: $id
           ) {
-            id
             labels
             properties
           }
@@ -117,7 +116,10 @@ export default defineComponent({
       onDone((result) => {
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
-        this.$emit("editedNode");
+        this.$emit("editedNode", {
+          id,
+          ...result.data,
+        });
       });
 
       onError((result) => {

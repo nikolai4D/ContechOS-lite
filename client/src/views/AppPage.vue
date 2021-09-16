@@ -5,26 +5,26 @@
     <RelationshipToNewNode
       :activeElmntId="activeElementId"
       :targetElmntId="targetElementId"
-      @createRelationshiptoNewNode="getAllUsers"
+      @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
-    <AddNode @addedNode="getAllUsers" />
+    <AddNode @addedNode="handleAddedNode" />
     <EditNode
       :labelsProps="labels"
       :propertiesProps="properties"
       :nodeId="activeElementId"
-      @editedNode="getAllUsers"
+      @editedNode="handleEditedNode"
     />
     <EditRelationship
       :propertiesProps="properties"
       :nodeId="activeElementId"
       :relName="relationshipName"
-      @editedRelationship="getAllUsers"
+      @editedRelationship="handleEditedRelationship"
     />
     <CreateRelationship
       :activeElmntId="activeElementId"
       :targetElmntId="targetElementId"
-      @createRelationship="getAllUsers"
+      @createRelationship="handleCreateRelationship"
     />
 
     <ContextMenu
@@ -594,6 +594,32 @@ export default defineComponent({
           "y",
           (data: any) => (data.target.y - data.source.y) / 2 + data.source.y
         );
+    },
+    handleCreateRelationshipToNewNode({ node, relationship }: any) {
+      this.nodes.push(node);
+      this.relationships.push(relationship);
+
+      this.restart();
+    },
+    handleAddedNode(node: any) {
+      this.nodes.push(node);
+
+      this.restart();
+    },
+    handleEditedNode(newNode: any) {
+      this.nodes[this.nodes.findIndex((node: any) => node.id == newNode.id)] = newNode;
+
+      this.restart();
+    },
+    handleEditedRelationship(newRelationship: any) {
+      this.relationships[this.relationships.findIndex((relationship: any) => relationship.id == newRelationship.id)] = newRelationship;
+
+      this.restart();
+    },
+    handleCreateRelationship(relationship: any) {
+      this.relationships.push(relationship);
+
+      this.restart();
     },
   },
 });
