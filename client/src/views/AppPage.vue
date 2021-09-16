@@ -107,10 +107,11 @@ export default defineComponent({
       relationships: any[];
     };
   },
-  mounted () {
-    let navHeight = document.getElementById("nav")!.offsetHeight
-    let docHeight = window.innerHeight
-    document.getElementsByTagName("svg")![0].style.height = (docHeight - navHeight) + "px"
+  mounted() {
+    let navHeight = document.getElementById("nav")!.offsetHeight;
+    let docHeight = window.innerHeight;
+    document.getElementsByTagName("svg")![0].style.height =
+      docHeight - navHeight + "px";
   },
   components: {
     ContextMenu,
@@ -435,7 +436,7 @@ export default defineComponent({
         .attr("style", "user-select: none")
         .attr("id", (link: any) => link.id)
         .text((link: any) => link.name);
-      
+
       const arrowHeads = d3
         .select("svg")
         .append("g")
@@ -574,40 +575,48 @@ export default defineComponent({
           .merge(update_links)*/
     },
     tick() {
-    // arrows management
-    this.linksSelection
-      .attr("x1", (data: any) => {
-        let distanceX = (data.target.x - data.source.x)
-        let distanceY = (data.target.y - data.source.y)
-        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
-        let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
-        let result = startingX
-        return result
-      })
-      .attr("y1", (data: any) => {
-        let distanceX = (data.target.x - data.source.x)
-        let distanceY = (data.target.y - data.source.y)
-        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-15
-        let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
-        let result = startingY
-        return result
-      })
-      .attr("x2", (data: any) => {
-        let distanceX = (data.target.x - data.source.x)
-        let distanceY = (data.target.y - data.source.y)
-        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
-        let startingX = data.source.x + (40/distanceBetweenCenters)* distanceX
-        let result = data.target.x -(startingX - data.source.x)
-        return result
-      })
-      .attr("y2", (data: any) => {
-        let distanceX = (data.target.x - data.source.x)
-        let distanceY = (data.target.y - data.source.y)
-        let distanceBetweenCenters = Math.sqrt((distanceX*distanceX)+(distanceY*distanceY))-30
-        let startingY = data.source.y + (40/distanceBetweenCenters)* distanceY
-        let result = data.target.y - (startingY - data.source.y)
-        return result
-      });
+      // arrows management
+      this.linksSelection
+        .attr("x1", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
+          let startingX =
+            data.source.x + (40 / distanceBetweenCenters) * distanceX;
+          let result = startingX;
+          return result;
+        })
+        .attr("y1", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
+          let startingY =
+            data.source.y + (40 / distanceBetweenCenters) * distanceY;
+          let result = startingY;
+          return result;
+        })
+        .attr("x2", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
+          let startingX =
+            data.source.x + (40 / distanceBetweenCenters) * distanceX;
+          let result = data.target.x - (startingX - data.source.x);
+          return result;
+        })
+        .attr("y2", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
+          let startingY =
+            data.source.y + (40 / distanceBetweenCenters) * distanceY;
+          let result = data.target.y - (startingY - data.source.y);
+          return result;
+        });
 
       this.nodesSelection
         .attr("cx", (data: any) => data.x)
