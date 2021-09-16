@@ -457,10 +457,7 @@ export default defineComponent({
         .append("g")
         .classed("arrows", true);
 
-      this.nodesSelection = d3
-        .select("svg")
-        .append("g")
-        .classed("nodes", true);
+      this.nodesSelection = d3.select("svg").append("g").classed("nodes", true);
 
       this.nodeLabelsSelection = d3
         .select("svg")
@@ -590,22 +587,22 @@ export default defineComponent({
       this.linkLabelsSelection = d3
         .select("svg")
         .select(".linkLabels")
-        .selectAll("text")
+        .selectAll("text");
 
       this.arrowsSelection = d3
         .select("svg")
         .select(".arrow")
-        .selectAll("marker")
+        .selectAll("marker");
 
       this.nodesSelection = d3
         .select("svg")
         .select(".nodes")
-        .selectAll("circle")
+        .selectAll("circle");
 
       this.nodeLabelsSelection = d3
         .select("svg")
         .select(".nodeLabels")
-        .selectAll("text")
+        .selectAll("text");
 
       // arrows management
       this.linksSelection
