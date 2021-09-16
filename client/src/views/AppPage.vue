@@ -263,9 +263,13 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.nodes = this.nodes.filter((node: any) => node.id !== id);
-
-        this.restart();
+        if(result.data.removeNode.success){
+          this.nodes = this.nodes.filter((node: any) => node.id !== id);
+          this.restart();
+        } else {
+          console.log("Couldn't delete the node, because it has outstanding relationships")
+          alert("Couldn't delete the node, because it has outstanding relationships")
+        }
       });
 
       onError((result) => {
@@ -314,11 +318,15 @@ export default defineComponent({
       mutate({ id });
 
       onDone((result) => {
-        this.relationships = this.relationships.filter(
-          (relationship) => relationship.id !== id
-        );
-
-        this.restart();
+        if(result.data.removeRelationship.success) {
+          this.relationships = this.relationships.filter(
+            (relationship) => relationship.id !== id
+          );
+          this.restart();
+        } else {
+          console.log("Couldn't delete the relationship")
+          alert("Couldn't delete the relationship")
+        }
       });
 
       onError((result) => {
