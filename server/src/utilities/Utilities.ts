@@ -31,10 +31,38 @@ export class Utilities {
   }
 
   public static isValidNeo4jLabel(label: string): boolean {
+    /**
+     * Must be in pascal case.
+     *
+     * Valid labels:
+     * - Label
+     * - AnotherLabel
+     *
+     * Invalid labels:
+     * - label
+     * - 123
+     * - Label123
+     * - Lab el
+     * - LAbel
+     */
     return /^([A-Z][a-z]+)+$/.test(label);
   }
 
   public static isValidNeo4jRelationshipType(type: string): boolean {
+    /**
+     * Must be in screaming snake case.
+     *
+     * Valid labels:
+     * - TYPE
+     * - RELATIONSHIP_TYPE
+     *
+     * Invalid labels:
+     * - TYPe
+     * - 123
+     * - TYPE123
+     * - TY PE
+     * - type
+     */
     return /^([A-Z]+(\_){0,1})+([A-Z])$/.test(type);
   }
 }

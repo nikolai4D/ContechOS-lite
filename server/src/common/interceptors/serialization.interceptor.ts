@@ -9,6 +9,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Utilities } from 'src/utilities/Utilities';
 
+/**
+ * Object keys to exclude from every response object
+ */
 const KEYS_TO_EXCLUDE: string[] = ['password'];
 
 const serialize = (value: any): any => {

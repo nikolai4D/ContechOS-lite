@@ -269,8 +269,12 @@ export default defineComponent({
           this.nodes = this.nodes.filter((node: any) => node.id !== id);
           this.restart();
         } else {
-          console.log("Couldn't delete the node, because it has outstanding relationships")
-          alert("Couldn't delete the node, because it has outstanding relationships")
+          console.log(
+            "Couldn't delete the node, because it has outstanding relationships"
+          );
+          alert(
+            "Couldn't delete the node, because it has outstanding relationships"
+          );
         }
       });
 
@@ -328,8 +332,8 @@ export default defineComponent({
           );
           this.restart();
         } else {
-          console.log("Couldn't delete the relationship")
-          alert("Couldn't delete the relationship")
+          console.log("Couldn't delete the relationship");
+          alert("Couldn't delete the relationship");
         }
       });
 
