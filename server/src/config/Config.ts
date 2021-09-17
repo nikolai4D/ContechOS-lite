@@ -9,12 +9,23 @@ export class Config {
 
   public static readonly PASSWORD_HASH_ROUNDS = 11;
 
+  /**
+   * Labels that cannot be used when creating a node using the
+   * generic node create API.
+   */
   public static readonly FORBIDDEN_GENERIC_NODE_LABELS = ['User', 'Role'];
+
+  /**
+   * Node properties that cannot be updated using the API.
+   */
   public static readonly FORBIDDEN_NODE_PROPERTIES_TO_UPDATE = [
     'id',
     'createdAt',
     'updatedAt',
   ];
 
+  /**
+   * Relationship properties that cannot be updated using the API.
+   */
   public static readonly FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE = ['id'];
 }
