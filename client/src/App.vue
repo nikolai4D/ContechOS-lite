@@ -24,7 +24,8 @@ import { ActionTypes } from "./store/modules/auth/actions.types";
 
 export default {
   name: "app",
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     signOut: mapActions([ActionTypes.SIGN_OUT]).SIGN_OUT,
     ...mapGetters(["getUser"]),
   },

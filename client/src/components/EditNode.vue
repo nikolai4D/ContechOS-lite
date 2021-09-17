@@ -30,7 +30,8 @@
   top: 0;
   left: 0;
 
-  &.show { // this activates when this element has the class show
+  &.show {
+    // this activates when this element has the class show
     display: block;
   }
 }
@@ -46,22 +47,23 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "EditNode",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
-     
-     
       toggleMenu: true,
       labels: [],
       properties: {},
       activeNodeId: "",
     };
   },
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     nodeId: String,
     labelsProps: Array,
-    propertiesprops: {}
+    propertiesprops: {},
   },
-  watch: { // executes when the value of the given prop changes on the parent element
+  watch: {
+    // executes when the value of the given prop changes on the parent element
     labelsProps(newValue, oldValue) {
       this.labels = newValue;
     },
@@ -73,25 +75,28 @@ export default defineComponent({
       this.activeNodeId = newValue;
     },
   },
-  components: { // child components used
+  components: {
+    // child components used
     Attributes,
     Labels,
     MenuHeader,
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     changeProperties(event: any) {
       this.properties = event;
     },
     changeLabels(event: any) {
       this.labels = event;
     },
-    removeUnnecessaryProperties(properties: { [key: string]: any }) { 
+    removeUnnecessaryProperties(properties: { [key: string]: any }) {
       // remove server properties that don't have to be displayed to the user
       return Object.entries(properties)
         .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
-    editNode() { // function that manages the mutation used to edit a node
+    editNode() {
+      // function that manages the mutation used to edit a node
       // remove blank properties, which are the ones that are "": ""
       var properties = this.properties;
       properties = Object.entries(properties)
@@ -113,16 +118,19 @@ export default defineComponent({
         }
       `);
 
-      mutate({ // data passed to the mutation
-        properties: properties, labels: labels, id: id 
+      mutate({
+        // data passed to the mutation
+        properties: properties,
+        labels: labels,
+        id: id,
       });
 
-      
-      onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
-        
+
         //emit event to parent component and return the data from the mutation
         this.$emit("editedNode", {
           id,
@@ -130,7 +138,8 @@ export default defineComponent({
         });
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

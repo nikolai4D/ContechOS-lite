@@ -34,21 +34,25 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "MenuHeader",
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     menuName: String,
   },
   mounted() {
     this.parent = this.$el.parentElement.parentElement; // get parent menu component
     this.enableDrag();
   },
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       toggleMenu: true,
       parent: null,
     };
   },
-  methods: { // methods used in this component
-    closeElement(event) { // triggered when clicked on x
+  methods: {
+    // methods used in this component
+    closeElement(event) {
+      // triggered when clicked on x
       // hide menu
       this.parent.classList.remove("show");
       this.parent.style.display = "none";
@@ -57,13 +61,15 @@ export default defineComponent({
       // emit event to parent component and return new value of togglemenu
       this.$emit("menuToggle", this.toggleMenu);
     },
-    menuToggle(newValue) { // triggered whe clicked on toggle triangle
+    menuToggle(newValue) {
+      // triggered whe clicked on toggle triangle
       // reset data
       this.toggleMenu = newValue;
       // emit event to parent component and return new value of togglemenu
       this.$emit("menuToggle", newValue);
     },
-    enableDrag() { // lets user drag and move the menu from the header
+    enableDrag() {
+      // lets user drag and move the menu from the header
       let x = 0;
       let y = 0;
 
