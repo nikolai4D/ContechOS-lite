@@ -33,11 +33,11 @@ export class Utilities {
   public static isValidNeo4jLabel(label: string): boolean {
     /**
      * Must be in pascal case.
-     * 
+     *
      * Valid labels:
      * - Label
      * - AnotherLabel
-     * 
+     *
      * Invalid labels:
      * - label
      * - 123
@@ -51,11 +51,11 @@ export class Utilities {
   public static isValidNeo4jRelationshipType(type: string): boolean {
     /**
      * Must be in screaming snake case.
-     * 
+     *
      * Valid labels:
      * - TYPE
      * - RELATIONSHIP_TYPE
-     * 
+     *
      * Invalid labels:
      * - TYPe
      * - 123

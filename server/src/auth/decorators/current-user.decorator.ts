@@ -3,7 +3,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 
 /**
  * @returns The authenticated user making the request.
- * 
+ *
  * This is always guaranteed to be a User when the resolver
  * is decorated with the `@UseGuards(JwtAuthGuard)` decorator.
  * Otherwise this can return `null`.
