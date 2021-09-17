@@ -431,6 +431,7 @@ export default defineComponent({
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
+      // Create a links object using the object structure that d3 expects.
       const links = relationships.map((relationship: any) => {
         return {
           id: relationship.id,
@@ -440,6 +441,7 @@ export default defineComponent({
         };
       });
 
+      // Create the D3 force simulation
       this.simulation = d3
         .forceSimulation(nodes)
         .force(
@@ -462,26 +464,75 @@ export default defineComponent({
         .append("g")
         .attr("stroke", "#999")
         .attr("stroke-opacity", 0.6)
-        .classed("links", true);
+        .classed("links", true)
+        .selectAll("line")
+        .data(links, (link: any) => link.id)
+        .join("line")
+        .attr("marker-end", "url(#arrowhead)")
+        .attr("id", (data: any) => data.id);
 
       this.linkLabelsSelection = d3
         .select("svg")
         .append("g")
-        .classed("linkLabels", true);
+        .classed("linkLabels", true)
+        .selectAll("text")
+        .data(links, (link: any) => link.id)
+        .join("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
 
       this.arrowsSelection = d3
         .select("svg")
         .append("g")
-        .classed("arrows", true);
+        .classed("arrows", true)
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("id", "arrowhead")
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 12)
+        .attr("markerHeight", 12)
+        .attr("viewBox", "0 0 12 12")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+        .attr("style", "fill: rgba(0,0,0,0.3);");
 
-      this.nodesSelection = d3.select("svg").append("g").classed("nodes", true);
+      this.nodesSelection = d3.select("svg").append("g").classed("nodes", true).selectAll("circle")
+        .data(this.nodes, (node: any) => node.id)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
+        .attr("id", (data: any) => data.id);
 
       this.nodeLabelsSelection = d3
         .select("svg")
         .append("g")
-        .classed("nodeLabels", true);
+        .classed("nodeLabels", true)
+        .selectAll("text")
+        .data(this.nodes, (node: any) => node.id)
+        .join("text")
+        .attr("fill", "#ffffff")
+        .attr("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr("pointer-events", "none")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none;")
+        .text((node: any) => node.properties.name ?? node.labels[0]);
 
-      this.updateSelections();
+      this.nodesSelection
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
+      this.linksSelection.append("title").text((data: any) => data.name);
 
       this.nodesSelection.call(this.drag(this.simulation));
     },
@@ -563,7 +614,7 @@ export default defineComponent({
         .enter()
         .append("circle")
         .attr("r", 40)
-        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("fill", (data: any) => stringToColor(data.labels[0])) // Color the nodes based on the first label
         .attr("stroke", "#ffffff")
         .attr("stroke-width", 1.5)
         .attr("id", (data: any) => data.id)
@@ -582,6 +633,7 @@ export default defineComponent({
         .attr("style", "user-select: none;")
         .text((node: any) => node.properties.name ?? node.labels[0]);
 
+      // Update the simulation's links
       this.simulation.force(
         "link",
         d3
@@ -590,11 +642,14 @@ export default defineComponent({
           .id((data: any) => data.id)
       );
 
+      // Add drag to new nodes
       this.nodesSelection.call(this.drag(this.simulation));
 
+      // Restart the simulation
       this.simulation.alpha(1).restart();
     },
     tick() {
+      // Reset selections to update with new elements
       this.linksSelection = d3.select("svg").select(".links").selectAll("line");
 
       this.linkLabelsSelection = d3
@@ -617,6 +672,7 @@ export default defineComponent({
         .select(".nodeLabels")
         .selectAll("text");
 
+      // Add drag to new nodes in the selection
       this.nodesSelection.call(this.drag(this.simulation));
 
       // arrows management
@@ -662,6 +718,7 @@ export default defineComponent({
           return result;
         });
 
+      // Update coordinates
       this.nodesSelection
         .attr("cx", (data: any) => data.x)
         .attr("cy", (data: any) => data.y);
@@ -710,82 +767,6 @@ export default defineComponent({
       this.relationships.push(relationship);
 
       this.restart();
-    },
-    updateSelections() {
-      const links = this.relationships.map((relationship: any) => {
-        return {
-          id: relationship.id,
-          name: relationship.name,
-          source: this.nodes.find(
-            (node: any) => node.id === relationship.source.id
-          ),
-          target: this.nodes.find(
-            (node: any) => node.id === relationship.target.id
-          ),
-        };
-      });
-
-      this.linksSelection = this.linksSelection
-        .selectAll("line")
-        .data(links, (link: any) => link.id)
-        .join("line")
-        .attr("marker-end", "url(#arrowhead)")
-        .attr("id", (data: any) => data.id);
-
-      this.linkLabelsSelection = this.linkLabelsSelection
-        .selectAll("text")
-        .data(links, (link: any) => link.id)
-        .join("text")
-        .attr("fill", "black")
-        .attr("font-size", "10px")
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "middle")
-        .attr("style", "user-select: none")
-        .attr("id", (link: any) => link.id)
-        .text((link: any) => link.name);
-
-      this.arrowsSelection = this.arrowsSelection
-        .selectAll("marker")
-        .data(links)
-        .join("marker")
-        .attr("id", "arrowhead")
-        .attr("markerUnits", "strokeWidth")
-        .attr("markerWidth", 12)
-        .attr("markerHeight", 12)
-        .attr("viewBox", "0 0 12 12")
-        .attr("refX", 6)
-        .attr("refY", 6)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-        .attr("style", "fill: rgba(0,0,0,0.3);");
-
-      this.nodesSelection = this.nodesSelection
-        .selectAll("circle")
-        .data(this.nodes, (node: any) => node.id)
-        .join("circle")
-        .attr("r", 40)
-        .attr("fill", (data: any) => stringToColor(data.labels[0]))
-        .attr("stroke", "#ffffff")
-        .attr("stroke-width", 1.5)
-        .attr("id", (data: any) => data.id);
-
-      this.nodesSelection
-        .append("title")
-        .text((data: any) => data.properties.name ?? data.labels[0]);
-      this.linksSelection.append("title").text((data: any) => data.name);
-
-      this.nodeLabelsSelection = this.nodeLabelsSelection
-        .selectAll("text")
-        .data(this.nodes, (node: any) => node.id)
-        .join("text")
-        .attr("fill", "#ffffff")
-        .attr("font-size", "14px")
-        .attr("text-anchor", "middle")
-        .attr("pointer-events", "none")
-        .attr("alignment-baseline", "middle")
-        .attr("style", "user-select: none;")
-        .text((node: any) => node.properties.name ?? node.labels[0]);
     },
     drag(simulation: any): any {
       function dragstarted(event: any) {
