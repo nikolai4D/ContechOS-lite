@@ -12,11 +12,15 @@ import { GraphQLDeleteResult } from 'src/common/graphql/types/delete-result.grap
 export class NodesResolver {
   constructor(private readonly nodesService: NodesService) {}
 
-  @Mutation(() => Node)
+  @Mutation(() => Node) // `() => Node` specifies the return type of the mutation / query
   createNode(@Args('createNodeInput') createNodeInput: CreateNodeInput) {
     return this.nodesService.create(createNodeInput);
   }
 
+  /*
+    `{ name: 'nodes' }` overrides the defaul name of the query
+    that would be the name of the method, in this case `findAll`.
+  */
   @Query(() => [Node], { name: 'nodes' })
   findAll() {
     return this.nodesService.findAll();

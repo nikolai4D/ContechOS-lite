@@ -22,6 +22,11 @@ export class RelationshipsResolver {
 
   @Query(() => [Relationship], { name: 'relationships' })
   findAll(
+    /**
+     * If `from` or `to` are `null` there will be no filter
+     * in the respective nodes, otherwise only nodes with
+     * the specified label will be returned.
+     */
     @Args('from', { nullable: true }) from?: string,
     @Args('to', { nullable: true }) to?: string,
   ) {
