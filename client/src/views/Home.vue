@@ -20,7 +20,7 @@ import { mapGetters } from "vuex";
 
 export default defineComponent({
   name: "Home",
-  methods: {
+  methods: { // methods used in this component
     ...mapGetters(["getUser"]),
   },
 });

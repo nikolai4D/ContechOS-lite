@@ -30,7 +30,7 @@
   top: 0;
   left: 0;
 
-  &.show {
+  &.show { // this activates when this element has the class show
     display: block;
   }
 }
@@ -46,23 +46,22 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "EditNode",
-  data() {
+  data() { // variables used in this component
     return {
-      startingPos: { x: null, y: null },
-      currentPos: { x: null, y: null },
-      isMouseDown: false,
+     
+     
       toggleMenu: true,
       labels: [],
       properties: {},
       activeNodeId: "",
     };
   },
-  props: {
+  props: { // data given on creation of component from parent component
     nodeId: String,
     labelsProps: Array,
-    propertiesProps: {},
+    propertiesprops: {}
   },
-  watch: {
+  watch: { // executes when the value of the given prop changes on the parent element
     labelsProps(newValue, oldValue) {
       this.labels = newValue;
     },
@@ -74,24 +73,26 @@ export default defineComponent({
       this.activeNodeId = newValue;
     },
   },
-  components: {
+  components: { // child components used
     Attributes,
     Labels,
     MenuHeader,
   },
-  methods: {
+  methods: { // methods used in this component
     changeProperties(event: any) {
       this.properties = event;
     },
     changeLabels(event: any) {
       this.labels = event;
     },
-    removeUnnecessaryProperties(properties: { [key: string]: any }) {
+    removeUnnecessaryProperties(properties: { [key: string]: any }) { 
+      // remove server properties that don't have to be displayed to the user
       return Object.entries(properties)
         .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
-    editNode() {
+    editNode() { // function that manages the mutation used to edit a node
+      // remove blank properties, which are the ones that are "": ""
       var properties = this.properties;
       properties = Object.entries(properties)
         .filter(([key]) => key !== "")
@@ -99,6 +100,7 @@ export default defineComponent({
       var labels = this.labels;
       var id = this.activeNodeId;
 
+      // mutation
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject, $id: String!) {
           updateNode(
@@ -111,18 +113,24 @@ export default defineComponent({
         }
       `);
 
-      mutate({ properties: properties, labels: labels, id: id });
+      mutate({ // data passed to the mutation
+        properties: properties, labels: labels, id: id 
+      });
 
-      onDone((result) => {
+      
+      onDone((result) => { // runs if the mutation executed correctly
+        // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
+        
+        //emit event to parent component and return the data from the mutation
         this.$emit("editedNode", {
           id,
           ...result.data.updateNode,
         });
       });
 
-      onError((result) => {
+      onError((result) => { // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

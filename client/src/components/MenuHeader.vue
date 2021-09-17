@@ -34,45 +34,50 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "MenuHeader",
-  props: {
+  props: { // data given on creation of component from parent component
     menuName: String,
   },
   mounted() {
-    this.parent = this.$el.parentElement.parentElement;
+    this.parent = this.$el.parentElement.parentElement; // get parent menu component
     this.enableDrag();
   },
-  data() {
+  data() { // variables used in this component
     return {
       toggleMenu: true,
       parent: null,
     };
   },
-  methods: {
-    closeElement(event) {
+  methods: { // methods used in this component
+    closeElement(event) { // triggered when clicked on x
+      // hide menu
       this.parent.classList.remove("show");
       this.parent.style.display = "none";
+      // reset data
       this.toggleMenu = true;
+      // emit event to parent component and return new value of togglemenu
       this.$emit("menuToggle", this.toggleMenu);
     },
-    menuToggle(newValue) {
+    menuToggle(newValue) { // triggered whe clicked on toggle triangle
+      // reset data
       this.toggleMenu = newValue;
+      // emit event to parent component and return new value of togglemenu
       this.$emit("menuToggle", newValue);
     },
-    enableDrag() {
+    enableDrag() { // lets user drag and move the menu from the header
       let x = 0;
       let y = 0;
 
       let isDragging = false;
       let parent = this.parent;
 
-      const draggableElement = parent.firstElementChild.firstElementChild;
+      const draggableElement = this.$el; // the element that you have to drag to move the menu is the header
 
       draggableElement.addEventListener("mousedown", () => {
         function update() {
           if (isDragging) {
             requestAnimationFrame(update);
           }
-          parent.style.transform = `translate(${x}px, ${y}px)`;
+          parent.style.transform = `translate(${x}px, ${y}px)`; // move menu to current mouse position
         }
 
         isDragging = true;
@@ -85,11 +90,13 @@ export default defineComponent({
           return;
         }
 
+        // set x and y to current mouse position
         x = event.clientX;
         y = event.clientY;
       });
 
       document.addEventListener("mouseup", () => {
+        // reset variable
         isDragging = false;
       });
     },

@@ -39,7 +39,7 @@
   top: 0;
   left: 0;
 
-  &.show {
+  &.show { // this activates when this element has the class show
     display: block;
   }
 }
@@ -54,11 +54,11 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "CreateRelationship",
-  components: {
+  components: { // child components used
     MenuHeader,
     Attributes,
   },
-  data() {
+  data() { // variables used in this component
     return {
       properties: { "": "" },
       toggleMenu: true,
@@ -67,11 +67,11 @@ export default defineComponent({
       targetElementId: "",
     };
   },
-  props: {
+  props: { // data given on creation of component from parent component
     activeElmntId: String,
     targetElmntId: String,
   },
-  watch: {
+  watch: { // executes when the value of the given prop changes on the parent element
     activeElmntId(newValue, oldValue) {
       this.activeElementId = newValue;
     },
@@ -79,17 +79,20 @@ export default defineComponent({
       this.targetElementId = newValue;
     },
   },
-  methods: {
+  methods: { // methods used in this component
     changeProperties(event: any) {
       this.properties = event;
     },
     changeName(event: any) {
       this.relationshipName = event.path[0].value.toUpperCase();
     },
-    createRelationship() {
-      var properties = Object.entries(this.properties)
+    createRelationship() { // function that manages the mutation used to create a relationship
+      // remove blank properties, which are the ones that are "": ""
+      var properties = Object.entries(this.properties) 
         .filter(([key]) => key !== "")
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
+
+      //mutation
       const { mutate, onDone, onError } = useMutation(gql`
         mutation (
           $name: String!
@@ -118,23 +121,27 @@ export default defineComponent({
         }
       `);
 
-      mutate({
+      mutate({ // data passed to the mutation
         name: this.relationshipName,
         properties: properties,
         source: this.activeElementId,
         target: this.targetElementId,
       });
 
-      onDone((result) => {
+      
+     onDone((result) => { // runs if the mutation executed correctly
+        // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
+        //reset data
         this.properties = { "": "" };
         this.relationshipName = "";
 
+        //emit event to parent component and return the data from the mutation
         this.$emit("createRelationship", result.data.createRelationship);
       });
 
-      onError((result) => {
+      onError((result) => { // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

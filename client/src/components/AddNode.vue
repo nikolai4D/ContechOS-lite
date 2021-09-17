@@ -33,7 +33,7 @@
   top: 0;
   left: 0;
 
-  &.show {
+  &.show { // this activates when this element has the class show
     display: block;
   }
 }
@@ -49,34 +49,33 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "AddNode",
-  data() {
+  data() { // variables used in this component
     return {
-      startingPos: { x: null, y: null },
-      currentPos: { x: null, y: null },
-      isMouseDown: false,
       toggleMenu: true,
       labels: [""],
       properties: { "": "" },
     };
   },
-  components: {
+  components: { // child components used
     Attributes,
     Labels,
     MenuHeader,
   },
-  methods: {
+  methods: { // methods used in this component
     changeAttributes(event: any) {
       this.properties = event;
     },
     changeLabels(event: any) {
       this.labels = event;
     },
-    addNode() {
-      var labels = this.labels;
-      var properties = Object.entries(this.properties)
+    addNode() { // function that manages the mutation used to create a node
+      // remove blank properties, which are the ones that are "": ""
+      var properties = Object.entries(this.properties) 
         .filter(([key]) => key !== "")
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
+      var labels = this.labels;
 
+      // mutation
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject!) {
           createNode(
@@ -89,17 +88,23 @@ export default defineComponent({
         }
       `);
 
-      mutate({ labels: labels, properties: properties });
+      mutate({ // data passed to the mutation
+        labels: labels, properties: properties 
+      });
 
-      onDone((result) => {
+     onDone((result) => { // runs if the mutation executed correctly
+        // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
+        // reset data
         this.labels = [""];
         this.properties = { "": "" };
+        
+        //emit event to parent component and return the data from the mutation
         this.$emit("addedNode", result.data.createNode);
       });
 
-      onError((result) => {
+      onError((result) => { // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

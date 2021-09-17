@@ -10,8 +10,9 @@
       v-for="(option, id) in options"
       :key="id"
       @click="option.action($event)"
-      >{{ option.name }}</a
     >
+      {{ option.name }}
+    </a>
   </div>
 </template>
 
@@ -20,7 +21,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ContextMenu",
-  props: {
+  props: { // data given on creation of component from parent component
     options: Array,
     menuId: String,
   },
