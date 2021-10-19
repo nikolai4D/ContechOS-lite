@@ -12,6 +12,10 @@
         id="log-out"
         >Logout</a
       >
+      <button
+          @click="logout"
+      >Logout</button
+      >
       <router-link to="/app" v-if="this.$route.path == '/app'">App</router-link>
     </nav>
     <router-view />
@@ -27,6 +31,11 @@ export default {
   methods: { // methods used in this component
     signOut: mapActions([ActionTypes.SIGN_OUT]).SIGN_OUT,
     ...mapGetters(["getUser"]),
+    logout() {
+      this.$keycloak.logoutFn()
+      console.log(this.$keycloak)
+    }
+
   },
   created() {
     if (localStorage.getItem("auth.token")) {

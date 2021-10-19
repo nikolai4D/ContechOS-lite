@@ -78,7 +78,8 @@ export default defineComponent({
   created() {
     this.getAllUsers();
   },
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       activeElementId: "",
       labels: [],
@@ -116,8 +117,20 @@ export default defineComponent({
     let docHeight = window.innerHeight;
     document.getElementsByTagName("svg")![0].style.height =
       docHeight - navHeight + "px";
+    // Snippet from elsewhere. need more information how d3 works
+    //https://bl.ocks.org/sistemawebpro/41d81ad70d7355691a61a6f7ac7f83d9
+    //https://stackoverflow.com/questions/66900901/how-to-set-up-d3-zoom-correctly-in-vue
+
+/*    var svg = d3.select("#dataviz_basicZoom")
+        .append("svg")
+        .call(d3.zoom().on("zoom", function () {
+          svg.attr("transform", d3.event.transform)
+        }))
+        .append("g")*/
+
   },
-  components: { // child components used
+  components: {
+    // child components used
     ContextMenu,
     AddNode,
     EditNode,
@@ -125,7 +138,8 @@ export default defineComponent({
     CreateRelationship,
     RelationshipToNewNode,
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     addNode() {
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
@@ -147,8 +161,8 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.labels = result.data.node.labels;
         this.properties = result.data.node.properties;
 
@@ -156,7 +170,8 @@ export default defineComponent({
         document.getElementById("editNode")!.style.display = "block";
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -263,9 +278,9 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
-        if(result.data.removeNode.success){
+      onDone((result) => {
+        // runs if the mutation executed correctly
+        if (result.data.removeNode.success) {
           this.nodes = this.nodes.filter((node: any) => node.id !== id);
           this.restart();
         } else {
@@ -278,7 +293,8 @@ export default defineComponent({
         }
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -297,8 +313,8 @@ export default defineComponent({
 
       mutate({ id: id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.properties = result.data.relationship.properties;
         this.relationshipName = result.data.relationship.name;
 
@@ -306,7 +322,8 @@ export default defineComponent({
         document.getElementById("editRelationship")!.style.display = "block";
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -324,9 +341,9 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
-        if(result.data.removeRelationship.success) {
+      onDone((result) => {
+        // runs if the mutation executed correctly
+        if (result.data.removeRelationship.success) {
           this.relationships = this.relationships.filter(
             (relationship) => relationship.id !== id
           );
@@ -337,7 +354,8 @@ export default defineComponent({
         }
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -414,13 +432,14 @@ export default defineComponent({
 
       mutate();
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.nodes = result.data.nodes;
         this.relationships = result.data.relationships;
 
@@ -428,8 +447,16 @@ export default defineComponent({
       });
     },
     async init({ nodes, relationships }: any) {
+
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+
+
+      let zoom = d3.zoom<SVGSVGElement, unknown>().on("zoom", function(event, a) {
+        svg.setAttribute("transform", event.transform)
+      })
+
+      d3.select<SVGSVGElement, unknown>("svg").call(zoom)
 
       // Create a links object using the object structure that d3 expects.
       const links = relationships.map((relationship: any) => {
@@ -505,7 +532,11 @@ export default defineComponent({
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
         .attr("style", "fill: rgba(0,0,0,0.3);");
 
-      this.nodesSelection = d3.select("svg").append("g").classed("nodes", true).selectAll("circle")
+      this.nodesSelection = d3
+        .select("svg")
+        .append("g")
+        .classed("nodes", true)
+        .selectAll("circle")
         .data(this.nodes, (node: any) => node.id)
         .join("circle")
         .attr("r", 40)
