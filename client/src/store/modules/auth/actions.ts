@@ -32,6 +32,10 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: any
   ): Promise<void>;
+  [ActionTypes.SET_NEW_PASSWORD](
+    { commit }: AugmentedActionContext,
+    paylord: any
+  ): Promise<void>;
 }
 
 export const actions: ActionTree<State, RootState> & Actions = {
@@ -124,6 +128,44 @@ export const actions: ActionTree<State, RootState> & Actions = {
             id
             name
             email
+          }
+        }
+      `);
+
+      mutate();
+
+      onDone((result) => {
+        if (!result.data) {
+          return dispatch(ActionTypes.SIGN_OUT);
+        }
+
+        commit(MutationTypes.SET_USER, result.data.currentUser);
+
+        resolve();
+      });
+
+      onError((result) => {
+        console.log(result.graphQLErrors[0].extensions?.response.message);
+        alert(result.graphQLErrors[0].extensions?.response.message);
+
+        dispatch(ActionTypes.SIGN_OUT);
+
+        reject();
+      });
+    });
+  },
+  [ActionTypes.SET_NEW_PASSWORD]({ commit, dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      provideApolloClient(apolloClient);
+
+      const { mutate, onDone, onError } = useMutation(gql`
+        mutation ($password: String!) {
+          updateUser(id: "1", updateUserInput: { password: $password }) {
+            user {
+              id
+              name
+              email
+            }
           }
         }
       `);

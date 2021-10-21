@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Register from "../views/Signup.vue";
 import Login from "../views/Login.vue";
 import AppPage from "../views/AppPage.vue";
+import SetNewPassword from "../views/SetNewPassword.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -32,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
         next();
       }
     },
+  },
+  {
+    path: "/setNewPassword",
+    name: "ForgotPassword",
+    component: SetNewPassword,
   },
 ];
 
