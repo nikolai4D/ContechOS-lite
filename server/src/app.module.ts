@@ -7,6 +7,7 @@ import Joi from 'joi';
 import { GraphQLModule } from '@nestjs/graphql';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { NodesModule } from './nodes/nodes.module';
+import { LocaleEnum, LocaleModule } from 'locale-nestjs';
 
 @Module({
   imports: [
@@ -30,6 +31,10 @@ import { NodesModule } from './nodes/nodes.module';
     AuthModule,
     RelationshipsModule,
     NodesModule,
+    LocaleModule.forRoot({
+      dictionaryPath: './src',
+      defaultLocale: LocaleEnum.svSE,
+    }),
   ],
 })
 export class AppModule {}

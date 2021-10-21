@@ -1,13 +1,11 @@
 import {
+  CallHandler,
+  ExecutionContext,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
 } from '@nestjs/common';
-import { isDateTime } from 'neo4j-driver';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Utilities } from 'src/utilities/Utilities';
 
 /**
  * Object keys to exclude from every response object
@@ -18,16 +16,13 @@ const serialize = (value: any): any => {
   if (Array.isArray(value)) {
     return value.map(serialize);
   }
-
   // Date must be returned as-is
   if (value instanceof Date) {
     return value;
   }
-
-  if (isDateTime(value)) {
-    return Utilities.neo4jDateTimeToDateObject(value).toISOString();
-  }
-
+  /*    if (isDateTime(value)) {
+          return Utilities.neo4jDateTimeToDateObject(value).toISOString();
+        }*/
   if (value !== null && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value)
@@ -35,7 +30,6 @@ const serialize = (value: any): any => {
         .map(([key, value]) => [key, serialize(value)]),
     );
   }
-
   return value;
 };
 

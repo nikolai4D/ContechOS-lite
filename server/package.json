@@ -34,6 +34,7 @@
     "graphql": "^15.5.2",
     "graphql-type-json": "^0.3.2",
     "joi": "^17.4.2",
+    "locale-nestjs": "^1.0.3",
     "neo4j-driver": "^4.2.3",
     "nest-neo4j": "^0.1.4",
     "passport": "^0.4.1",
