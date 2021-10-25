@@ -3,37 +3,37 @@
     <svg @contextmenu="rightClick($event)"></svg>
 
     <RelationshipToNewNode
-        :activeElmntId="activeElementId"
-        :targetElmntId="targetElementId"
-        @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
+      :activeElmntId="activeElementId"
+      :targetElmntId="targetElementId"
+      @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
     <AddNode @addedNode="handleAddedNode" />
     <EditNode
-        :labelsProps="labels"
-        :propertiesProps="properties"
-        :nodeId="activeElementId"
-        @editedNode="handleEditedNode"
+      :labelsProps="labels"
+      :propertiesProps="properties"
+      :nodeId="activeElementId"
+      @editedNode="handleEditedNode"
     />
     <EditRelationship
-        :propertiesProps="properties"
-        :nodeId="activeElementId"
-        :relName="relationshipName"
-        @editedRelationship="handleEditedRelationship"
+      :propertiesProps="properties"
+      :nodeId="activeElementId"
+      :relName="relationshipName"
+      @editedRelationship="handleEditedRelationship"
     />
     <CreateRelationship
-        :activeElmntId="activeElementId"
-        :targetElmntId="targetElementId"
-        @createRelationship="handleCreateRelationship"
+      :activeElmntId="activeElementId"
+      :targetElmntId="targetElementId"
+      @createRelationship="handleCreateRelationship"
     />
 
     <ContextMenu
-        :menuId="'bg-context-menu'"
-        :options="[{ name: 'Add Node', action: addNode }]"
+      :menuId="'bg-context-menu'"
+      :options="[{ name: 'Add Node', action: addNode }]"
     />
     <ContextMenu
-        :menuId="'node-context-menu'"
-        :options="[
+      :menuId="'node-context-menu'"
+      :options="[
         { name: 'Edit Node', action: editNode },
         {
           name: 'Create Relation to Existing Node',
@@ -44,8 +44,8 @@
       ]"
     />
     <ContextMenu
-        :menuId="'rel-context-menu'"
-        :options="[
+      :menuId="'rel-context-menu'"
+      :options="[
         { name: 'Edit Relation', action: editRel },
         { name: 'Delete Relation', action: deleteRel },
       ]"
@@ -116,7 +116,7 @@ export default defineComponent({
     let navHeight = document.getElementById("nav")!.offsetHeight;
     let docHeight = window.innerHeight;
     document.getElementsByTagName("svg")![0].style.height =
-        docHeight - navHeight + "px";
+      docHeight - navHeight + "px";
   },
   components: {
     // child components used
@@ -169,21 +169,21 @@ export default defineComponent({
       const svg = document.querySelector("svg")!;
 
       const line = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "line"
+        "http://www.w3.org/2000/svg",
+        "line"
       );
       const text = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "text"
+        "http://www.w3.org/2000/svg",
+        "text"
       );
 
       const arrow = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "marker"
+        "http://www.w3.org/2000/svg",
+        "marker"
       );
       const path = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "path"
+        "http://www.w3.org/2000/svg",
+        "path"
       );
 
       line.setAttribute("stroke", "#999");
@@ -203,7 +203,7 @@ export default defineComponent({
       text.textContent = "";
 
       const activeElement = document.getElementById(
-          this.activeElementId
+        this.activeElementId
       ) as unknown as SVGCircleElement;
 
       const navBar = document.getElementById("nav")!;
@@ -233,7 +233,7 @@ export default defineComponent({
 
           document.getElementById("createRelationship")!.classList.add("show");
           document.getElementById("createRelationship")!.style.display =
-              "block";
+            "block";
         }
 
         line.remove();
@@ -274,10 +274,10 @@ export default defineComponent({
           this.restart();
         } else {
           console.log(
-              "Couldn't delete the node, because it has outstanding relationships"
+            "Couldn't delete the node, because it has outstanding relationships"
           );
           alert(
-              "Couldn't delete the node, because it has outstanding relationships"
+            "Couldn't delete the node, because it has outstanding relationships"
           );
         }
       });
@@ -334,7 +334,7 @@ export default defineComponent({
         // runs if the mutation executed correctly
         if (result.data.removeRelationship.success) {
           this.relationships = this.relationships.filter(
-              (relationship) => relationship.id !== id
+            (relationship) => relationship.id !== id
           );
           this.restart();
         } else {
@@ -451,99 +451,99 @@ export default defineComponent({
 
       // Create the D3 force simulation
       this.simulation = d3
-          .forceSimulation(nodes)
-          .force(
-              "link",
-              d3
-                  .forceLink(links)
-                  .distance(200)
-                  .id((data: any) => data.id)
-          )
-          .force("charge", d3.forceManyBody())
-          .force("collide", d3.forceCollide().radius(70).iterations(2))
-          .force(
-              "center",
-              d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
-          )
-          .on("tick", this.tick);
+        .forceSimulation(nodes)
+        .force(
+          "link",
+          d3
+            .forceLink(links)
+            .distance(200)
+            .id((data: any) => data.id)
+        )
+        .force("charge", d3.forceManyBody())
+        .force("collide", d3.forceCollide().radius(70).iterations(2))
+        .force(
+          "center",
+          d3.forceCenter(svg.clientWidth / 2, svg.clientHeight / 2)
+        )
+        .on("tick", this.tick);
 
       this.linksSelection = d3
-          .select("svg")
-          .append("g")
-          .attr("stroke", "#999")
-          .attr("stroke-opacity", 0.6)
-          .classed("links", true)
-          .selectAll("line")
-          .data(links, (link: any) => link.id)
-          .join("line")
-          .attr("marker-end", "url(#arrowhead)")
-          .attr("id", (data: any) => data.id);
+        .select("svg")
+        .append("g")
+        .attr("stroke", "#999")
+        .attr("stroke-opacity", 0.6)
+        .classed("links", true)
+        .selectAll("line")
+        .data(links, (link: any) => link.id)
+        .join("line")
+        .attr("marker-end", "url(#arrowhead)")
+        .attr("id", (data: any) => data.id);
 
       this.linkLabelsSelection = d3
-          .select("svg")
-          .append("g")
-          .classed("linkLabels", true)
-          .selectAll("text")
-          .data(links, (link: any) => link.id)
-          .join("text")
-          .attr("fill", "black")
-          .attr("font-size", "10px")
-          .attr("text-anchor", "middle")
-          .attr("alignment-baseline", "middle")
-          .attr("style", "user-select: none")
-          .attr("id", (link: any) => link.id)
-          .text((link: any) => link.name);
+        .select("svg")
+        .append("g")
+        .classed("linkLabels", true)
+        .selectAll("text")
+        .data(links, (link: any) => link.id)
+        .join("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
 
       this.arrowsSelection = d3
-          .select("svg")
-          .append("g")
-          .classed("arrows", true)
-          .selectAll("marker")
-          .data(links)
-          .join("marker")
-          .attr("id", "arrowhead")
-          .attr("markerUnits", "strokeWidth")
-          .attr("markerWidth", 12)
-          .attr("markerHeight", 12)
-          .attr("viewBox", "0 0 12 12")
-          .attr("refX", 6)
-          .attr("refY", 6)
-          .attr("orient", "auto")
-          .append("path")
-          .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-          .attr("style", "fill: rgba(0,0,0,0.3);");
+        .select("svg")
+        .append("g")
+        .classed("arrows", true)
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("id", "arrowhead")
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 12)
+        .attr("markerHeight", 12)
+        .attr("viewBox", "0 0 12 12")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+        .attr("style", "fill: rgba(0,0,0,0.3);");
 
       this.nodesSelection = d3
-          .select("svg")
-          .append("g")
-          .classed("nodes", true)
-          .selectAll("circle")
-          .data(this.nodes, (node: any) => node.id)
-          .join("circle")
-          .attr("r", 40)
-          .attr("fill", (data: any) => stringToColor(data.labels[0]))
-          .attr("stroke", "#ffffff")
-          .attr("stroke-width", 1.5)
-          .attr("id", (data: any) => data.id);
+        .select("svg")
+        .append("g")
+        .classed("nodes", true)
+        .selectAll("circle")
+        .data(this.nodes, (node: any) => node.id)
+        .join("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0]))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
+        .attr("id", (data: any) => data.id);
 
       this.nodeLabelsSelection = d3
-          .select("svg")
-          .append("g")
-          .classed("nodeLabels", true)
-          .selectAll("text")
-          .data(this.nodes, (node: any) => node.id)
-          .join("text")
-          .attr("fill", "#ffffff")
-          .attr("font-size", "14px")
-          .attr("text-anchor", "middle")
-          .attr("pointer-events", "none")
-          .attr("alignment-baseline", "middle")
-          .attr("style", "user-select: none;")
-          .text((node: any) => node.properties.name ?? node.labels[0]);
+        .select("svg")
+        .append("g")
+        .classed("nodeLabels", true)
+        .selectAll("text")
+        .data(this.nodes, (node: any) => node.id)
+        .join("text")
+        .attr("fill", "#ffffff")
+        .attr("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr("pointer-events", "none")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none;")
+        .text((node: any) => node.properties.name ?? node.labels[0]);
 
       this.nodesSelection
-          .append("title")
-          .text((data: any) => data.properties.name ?? data.labels[0]);
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
       this.linksSelection.append("title").text((data: any) => data.name);
 
       this.nodesSelection.call(this.drag(this.simulation));
@@ -554,10 +554,10 @@ export default defineComponent({
           id: relationship.id,
           name: relationship.name,
           source: this.nodes.find(
-              (node: any) => node.id === relationship.source.id
+            (node: any) => node.id === relationship.source.id
           ),
           target: this.nodes.find(
-              (node: any) => node.id === relationship.target.id
+            (node: any) => node.id === relationship.target.id
           ),
         };
       });
@@ -565,93 +565,93 @@ export default defineComponent({
       this.simulation.nodes(this.nodes);
 
       this.nodesSelection
-          .data(this.nodes, (node: any) => node.id)
-          .exit()
-          .remove();
+        .data(this.nodes, (node: any) => node.id)
+        .exit()
+        .remove();
 
       this.linksSelection
-          .data(links, (link: any) => link.id)
-          .exit()
-          .remove();
+        .data(links, (link: any) => link.id)
+        .exit()
+        .remove();
 
       this.nodeLabelsSelection
-          .data(this.nodes, (node: any) => node.id)
-          .exit()
-          .remove();
+        .data(this.nodes, (node: any) => node.id)
+        .exit()
+        .remove();
 
       this.linkLabelsSelection
-          .data(links, (link: any) => link.id)
-          .exit()
-          .remove();
+        .data(links, (link: any) => link.id)
+        .exit()
+        .remove();
 
       this.linksSelection
-          .data(links, (link: any) => link.id)
-          .enter()
-          .append("line")
-          .attr("marker-end", "url(#arrowhead)")
-          .attr("id", (data: any) => data.id)
-          .append("title")
-          .text((data: any) => data.name);
+        .data(links, (link: any) => link.id)
+        .enter()
+        .append("line")
+        .attr("marker-end", "url(#arrowhead)")
+        .attr("id", (data: any) => data.id)
+        .append("title")
+        .text((data: any) => data.name);
 
       this.linkLabelsSelection
-          .data(links, (link: any) => link.id)
-          .enter()
-          .append("text")
-          .attr("fill", "black")
-          .attr("font-size", "10px")
-          .attr("text-anchor", "middle")
-          .attr("alignment-baseline", "middle")
-          .attr("style", "user-select: none")
-          .attr("id", (link: any) => link.id)
-          .text((link: any) => link.name);
+        .data(links, (link: any) => link.id)
+        .enter()
+        .append("text")
+        .attr("fill", "black")
+        .attr("font-size", "10px")
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none")
+        .attr("id", (link: any) => link.id)
+        .text((link: any) => link.name);
 
       this.arrowsSelection
-          .selectAll("marker")
-          .data(links)
-          .join("marker")
-          .attr("id", "arrowhead")
-          .attr("markerUnits", "strokeWidth")
-          .attr("markerWidth", 12)
-          .attr("markerHeight", 12)
-          .attr("viewBox", "0 0 12 12")
-          .attr("refX", 6)
-          .attr("refY", 6)
-          .attr("orient", "auto")
-          .append("path")
-          .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
-          .attr("style", "fill: rgba(0,0,0,0.3);");
+        .selectAll("marker")
+        .data(links)
+        .join("marker")
+        .attr("id", "arrowhead")
+        .attr("markerUnits", "strokeWidth")
+        .attr("markerWidth", 12)
+        .attr("markerHeight", 12)
+        .attr("viewBox", "0 0 12 12")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+        .attr("style", "fill: rgba(0,0,0,0.3);");
 
       this.nodesSelection
-          .data(this.nodes, (node: any) => node.id)
-          .enter()
-          .append("circle")
-          .attr("r", 40)
-          .attr("fill", (data: any) => stringToColor(data.labels[0])) // Color the nodes based on the first label
-          .attr("stroke", "#ffffff")
-          .attr("stroke-width", 1.5)
-          .attr("id", (data: any) => data.id)
-          .append("title")
-          .text((data: any) => data.properties.name ?? data.labels[0]);
+        .data(this.nodes, (node: any) => node.id)
+        .enter()
+        .append("circle")
+        .attr("r", 40)
+        .attr("fill", (data: any) => stringToColor(data.labels[0])) // Color the nodes based on the first label
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 1.5)
+        .attr("id", (data: any) => data.id)
+        .append("title")
+        .text((data: any) => data.properties.name ?? data.labels[0]);
 
       this.nodeLabelsSelection
-          .data(this.nodes, (node: any) => node.id)
-          .enter()
-          .append("text")
-          .attr("fill", "#ffffff")
-          .attr("font-size", "14px")
-          .attr("text-anchor", "middle")
-          .attr("pointer-events", "none")
-          .attr("alignment-baseline", "middle")
-          .attr("style", "user-select: none;")
-          .text((node: any) => node.properties.name ?? node.labels[0]);
+        .data(this.nodes, (node: any) => node.id)
+        .enter()
+        .append("text")
+        .attr("fill", "#ffffff")
+        .attr("font-size", "14px")
+        .attr("text-anchor", "middle")
+        .attr("pointer-events", "none")
+        .attr("alignment-baseline", "middle")
+        .attr("style", "user-select: none;")
+        .text((node: any) => node.properties.name ?? node.labels[0]);
 
       // Update the simulation's links
       this.simulation.force(
-          "link",
-          d3
-              .forceLink(links)
-              .distance(200)
-              .id((data: any) => data.id)
+        "link",
+        d3
+          .forceLink(links)
+          .distance(200)
+          .id((data: any) => data.id)
       );
 
       // Add drag to new nodes
@@ -665,89 +665,89 @@ export default defineComponent({
       this.linksSelection = d3.select("svg").select(".links").selectAll("line");
 
       this.linkLabelsSelection = d3
-          .select("svg")
-          .select(".linkLabels")
-          .selectAll("text");
+        .select("svg")
+        .select(".linkLabels")
+        .selectAll("text");
 
       this.arrowsSelection = d3
-          .select("svg")
-          .select(".arrow")
-          .selectAll("marker");
+        .select("svg")
+        .select(".arrow")
+        .selectAll("marker");
 
       this.nodesSelection = d3
-          .select("svg")
-          .select(".nodes")
-          .selectAll("circle");
+        .select("svg")
+        .select(".nodes")
+        .selectAll("circle");
 
       this.nodeLabelsSelection = d3
-          .select("svg")
-          .select(".nodeLabels")
-          .selectAll("text");
+        .select("svg")
+        .select(".nodeLabels")
+        .selectAll("text");
 
       // Add drag to new nodes in the selection
       this.nodesSelection.call(this.drag(this.simulation));
 
       // arrows management
       this.linksSelection
-          .attr("x1", (data: any) => {
-            let distanceX = data.target.x - data.source.x;
-            let distanceY = data.target.y - data.source.y;
-            let distanceBetweenCenters =
-                Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
-            let startingX =
-                data.source.x + (40 / distanceBetweenCenters) * distanceX;
-            let result = startingX;
-            return result;
-          })
-          .attr("y1", (data: any) => {
-            let distanceX = data.target.x - data.source.x;
-            let distanceY = data.target.y - data.source.y;
-            let distanceBetweenCenters =
-                Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
-            let startingY =
-                data.source.y + (40 / distanceBetweenCenters) * distanceY;
-            let result = startingY;
-            return result;
-          })
-          .attr("x2", (data: any) => {
-            let distanceX = data.target.x - data.source.x;
-            let distanceY = data.target.y - data.source.y;
-            let distanceBetweenCenters =
-                Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
-            let startingX =
-                data.source.x + (40 / distanceBetweenCenters) * distanceX;
-            let result = data.target.x - (startingX - data.source.x);
-            return result;
-          })
-          .attr("y2", (data: any) => {
-            let distanceX = data.target.x - data.source.x;
-            let distanceY = data.target.y - data.source.y;
-            let distanceBetweenCenters =
-                Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
-            let startingY =
-                data.source.y + (40 / distanceBetweenCenters) * distanceY;
-            let result = data.target.y - (startingY - data.source.y);
-            return result;
-          });
+        .attr("x1", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
+          let startingX =
+            data.source.x + (40 / distanceBetweenCenters) * distanceX;
+          let result = startingX;
+          return result;
+        })
+        .attr("y1", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 15;
+          let startingY =
+            data.source.y + (40 / distanceBetweenCenters) * distanceY;
+          let result = startingY;
+          return result;
+        })
+        .attr("x2", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
+          let startingX =
+            data.source.x + (40 / distanceBetweenCenters) * distanceX;
+          let result = data.target.x - (startingX - data.source.x);
+          return result;
+        })
+        .attr("y2", (data: any) => {
+          let distanceX = data.target.x - data.source.x;
+          let distanceY = data.target.y - data.source.y;
+          let distanceBetweenCenters =
+            Math.sqrt(distanceX * distanceX + distanceY * distanceY) - 30;
+          let startingY =
+            data.source.y + (40 / distanceBetweenCenters) * distanceY;
+          let result = data.target.y - (startingY - data.source.y);
+          return result;
+        });
 
       // Update coordinates
       this.nodesSelection
-          .attr("cx", (data: any) => data.x)
-          .attr("cy", (data: any) => data.y);
+        .attr("cx", (data: any) => data.x)
+        .attr("cy", (data: any) => data.y);
 
       this.nodeLabelsSelection
-          .attr("x", (data: any) => data.x)
-          .attr("y", (data: any) => data.y);
+        .attr("x", (data: any) => data.x)
+        .attr("y", (data: any) => data.y);
 
       this.linkLabelsSelection
-          .attr(
-              "x",
-              (data: any) => (data.target.x - data.source.x) / 2 + data.source.x
-          )
-          .attr(
-              "y",
-              (data: any) => (data.target.y - data.source.y) / 2 + data.source.y
-          );
+        .attr(
+          "x",
+          (data: any) => (data.target.x - data.source.x) / 2 + data.source.x
+        )
+        .attr(
+          "y",
+          (data: any) => (data.target.y - data.source.y) / 2 + data.source.y
+        );
     },
     handleCreateRelationshipToNewNode({ node, relationship }: any) {
       this.nodes.push(node);
@@ -762,16 +762,16 @@ export default defineComponent({
     },
     handleEditedNode(newNode: any) {
       this.nodes[this.nodes.findIndex((node: any) => node.id == newNode.id)] =
-          newNode;
+        newNode;
 
       this.restart();
     },
     handleEditedRelationship(newRelationship: any) {
       this.relationships[
-          this.relationships.findIndex(
-              (relationship: any) => relationship.id == newRelationship.id
-          )
-          ] = newRelationship;
+        this.relationships.findIndex(
+          (relationship: any) => relationship.id == newRelationship.id
+        )
+      ] = newRelationship;
 
       this.restart();
     },
@@ -784,11 +784,11 @@ export default defineComponent({
       function dragstarted(event: any) {
         // first hide all open menus
         document
-            .querySelectorAll<HTMLElement>(".context-menu")
-            .forEach((el) => {
-              el.classList.remove("show");
-              el.style.display = "none";
-            });
+          .querySelectorAll<HTMLElement>(".context-menu")
+          .forEach((el) => {
+            el.classList.remove("show");
+            el.style.display = "none";
+          });
 
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
@@ -807,10 +807,10 @@ export default defineComponent({
       }
 
       return d3
-          .drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended);
+        .drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
     },
   },
 });
