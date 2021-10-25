@@ -1,18 +1,22 @@
 <template>
   <div>
     <nav id="nav">
-      <router-link to="/">Home</router-link> <span v-if="!getUser()">| </span>
+      <router-link to="/">Home</router-link>
+      <span v-if="!getUser()">| </span>
       <router-link to="/login" v-if="!getUser()">Login</router-link>
       <span v-if="!getUser()"> | </span>
       <router-link to="/signup" v-if="!getUser()">Signup</router-link>
-      <span v-if="getUser()">| </span>
+      <span v-if="getUser()"> | </span>
       <a
         @click="signOut"
-        v-if="getUser() && this.$route.path !== '/app'"
+        v-if="getUser()"
         id="log-out"
         >Logout</a
       >
-      <router-link to="/app" v-if="this.$route.path == '/app'">App</router-link>
+      <span v-if="getUser()"> | </span>
+      <router-link v-if="getUser()" to="/data" >Data</router-link>
+      <span v-if="getUser()"> | </span>
+      <router-link v-if="getUser()" to="/config">Config</router-link>
     </nav>
     <router-view />
   </div>

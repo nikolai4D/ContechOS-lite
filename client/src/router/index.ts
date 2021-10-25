@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { useStore } from "@/store";
 import Home from "../views/Home.vue";
 import Register from "../views/Signup.vue";
 import Login from "../views/Login.vue";
-import AppPage from "../views/AppPage.vue";
+import Data from "@/views/Data.vue";
+import Config from "@/views/Config.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -22,9 +22,21 @@ const routes: Array<RouteRecordRaw> = [
     component: Register,
   },
   {
-    path: "/app",
-    name: "AppPage",
-    component: AppPage,
+    path: "/data",
+    name: "Data",
+    component: Data,
+    beforeEnter: (to, from, next) => {
+      if (!localStorage["auth.token"]) {
+        next("/");
+      } else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/config",
+    name: "Config",
+    component: Config,
     beforeEnter: (to, from, next) => {
       if (!localStorage["auth.token"]) {
         next("/");

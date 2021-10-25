@@ -5,7 +5,7 @@
     <p v-if="getUser()" class="text-capitalize">Welcome {{ getUser().name }}</p>
     <p v-if="!getUser()">You are not logged in yet</p>
     <router-link
-      to="/app"
+      to="/data"
       v-if="getUser()"
       class="btn btn-outline-dark"
       id="access-app"
