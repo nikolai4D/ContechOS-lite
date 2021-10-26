@@ -73,6 +73,7 @@ import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { Config } from "@/config/Config";
+import {NodeDto} from '@/modules/nodeDto';
 
 export default defineComponent({
   name: "Config",
@@ -136,7 +137,6 @@ export default defineComponent({
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
-      console.log(Config.CONFIG);
     },
     editNode() {
       this.hideAllInputMenus();
@@ -433,15 +433,18 @@ export default defineComponent({
 
       onDone((result) => {
         // runs if the mutation executed correctly
-        this.nodes = result.data.nodes;
+        this.nodes = result.data.nodes.filter(
+            (obj: { id: string; labels: string[]; properties: any }) =>
+                obj.labels.includes(Config.CONFIG)
+        );
         this.relationships = result.data.relationships;
-
         this.init(result.data);
       });
     },
     async init({ nodes, relationships }: any) {
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+      //nodes = Object.assign([], nodes.map((obj: NodeDto) => { console.log ({ ...obj, labels: ['testfsadgdgsds']}); return { ...obj, labels: ['testfsadgdgsds']}} ))
 
       // Create a links object using the object structure that d3 expects.
       const links = relationships.map((relationship: any) => {
@@ -543,11 +546,11 @@ export default defineComponent({
         .attr("pointer-events", "none")
         .attr("alignment-baseline", "middle")
         .attr("style", "user-select: none;")
-        .text((node: any) => node.properties.name ?? node.labels[0]);
+        .text((node: any) => node.properties.name ?? node.labels.filter((data: string) => data !== Config.CONFIG)[0]);
 
       this.nodesSelection
         .append("title")
-        .text((data: any) => data.properties.name ?? data.labels[0]);
+        .text((data: any) => data.properties.name ?? data.labels.filter((data: string) => data !== Config.CONFIG)[0]);
       this.linksSelection.append("title").text((data: any) => data.name);
 
       this.nodesSelection.call(this.drag(this.simulation));

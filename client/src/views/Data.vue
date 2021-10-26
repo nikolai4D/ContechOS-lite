@@ -10,7 +10,7 @@
 
     <AddNode @addedNode="handleAddedNode" :layer="layer" />
     <EditNode
-      :labelsProps="labels"
+        :labelsProps="labels"
       :propertiesProps="properties"
       :nodeId="activeElementId"
       @editedNode="handleEditedNode"
@@ -73,6 +73,7 @@ import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { Config } from "../config/Config";
+import {NodeDto} from '@/modules/nodeDto';
 
 export default defineComponent({
   name: "Data",
@@ -445,6 +446,7 @@ export default defineComponent({
     async init({ nodes, relationships }: any) {
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+      //nodes = Object.assign([], nodes.map((obj: NodeDto) => { console.log ({ ...obj, labels: ['testfsadgdgsds']}); return { ...obj, labels: ['testfsadgdgsds']}} ))
 
       // Create a links object using the object structure that d3 expects.
       const links = relationships.map((relationship: any) => {
