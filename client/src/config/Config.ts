@@ -13,19 +13,19 @@ export class Config {
    * Labels that cannot be used when creating a node using the
    * generic node create API.
    */
-  public static readonly FORBIDDEN_GENERIC_NODE_LABELS = 'User'
+  public static readonly FORBIDDEN_GENERIC_NODE_LABELS = "User";
 
   /**
    * Node properties that cannot be updated using the API.
    */
   public static readonly FORBIDDEN_NODE_PROPERTIES_TO_UPDATE = [
-    'id',
-    'createdAt',
-    'updatedAt',
+    "id",
+    "createdAt",
+    "updatedAt",
   ];
 
   /**
    * Relationship properties that cannot be updated using the API.
    */
-  public static readonly FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE = ['id'];
+  public static readonly FORBIDDEN_RELATIONSHIP_PROPERTIES_TO_UPDATE = ["id"];
 }

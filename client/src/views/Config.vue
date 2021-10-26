@@ -8,7 +8,7 @@
       @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
-    <AddNode @addedNode="handleAddedNode"/>
+    <AddNode @addedNode="handleAddedNode" />
     <EditNode
       :labelsProps="labels"
       :propertiesProps="properties"
@@ -134,7 +134,7 @@ export default defineComponent({
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
-      console.log(Config.FORBIDDEN_GENERIC_NODE_LABELS)
+      console.log(Config.FORBIDDEN_GENERIC_NODE_LABELS);
     },
     editNode() {
       this.hideAllInputMenus();
