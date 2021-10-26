@@ -1,15 +1,23 @@
 <template>
   <nav id="addNode" class="dropdown-menu dropdown-menu-sm inputMenu">
     <div>
-      <MenuHeader :menuName="'Add New Node'" @menuToggle="toggleMenu = $event" />
+      <MenuHeader
+        :menuName="'Add New Node'"
+        @menuToggle="toggleMenu = $event"
+      />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
         <Labels :lbl="labels" @labelsChanged="changeLabels($event)" />
-        <Attributes :attr="properties" @attributesChanged="changeAttributes($event)" />
+        <Attributes
+          :attr="properties"
+          @attributesChanged="changeAttributes($event)"
+        />
         <button
           type="submit"
           class="form form-control btn btn-primary mt-3"
           @click="addNode"
-        >Add Node</button>
+        >
+          Add Node
+        </button>
       </ul>
     </div>
   </nav>
