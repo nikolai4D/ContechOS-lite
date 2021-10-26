@@ -429,7 +429,11 @@ export default defineComponent({
 
       onDone((result) => {
         // runs if the mutation executed correctly
-        this.nodes = result.data.nodes;
+        this.nodes = result.data.nodes.filter(
+          (obj: { id: string; labels: string[]; properties: any }) =>
+            obj.labels.includes(Config.DATA)
+        );
+
         this.relationships = result.data.relationships;
 
         this.init(result.data);
