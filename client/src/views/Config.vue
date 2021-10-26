@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg @contextmenu="rightClick($event)"></svg>
+    <svg @contextmenu="rightClick($event)" />
 
     <RelationshipToNewNode
       :activeElmntId="activeElementId"
@@ -8,7 +8,7 @@
       @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
-    <AddNode @addedNode="handleAddedNode" />
+    <AddNode @addedNode="handleAddedNode" :layer="layer" />
     <EditNode
       :labelsProps="labels"
       :propertiesProps="properties"
@@ -27,10 +27,7 @@
       @createRelationship="handleCreateRelationship"
     />
 
-    <ContextMenu
-      :menuId="'bg-context-menu'"
-      :options="[{ name: 'Add Node', action: addNode }]"
-    />
+    <ContextMenu :menuId="'bg-context-menu'" :options="[{ name: 'Add Node', action: addNode }]" />
     <ContextMenu
       :menuId="'node-context-menu'"
       :options="[
@@ -96,6 +93,7 @@ export default defineComponent({
       nodes: [],
       relationships: [],
       selectionsInitialized: false,
+      layer: Config.CONFIG,
     } as {
       activeElementId: string;
       labels: string[];
@@ -111,6 +109,7 @@ export default defineComponent({
       nodes: any[];
       relationships: any[];
       selectionsInitialized: boolean;
+      layer: string;
     };
   },
   mounted() {
@@ -134,7 +133,7 @@ export default defineComponent({
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
-      console.log(Config.FORBIDDEN_GENERIC_NODE_LABELS);
+      console.log(Config.CONFIG);
     },
     editNode() {
       this.hideAllInputMenus();

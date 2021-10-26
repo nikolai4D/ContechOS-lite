@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg @contextmenu="rightClick($event)"></svg>
+    <svg @contextmenu="rightClick($event)" />
 
     <RelationshipToNewNode
       :activeElmntId="activeElementId"
@@ -8,7 +8,7 @@
       @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
-    <AddNode @addedNode="handleAddedNode" />
+    <AddNode @addedNode="handleAddedNode" :layer="layer" />
     <EditNode
       :labelsProps="labels"
       :propertiesProps="properties"
@@ -27,10 +27,7 @@
       @createRelationship="handleCreateRelationship"
     />
 
-    <ContextMenu
-      :menuId="'bg-context-menu'"
-      :options="[{ name: 'Add Node', action: addNode }]"
-    />
+    <ContextMenu :menuId="'bg-context-menu'" :options="[{ name: 'Add Node', action: addNode }]" />
     <ContextMenu
       :menuId="'node-context-menu'"
       :options="[
@@ -72,6 +69,7 @@ import RelationshipToNewNode from "../components/CreateRelToNewNode.vue";
 import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import { Config } from "../config/Config";
 
 export default defineComponent({
   name: "Data",
@@ -95,6 +93,7 @@ export default defineComponent({
       nodes: [],
       relationships: [],
       selectionsInitialized: false,
+      layer: Config.DATA,
     } as {
       activeElementId: string;
       labels: string[];
@@ -110,6 +109,7 @@ export default defineComponent({
       nodes: any[];
       relationships: any[];
       selectionsInitialized: boolean;
+      layer: string;
     };
   },
   mounted() {

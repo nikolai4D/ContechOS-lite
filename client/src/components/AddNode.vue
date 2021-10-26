@@ -1,23 +1,15 @@
 <template>
   <nav id="addNode" class="dropdown-menu dropdown-menu-sm inputMenu">
     <div>
-      <MenuHeader
-        :menuName="'Add New Node'"
-        @menuToggle="toggleMenu = $event"
-      />
+      <MenuHeader :menuName="'Add New Node'" @menuToggle="toggleMenu = $event" />
       <ul class="list-unstyled components p-3 pb-0" v-if="toggleMenu">
         <Labels :lbl="labels" @labelsChanged="changeLabels($event)" />
-        <Attributes
-          :attr="properties"
-          @attributesChanged="changeAttributes($event)"
-        />
+        <Attributes :attr="properties" @attributesChanged="changeAttributes($event)" />
         <button
           type="submit"
           class="form form-control btn btn-primary mt-3"
           @click="addNode"
-        >
-          Add Node
-        </button>
+        >Add Node</button>
       </ul>
     </div>
   </nav>
@@ -56,8 +48,13 @@ export default defineComponent({
       toggleMenu: true,
       labels: [""],
       properties: { "": "" },
+    } as {
+      toggleMenu: boolean;
+      labels: string[];
+      properties: any;
     };
   },
+  props: ["layer"],
   components: {
     // child components used
     Attributes,
@@ -78,8 +75,8 @@ export default defineComponent({
       var properties = Object.entries(this.properties)
         .filter(([key]) => key !== "")
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
-      var labels = this.labels;
-
+      var labels = Object.assign([], this.labels);
+      labels.push(this.layer as string);
       // mutation
       const { mutate, onDone, onError } = useMutation(gql`
         mutation ($labels: [String!]!, $properties: JSONObject!) {
