@@ -8,7 +8,7 @@
         @createRelationshiptoNewNode="handleCreateRelationshipToNewNode"
     />
 
-    <AddNode @addedNode="handleAddedNode" />
+    <AddNode @addedNode="handleAddedNode"/>
     <EditNode
         :labelsProps="labels"
         :propertiesProps="properties"
@@ -72,6 +72,7 @@ import RelationshipToNewNode from "../components/CreateRelToNewNode.vue";
 import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import { Config } from "@/config/Config";
 
 export default defineComponent({
   name: "Config",
@@ -133,6 +134,7 @@ export default defineComponent({
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
       document.getElementById("addNode")!.style.display = "block";
+      console.log(Config.FORBIDDEN_GENERIC_NODE_LABELS)
     },
     editNode() {
       this.hideAllInputMenus();
