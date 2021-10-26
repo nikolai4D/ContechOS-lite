@@ -7,14 +7,9 @@
       <span v-if="!getUser()"> | </span>
       <router-link to="/signup" v-if="!getUser()">Signup</router-link>
       <span v-if="getUser()"> | </span>
-      <a
-        @click="signOut"
-        v-if="getUser()"
-        id="log-out"
-        >Logout</a
-      >
+      <a @click="signOut" v-if="getUser()" id="log-out">Logout</a>
       <span v-if="getUser()"> | </span>
-      <router-link v-if="getUser()" to="/data" >Data</router-link>
+      <router-link v-if="getUser()" to="/data">Data</router-link>
       <span v-if="getUser()"> | </span>
       <router-link v-if="getUser()" to="/config">Config</router-link>
     </nav>
