@@ -27,7 +27,10 @@
       @createRelationship="handleCreateRelationship"
     />
 
-    <ContextMenu :menuId="'bg-context-menu'" :options="[{ name: 'Add Node', action: addNode }]" />
+    <ContextMenu
+      :menuId="'bg-context-menu'"
+      :options="[{ name: 'Add Node', action: addNode }]"
+    />
     <ContextMenu
       :menuId="'node-context-menu'"
       :options="[
