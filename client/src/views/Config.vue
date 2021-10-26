@@ -73,7 +73,7 @@ import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { Config } from "@/config/Config";
-import {NodeDto} from '@/modules/nodeDto';
+import { NodeDto } from "@/modules/nodeDto";
 
 export default defineComponent({
   name: "Config",
@@ -434,8 +434,8 @@ export default defineComponent({
       onDone((result) => {
         // runs if the mutation executed correctly
         this.nodes = result.data.nodes.filter(
-            (obj: { id: string; labels: string[]; properties: any }) =>
-                obj.labels.includes(Config.CONFIG)
+          (obj: { id: string; labels: string[]; properties: any }) =>
+            obj.labels.includes(Config.CONFIG)
         );
         this.relationships = result.data.relationships;
         this.init(result.data);
@@ -546,11 +546,19 @@ export default defineComponent({
         .attr("pointer-events", "none")
         .attr("alignment-baseline", "middle")
         .attr("style", "user-select: none;")
-        .text((node: any) => node.properties.name ?? node.labels.filter((data: string) => data !== Config.CONFIG)[0]);
+        .text(
+          (node: any) =>
+            node.properties.name ??
+            node.labels.filter((data: string) => data !== Config.CONFIG)[0]
+        );
 
       this.nodesSelection
         .append("title")
-        .text((data: any) => data.properties.name ?? data.labels.filter((data: string) => data !== Config.CONFIG)[0]);
+        .text(
+          (data: any) =>
+            data.properties.name ??
+            data.labels.filter((data: string) => data !== Config.CONFIG)[0]
+        );
       this.linksSelection.append("title").text((data: any) => data.name);
 
       this.nodesSelection.call(this.drag(this.simulation));
