@@ -10,7 +10,7 @@
 
     <AddNode @addedNode="handleAddedNode" :layer="layer" />
     <EditNode
-        :labelsProps="labels"
+      :labelsProps="labels"
       :propertiesProps="properties"
       :nodeId="activeElementId"
       @editedNode="handleEditedNode"
@@ -73,7 +73,7 @@ import EditRelationship from "../components/EditRelationship.vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { Config } from "../config/Config";
-import {NodeDto} from '@/modules/nodeDto';
+import { NodeDto } from "@/modules/nodeDto";
 
 export default defineComponent({
   name: "Data",
