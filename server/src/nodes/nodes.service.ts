@@ -12,19 +12,94 @@ import { Utilities } from 'src/utilities/Utilities';
 import { CreateNodeInput } from './dto/create-node.input';
 import { UpdateNodeInput } from './dto/update-node.input';
 import { Node } from './entities/node.entity';
+import { ValidationService } from '../utilities/validation.service';
 
 @Injectable()
 export class NodesService {
-  constructor(private readonly neo4jService: Neo4jService) {}
+  constructor(
+    private readonly neo4jService: Neo4jService,
+    private readonly validationService: ValidationService,
+  ) {}
 
-  async create(createNodeInput: CreateNodeInput): Promise<Node> {
+  async create(createNodeInput: CreateNodeInput): Promise<Node | void> {
+    if (!createNodeInput.labels || createNodeInput.labels.length === 0) {
+      throw new BadRequestException();
+    }
+    // TODO: if CONFIG OR DATA: exact two labels, second label not allowed to be one of the predefined labels
+    // TODO: if PROPERTY_VALUE, PROPERTY_KEY or DATATYPE: exact one label
+    // TODO: Labels contains none of the predefined labels
+    const label: string = createNodeInput.labels.filter((data: string) =>
+      Config.NODETYPE.includes(data),
+    )[0];
+    switch (label) {
+      case Config.CONFIG:
+        if (!this.validationService.validateConfigNode(createNodeInput)) {
+          throw new BadRequestException();
+        }
+        const allowedConfgIds = await Promise.all(
+          createNodeInput.properties['allowedConfigIds'].map(
+            async (item: string): Promise<Node | null> => this.findOne(item),
+          ),
+        );
+        if (allowedConfgIds.includes(null)) {
+          throw new BadRequestException();
+        }
+        const allowedPropertyKeyIds = await Promise.all(
+          createNodeInput.properties['allowedPropertyKeyIds'].map(
+            async (item: string): Promise<Node | null> => this.findOne(item),
+          ),
+        );
+        if (allowedPropertyKeyIds.includes(null)) {
+          throw new BadRequestException();
+        }
+
+        break;
+      case Config.DATA:
+        if (!this.validationService.validateDataNode(createNodeInput)) {
+          throw new BadRequestException();
+        }
+        break;
+      case Config.PROPERTY_VALUE:
+        if (
+          !this.validationService.validatePropertyValueNode(createNodeInput)
+        ) {
+          throw new BadRequestException();
+        }
+        await this.findOne(createNodeInput.properties['propertyKeyId']).then(
+          (resultNode) => {
+            if (!resultNode) {
+              throw new BadRequestException();
+            }
+          },
+        );
+        break;
+      case Config.PROPERTY_KEY:
+        if (!this.validationService.validatePropertyKeyNode(createNodeInput)) {
+          throw new BadRequestException();
+        }
+        await this.findOne(createNodeInput.properties['datatypeId']).then(
+          (resultNode) => {
+            if (!resultNode) {
+              throw new BadRequestException();
+            }
+          },
+        );
+        break;
+      case Config.DATATYPE:
+        if (!this.validationService.validateDatatypeNode(createNodeInput)) {
+          throw new BadRequestException();
+        }
+        break;
+      default:
+        throw new BadRequestException();
+    }
     if (!createNodeInput.labels.every(Utilities.isValidNeo4jLabel)) {
       throw new BadRequestException();
     }
 
     if (
-      createNodeInput.labels.some((label) =>
-        Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(label),
+      createNodeInput.labels.some((resultLabel) =>
+        Config.FORBIDDEN_GENERIC_NODE_LABELS.includes(resultLabel),
       )
     ) {
       throw new ForbiddenException();
@@ -59,7 +134,7 @@ export class NodesService {
       throw new InternalServerErrorException();
     }
 
-    const { labels, properties } = record.get('n');
+    const { labels, properties } = record?.get('n');
 
     return new Node({
       id: properties.id,

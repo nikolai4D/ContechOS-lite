@@ -56,7 +56,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
 
       onDone((result) => {
         localStorage.setItem("auth.token", result.data.signIn.token);
-
         commit(MutationTypes.SET_USER, result.data.signIn.user);
 
         resolve();

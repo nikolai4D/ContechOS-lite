@@ -8,6 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { RelationshipsModule } from './relationships/relationships.module';
 import { NodesModule } from './nodes/nodes.module';
 import { LocaleEnum, LocaleModule } from 'locale-nestjs';
+import { ValidationService } from './utilities/validation.service';
 
 @Module({
   imports: [
@@ -36,5 +37,6 @@ import { LocaleEnum, LocaleModule } from 'locale-nestjs';
       defaultLocale: LocaleEnum.svSE,
     }),
   ],
+  providers: [ValidationService],
 })
 export class AppModule {}
