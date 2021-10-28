@@ -24,15 +24,18 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Labels",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       labels: [],
     };
   },
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     lbl: Array,
   },
-  watch: { // executes when the value of the given prop changes on the parent element
+  watch: {
+    // executes when the value of the given prop changes on the parent element
     lbl(newValue, oldValue) {
       this.labels = newValue;
     },
@@ -40,7 +43,8 @@ export default defineComponent({
   mounted() {
     this.labels = this.lbl;
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     updateLabels(event) {
       // make a list out of the labels input value
       this.labels = event.target.value
@@ -50,7 +54,8 @@ export default defineComponent({
       //emit event to parent component and return the updated labels
       this.$emit("labelsChanged", this.labels);
     },
-    getLabels() { // turn labels list into string
+    getLabels() {
+      // turn labels list into string
       return this.labels.join(",");
     },
   },

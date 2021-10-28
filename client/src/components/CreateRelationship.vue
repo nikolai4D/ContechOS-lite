@@ -39,7 +39,8 @@
   top: 0;
   left: 0;
 
-  &.show { // this activates when this element has the class show
+  &.show {
+    // this activates when this element has the class show
     display: block;
   }
 }
@@ -54,11 +55,13 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "CreateRelationship",
-  components: { // child components used
+  components: {
+    // child components used
     MenuHeader,
     Attributes,
   },
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       properties: { "": "" },
       toggleMenu: true,
@@ -67,11 +70,13 @@ export default defineComponent({
       targetElementId: "",
     };
   },
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     activeElmntId: String,
     targetElmntId: String,
   },
-  watch: { // executes when the value of the given prop changes on the parent element
+  watch: {
+    // executes when the value of the given prop changes on the parent element
     activeElmntId(newValue, oldValue) {
       this.activeElementId = newValue;
     },
@@ -79,16 +84,18 @@ export default defineComponent({
       this.targetElementId = newValue;
     },
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     changeProperties(event: any) {
       this.properties = event;
     },
     changeName(event: any) {
       this.relationshipName = event.path[0].value.toUpperCase();
     },
-    createRelationship() { // function that manages the mutation used to create a relationship
+    createRelationship() {
+      // function that manages the mutation used to create a relationship
       // remove blank properties, which are the ones that are "": ""
-      var properties = Object.entries(this.properties) 
+      var properties = Object.entries(this.properties)
         .filter(([key]) => key !== "")
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
 
@@ -121,15 +128,16 @@ export default defineComponent({
         }
       `);
 
-      mutate({ // data passed to the mutation
+      mutate({
+        // data passed to the mutation
         name: this.relationshipName,
         properties: properties,
         source: this.activeElementId,
         target: this.targetElementId,
       });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
@@ -141,7 +149,8 @@ export default defineComponent({
         this.$emit("createRelationship", result.data.createRelationship);
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

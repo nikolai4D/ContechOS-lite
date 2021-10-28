@@ -121,13 +121,12 @@ export default defineComponent({
     //https://bl.ocks.org/sistemawebpro/41d81ad70d7355691a61a6f7ac7f83d9
     //https://stackoverflow.com/questions/66900901/how-to-set-up-d3-zoom-correctly-in-vue
 
-/*    var svg = d3.select("#dataviz_basicZoom")
+    /*    var svg = d3.select("#dataviz_basicZoom")
         .append("svg")
         .call(d3.zoom().on("zoom", function () {
           svg.attr("transform", d3.event.transform)
         }))
         .append("g")*/
-
   },
   components: {
     // child components used
@@ -447,16 +446,16 @@ export default defineComponent({
       });
     },
     async init({ nodes, relationships }: any) {
-
       const svg = document.querySelector("svg") as SVGElement;
       svg.setAttribute("viewBox", `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
 
+      let zoom = d3
+        .zoom<SVGSVGElement, unknown>()
+        .on("zoom", function (event, a) {
+          svg.setAttribute("transform", event.transform);
+        });
 
-      let zoom = d3.zoom<SVGSVGElement, unknown>().on("zoom", function(event, a) {
-        svg.setAttribute("transform", event.transform)
-      })
-
-      d3.select<SVGSVGElement, unknown>("svg").call(zoom)
+      d3.select<SVGSVGElement, unknown>("svg").call(zoom);
 
       // Create a links object using the object structure that d3 expects.
       const links = relationships.map((relationship: any) => {

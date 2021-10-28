@@ -63,12 +63,14 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "Login",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       passwordVisible: false,
     };
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     async formSubmit() {
       if (
         !(document.getElementById("agreeCheck") as HTMLInputElement).checked

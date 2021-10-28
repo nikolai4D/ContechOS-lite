@@ -12,10 +12,7 @@
         id="log-out"
         >Logout</a
       >
-      <button
-          @click="logout"
-      >Logout</button
-      >
+      <button @click="logout">Logout</button>
       <router-link to="/app" v-if="this.$route.path == '/app'">App</router-link>
     </nav>
     <router-view />
@@ -28,14 +25,14 @@ import { ActionTypes } from "./store/modules/auth/actions.types";
 
 export default {
   name: "app",
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     signOut: mapActions([ActionTypes.SIGN_OUT]).SIGN_OUT,
     ...mapGetters(["getUser"]),
     logout() {
-      this.$keycloak.logoutFn()
-      console.log(this.$keycloak)
-    }
-
+      this.$keycloak.logoutFn();
+      console.log(this.$keycloak);
+    },
   },
   created() {
     if (localStorage.getItem("auth.token")) {
