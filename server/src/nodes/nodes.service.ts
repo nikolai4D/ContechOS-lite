@@ -28,6 +28,7 @@ export class NodesService {
     // TODO: if CONFIG OR DATA: exact two labels, second label not allowed to be one of the predefined labels
     // TODO: if PROPERTY_VALUE, PROPERTY_KEY or DATATYPE: exact one label
     // TODO: Labels contains none of the predefined labels
+
     const label: string = createNodeInput.labels.filter((data: string) =>
       Config.NODETYPE.includes(data),
     )[0];
@@ -55,9 +56,35 @@ export class NodesService {
 
         break;
       case Config.DATA:
+        // TODO: validate against coresponding Config Node
         if (!this.validationService.validateDataNode(createNodeInput)) {
           throw new BadRequestException();
         }
+
+        const pickedPropertyKeyIds = await Promise.all(
+          Object.keys(createNodeInput.properties)
+            .filter((data: any) => data !== 'allowedConfigIds')
+            .map(
+              async (item: string): Promise<Node | null> => this.findOne(item),
+            ),
+        );
+        if (pickedPropertyKeyIds.includes(null)) {
+          throw new BadRequestException();
+        }
+
+        const propertyValueIds = Object.keys(createNodeInput.properties)
+          .filter((data: any) => data !== 'allowedConfigIds')
+          .map((data: any) => createNodeInput.properties[data]);
+
+        const pickedPropertyValueIds = await Promise.all(
+          propertyValueIds.map(
+            async (item: string): Promise<Node | null> => this.findOne(item),
+          ),
+        );
+        if (pickedPropertyValueIds.includes(null)) {
+          throw new BadRequestException();
+        }
+
         break;
       case Config.PROPERTY_VALUE:
         if (

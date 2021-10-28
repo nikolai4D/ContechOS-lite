@@ -5,7 +5,7 @@ import { CreateNodeInput } from '../nodes/dto/create-node.input';
 export class ValidationService {
   public validateConfigNode(node: CreateNodeInput): boolean {
     return (
-      node.properties.hasOwnProperty('allowedConfigIds') &&
+      node.properties.hasOwnProperty('allowedProperties') &&
       Array.isArray(node.properties['allowedConfigIds']) &&
       // casting an Array to a Set removes the duplicates --> so if the arraylenght is different from the Setsize there are duplicates and it should be rejected
       new Set(node.properties['allowedConfigIds']).size ===
@@ -25,7 +25,17 @@ export class ValidationService {
 
   public validateDataNode(node: CreateNodeInput): boolean {
     // Validation here
-    return true;
+
+    return (
+      node.properties.hasOwnProperty('allowedConfigIds') &&
+      Array.isArray(node.properties['allowedConfigIds']) &&
+      // casting an Array to a Set removes the duplicates --> so if the arraylenght is different from the Setsize there are duplicates and it should be rejected
+      new Set(node.properties['allowedConfigIds']).size ===
+        node.properties['allowedConfigIds'].length &&
+      node.properties['allowedConfigIds'].every(
+        (data) => typeof data === 'string' && true && data !== '',
+      )
+    );
   }
 
   public validatePropertyValueNode(node: CreateNodeInput): boolean {
