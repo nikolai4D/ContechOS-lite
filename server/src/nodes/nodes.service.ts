@@ -25,10 +25,6 @@ export class NodesService {
     if (!createNodeInput.labels || createNodeInput.labels.length === 0) {
       throw new BadRequestException();
     }
-    // TODO: if CONFIG OR DATA: exact two labels, second label not allowed to be one of the predefined labels
-    // TODO: if PROPERTY_VALUE, PROPERTY_KEY or DATATYPE: exact one label
-    // TODO: Labels contains none of the predefined labels
-
     const label: string = createNodeInput.labels.filter((data: string) =>
       Config.NODETYPE.includes(data),
     )[0];
