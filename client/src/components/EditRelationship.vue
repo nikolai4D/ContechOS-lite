@@ -42,7 +42,8 @@
   top: 0;
   left: 0;
 
-  &.show { // this activates when this element has the class show
+  &.show {
+    // this activates when this element has the class show
     display: block;
   }
 }
@@ -57,7 +58,8 @@ import gql from "graphql-tag";
 
 export default defineComponent({
   name: "EditRelationship",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       properties: {},
       activeRelationshipId: "",
@@ -65,12 +67,14 @@ export default defineComponent({
       relationshipName: "",
     };
   },
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     nodeId: String,
     propertiesprops: {},
     relName: String,
   },
-  watch: { // executes when the value of the given prop changes on the parent element
+  watch: {
+    // executes when the value of the given prop changes on the parent element
     propertiesProps(newValue, oldValue) {
       var cleanProperties = this.removeUnnecessaryProperties(newValue);
       this.properties = cleanProperties;
@@ -82,11 +86,13 @@ export default defineComponent({
       this.relationshipName = newValue;
     },
   },
-  components: { // child components used
+  components: {
+    // child components used
     Attributes,
     MenuHeader,
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     changeProperties(event: any) {
       this.properties = event;
     },
@@ -96,7 +102,8 @@ export default defineComponent({
         .filter(([key]) => !["id", "createdAt", "updatedAt"].includes(key))
         .reduce((prev, [key, value]) => ({ ...prev, [key]: value }), {});
     },
-    editRelationship() { // function that manages the mutation used to edit a relationship
+    editRelationship() {
+      // function that manages the mutation used to edit a relationship
       // remove blank properties, which are the ones that are "": ""
       var properties = this.properties;
       properties = Object.entries(properties)
@@ -123,24 +130,27 @@ export default defineComponent({
         }
       `);
 
-      mutate({ // data passed to the mutation
-        properties: properties, id: id 
+      mutate({
+        // data passed to the mutation
+        properties: properties,
+        id: id,
       });
 
-      
-      onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         // hide menu
         this.$el.classList.remove("show");
         this.$el.style.display = "none";
-        
+
         //emit event to parent component and return the data from the mutation
         this.$emit("editedRelationship", {
           id,
           ...result.data.updateRelationship,
         });
-        });
+      });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });

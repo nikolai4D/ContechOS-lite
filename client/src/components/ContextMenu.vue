@@ -21,7 +21,8 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "ContextMenu",
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     options: Array,
     menuId: String,
   },

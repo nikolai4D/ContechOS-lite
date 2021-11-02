@@ -64,26 +64,31 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Attributes",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       attributes: {},
     };
   },
-  props: { // data given on creation of component from parent component
+  props: {
+    // data given on creation of component from parent component
     attr: Object,
   },
-  watch: { // executes when the value of the given prop changes on the parent element
-    attr(newValue, oldValue) { 
+  watch: {
+    // executes when the value of the given prop changes on the parent element
+    attr(newValue, oldValue) {
       this.attributes = newValue;
     },
   },
-  mounted() { // executes when the component gets mounted
+  mounted() {
+    // executes when the component gets mounted
     this.attributes = this.attr;
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     addAttribute() {
       if (!this.attributes[""]) this.attributes[""] = "";
-        this.attributesChanged();
+      this.attributesChanged();
     },
     removeAttribute(name) {
       delete this.attributes[name];
@@ -98,7 +103,8 @@ export default defineComponent({
       this.attributes[event.path[0].value] = value;
       this.attributesChanged();
     },
-    attributesChanged() { //emit event to parent component and return the updated attributes
+    attributesChanged() {
+      //emit event to parent component and return the updated attributes
       this.$emit("attributesChanged", this.attributes);
     },
   },

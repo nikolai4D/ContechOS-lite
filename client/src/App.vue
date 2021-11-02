@@ -13,7 +13,9 @@
         >Logout</a
       >
       <span v-if="getUser()"> | </span>
-      <router-link to="/setNewPassword" v-if="getUser()">Forgot Password</router-link>
+      <router-link to="/setNewPassword" v-if="getUser()"
+        >Forgot Password</router-link
+      >
       <router-link to="/app" v-if="this.$route.path == '/app'">App</router-link>
     </nav>
     <router-view />
@@ -26,7 +28,8 @@ import { ActionTypes } from "./store/modules/auth/actions.types";
 
 export default {
   name: "app",
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     signOut: mapActions([ActionTypes.SIGN_OUT]).SIGN_OUT,
     ...mapGetters(["getUser"]),
   },

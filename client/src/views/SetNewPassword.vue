@@ -51,12 +51,14 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "SetNewPassword",
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       passwordVisible: false,
     };
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     async formSubmit() {
       let password1 = (
         document.getElementById("passwordInput1") as HTMLInputElement
@@ -64,16 +66,17 @@ export default defineComponent({
       let password2 = (
         document.getElementById("passwordInput2") as HTMLInputElement
       ).value;
-      if (
-        password1 !== password2
-      ) {
+      if (password1 !== password2) {
         alert("Passwords must match");
         return;
       }
 
-      await ((this as any).$store as Store).dispatch(ActionTypes.SET_NEW_PASSWORD, {
-        password1,
-      });
+      await ((this as any).$store as Store).dispatch(
+        ActionTypes.SET_NEW_PASSWORD,
+        {
+          password1,
+        }
+      );
 
       this.$router.push("/");
     },

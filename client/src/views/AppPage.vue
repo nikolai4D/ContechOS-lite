@@ -78,7 +78,8 @@ export default defineComponent({
   created() {
     this.getAllUsers();
   },
-  data() { // variables used in this component
+  data() {
+    // variables used in this component
     return {
       activeElementId: "",
       labels: [],
@@ -117,7 +118,8 @@ export default defineComponent({
     document.getElementsByTagName("svg")![0].style.height =
       docHeight - navHeight + "px";
   },
-  components: { // child components used
+  components: {
+    // child components used
     ContextMenu,
     AddNode,
     EditNode,
@@ -125,7 +127,8 @@ export default defineComponent({
     CreateRelationship,
     RelationshipToNewNode,
   },
-  methods: { // methods used in this component
+  methods: {
+    // methods used in this component
     addNode() {
       this.hideAllInputMenus();
       document.getElementById("addNode")!.classList.add("show");
@@ -147,8 +150,8 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.labels = result.data.node.labels;
         this.properties = result.data.node.properties;
 
@@ -156,7 +159,8 @@ export default defineComponent({
         document.getElementById("editNode")!.style.display = "block";
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -263,9 +267,9 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
-        if(result.data.removeNode.success){
+      onDone((result) => {
+        // runs if the mutation executed correctly
+        if (result.data.removeNode.success) {
           this.nodes = this.nodes.filter((node: any) => node.id !== id);
           this.restart();
         } else {
@@ -278,7 +282,8 @@ export default defineComponent({
         }
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -297,8 +302,8 @@ export default defineComponent({
 
       mutate({ id: id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.properties = result.data.relationship.properties;
         this.relationshipName = result.data.relationship.name;
 
@@ -306,7 +311,8 @@ export default defineComponent({
         document.getElementById("editRelationship")!.style.display = "block";
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -324,9 +330,9 @@ export default defineComponent({
 
       mutate({ id });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
-        if(result.data.removeRelationship.success) {
+      onDone((result) => {
+        // runs if the mutation executed correctly
+        if (result.data.removeRelationship.success) {
           this.relationships = this.relationships.filter(
             (relationship) => relationship.id !== id
           );
@@ -337,7 +343,8 @@ export default defineComponent({
         }
       });
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
@@ -414,13 +421,14 @@ export default defineComponent({
 
       mutate();
 
-      onError((result) => { // runs if the mutation runs into an error
+      onError((result) => {
+        // runs if the mutation runs into an error
         console.log(result.graphQLErrors[0].extensions?.response.message);
         alert(result.graphQLErrors[0].extensions?.response.message);
       });
 
-      
-     onDone((result) => { // runs if the mutation executed correctly
+      onDone((result) => {
+        // runs if the mutation executed correctly
         this.nodes = result.data.nodes;
         this.relationships = result.data.relationships;
 
@@ -505,7 +513,11 @@ export default defineComponent({
         .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
         .attr("style", "fill: rgba(0,0,0,0.3);");
 
-      this.nodesSelection = d3.select("svg").append("g").classed("nodes", true).selectAll("circle")
+      this.nodesSelection = d3
+        .select("svg")
+        .append("g")
+        .classed("nodes", true)
+        .selectAll("circle")
         .data(this.nodes, (node: any) => node.id)
         .join("circle")
         .attr("r", 40)
